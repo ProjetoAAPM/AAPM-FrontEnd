@@ -7,8 +7,6 @@ function Header() {
 
     return (
         <>
-            {/* O container agora é fixo no topo (mt-0) e sem padding lateral (px-0) em mobile/tablet */}
-            {/* As margens e o arredondamento só aparecem em 'lg' (telas cheias) */}
             <div className={`absolute w-full flex justify-center z-50 transition-all duration-300 
                 ${isOpen ? 'mt-0 px-0' : 'mt-0 px-0 lg:mt-4 lg:px-10'}`}>
                 
