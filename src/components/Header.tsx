@@ -23,7 +23,7 @@ function Header() {
                     </div>
 
                     <div className="hidden lg:flex gap-10 xl:gap-28 text-white text-lg font-medium">
-                        <Link to="/" className="hover:text-gray-300 transition-colors">Home</Link>
+                        <Link to="/home" className="hover:text-gray-300 transition-colors">Home</Link>
                         <Link to="/novidades" className="hover:text-gray-300 transition-colors">Novidades</Link>
                         <Link to="/pagamento" className="hover:text-gray-300 transition-colors">Pagamento</Link>
                     </div>
