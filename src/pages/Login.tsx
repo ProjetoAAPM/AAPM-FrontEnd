@@ -1,6 +1,10 @@
+import Formulario from "../components/Formulario";
+
 function Login() {
     return (
-        <p>Login</p>
+        <div>
+            <Formulario tipo="login" />
+        </div>
     );
 }
 

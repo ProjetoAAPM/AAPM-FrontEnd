@@ -1,6 +1,10 @@
+import Formulario from "../components/Formulario";
+
 function Cadastro() {
     return (
-        <p>Cadastro</p>
+        <div>
+            <Formulario tipo="cadastro" />
+        </div>
     );
 }
 
