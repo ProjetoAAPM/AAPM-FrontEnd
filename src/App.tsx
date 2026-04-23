@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import LandingPage from "./pages/LandingPage";
@@ -9,9 +9,13 @@ import Cadastro from "./pages/Cadastro";
 import Home from "./pages/Home";
 
 function App() {
+    const location = useLocation();
+
+    const esconderHeader = location.pathname === "/cadastro" || location.pathname === "/login";
+
     return (
-        <BrowserRouter>
-            <Header/>
+        <>
+            {!esconderHeader && <Header/>}
             <Routes>
                 <Route path='/' element={<LandingPage/>}/>
                 <Route path='/home' element={<Home/>}/>
@@ -22,7 +26,7 @@ function App() {
                 <Route path='*' element={<p>Página não encontrada</p>}/>
             </Routes>
             <Footer />
-        </BrowserRouter>
+        </>
     )
 }
 
