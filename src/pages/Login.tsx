@@ -2,7 +2,7 @@ import Formulario from "../components/Formulario";
 
 function Login() {
     return (
-        <div>
+        <div className="bg-[#101625]">
             <Formulario tipo="login" />
         </div>
     );
