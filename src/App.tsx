@@ -6,6 +6,8 @@ import Novidades from "./pages/Novidades"
 import Pagamento from "./pages/Pagamento"
 import Login from "./pages/Login"
 import Cadastro from "./pages/Cadastro"
+import HomeAdmin from "./pages/admin/HomeAdmin";
+
 
 function App() {
     return (
@@ -17,6 +19,7 @@ function App() {
                 <Route path='/pagamento' element={<Pagamento/>}/>
                 <Route path='/login' element={<Login/>}/>
                 <Route path='/cadastro' element={<Cadastro/>}/>
+                <Route path='/admin' element={<HomeAdmin/>}/>
                 <Route path='*' element={<p>Página não encontrada</p>}/>
             </Routes>
             <Footer />
