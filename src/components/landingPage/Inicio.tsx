@@ -1,8 +1,19 @@
 import Comentarios from "../landingPage/Comentarios";
+import EditorCK from "../admin/EditorCK";
 
-function Inicio() {
+function Inicio({ isAdmin, isEditing, content, setContent }: any) {
     return (
         <div className="relative min-h-screen flex flex-col items-center md:items-start overflow-hidden">
+
+            <video
+        src="src/assets/video/jundiai.mp4"
+        autoPlay
+        loop
+        muted
+        className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"
+      />
+      <div className="absolute inset-0 bg-black/60 z-[-1]" />
+
 
             <video src="src/assets/video/jundiai.mp4" autoPlay loop muted className="absolute top-0 left-0 w-full h-full object-cover z-[-1]"></video>
 
