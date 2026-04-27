@@ -12,7 +12,6 @@ import HomeAdmin from "./pages/admin/HomeAdmin";
 function App() {
     return (
         <BrowserRouter>
-            <Header/>
             <Routes>
                 <Route path='/' element={<LandingPage/>}/>
                 <Route path='/novidades' element={<Novidades/>}/>
