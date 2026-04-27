@@ -1,6 +1,3 @@
-NA PASTA COMPONENTES SO CRIA A PASTA ADMIN - EditorCK.tsx 
-
-
 import React, { useState, useId } from 'react';
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import DecoupledEditor from "@ckeditor/ckeditor5-build-decoupled-document";
