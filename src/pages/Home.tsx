@@ -10,7 +10,7 @@ function Home() {
         <Pontuacao />
       </section>
 
-      <section className="min-h-[85vh] flex items-center justify-center px-4">
+      <section className="min-h-[85vh] flex items-center justify-center">
         <FormularioExtrato />
       </section>
 
