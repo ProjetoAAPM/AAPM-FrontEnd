@@ -28,9 +28,17 @@ function Formulario({ tipo } : any) {
         console.log("Enviando:", dadosFinalizados);
     }
 
+     const cores = {
+        aluno: { bg: 'bg-[#C83D3D]', bg_label: 'bg-[#902C2D]', btn: 'bg-[#383636]', titulo: 'text-[#FFFFFF]' },
+        docente: { bg: 'bg-[#86D5FE]', bg_label: 'bg-[#2C6090]', btn: 'bg-[#383636]', titulo: 'text-[#16334D]' },
+        login: { bg: 'bg-[#FFEFAF]', bg_label: 'bg-[#FFDB4B]', btn: 'bg-[#FFDB4B]', titulo: 'text-[#101625]' }
+    };
+
+    const tema = tipo === 'login' ? cores.login : (usuario === 'aluno' ? cores.aluno : cores.docente);
+
     return (
         <div className="w-full flex justify-center py-20">
-            <form onSubmit={enviar} className="max-w-[848px] w-full min-h-screen mx-auto py-10 bg-[#C83D3D] rounded-lg flex flex-col items-center gap-6">
+            <form onSubmit={enviar} className={`${tema.bg} ${tipo === 'login' ? 'min-h-[500px] w-[500px]' : 'max-w-[848px] w-full min-h-screen'} mx-auto py-10 rounded-lg flex flex-col items-center gap-6`}>
                 <img src="src/assets/icons/Logo48.svg" alt="logo" className="absolute top-[30px] h-[100px] w-auto drop-shadow-md"/>
                 <h2 className="text-4xl font-bold italic text-white mt-6">
                     {tipo === 'login' ? 'Faça seu Login' : 'Faça seu Cadastro'}
