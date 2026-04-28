@@ -38,12 +38,12 @@ function Formulario({ tipo } : any) {
 
     const estiloLabel = `${tema.bg_label} w-fit py-2 px-14 rounded-r-full mb-2 text-lg inset-shadow-sm inset-shadow-indigo-700/10 ${tipo === 'login' ? ' text-[#373737] font-bold' : 'pl-20  -ml-18.5 text-[#FFFFFF] font-semibold' }`;
 
-    const estiloInput = `w-full h-[40px] p-1 bg-white rounded-md ${tipo === 'login' ? 'mx-15 shadow-md' : 'mx-2 shadow-md'}`;
+    const estiloInput = `h-[40px] p-1 bg-white rounded-md ${tipo === 'login' ? 'w-[380px] mx-15 shadow-md' : 'mx-2 shadow-md'}`;
 
     return (
         <div className="w-full flex justify-center py-20">
-            <form onSubmit={enviar} className={`${tema.bg} ${tipo === 'login' ? 'min-h-[500px] w-[500px]' : 'max-w-[848px] w-full min-h-screen'} mx-auto py-10 rounded-lg flex flex-col items-center gap-6`}>
-                <img src="src/assets/icons/Logo48.svg" alt="logo" className="absolute top-[30px] h-[100px] w-auto drop-shadow-md"/>
+            <form onSubmit={enviar} className={`${tema.bg} ${tipo === 'login' ? 'min-h-[500px] w-[500px] mt-35' : 'max-w-[848px] w-full mt-20 mb-20'}  py-10 rounded-xl flex flex-col items-center gap-6`}>
+                <img src="src/assets/icons/Logo48.svg" alt="logo" className={`${tipo === 'login' ? 'top-[170px]' : 'top-[110px]'} absolute h-[100px] w-auto drop-shadow-md`}/>
                 <h2 className={`text-4xl font-bold italic mt-4 ${tema.titulo}`}>
                     {tipo === 'login' ? 'Faça seu Login' : 'Faça seu Cadastro'}
                 </h2>
