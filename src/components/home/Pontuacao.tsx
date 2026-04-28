@@ -3,12 +3,46 @@ import BarraPontos from "./BarraPontos";
 import PorcoPorcentagem from "./PorcoPorcentagem";
 import Moeda from "./MoedaTotal";
 
-export default function Pontuacao() {
+const premios = {
+  2000: "Chaveiro",
+  3500: "Cordão",
+  5000: "Cartão",
+  7500: "Camiseta",
+  10000: "Dia da pizza"
+};
+export default function Pontuacao({ setExtrato }) {
   const [pontos, setPontos] = useState(0);
 
   function comprar() {
-    setPontos((prev) => (prev >= 10000 ? 0 : prev + 2500));
+  setPontos((prev) => {
+    const novo = prev >= 10000 ? 0 : prev + 2500;
+
+    const ganhos = [];
+
+    ganhos.push({
+      tipo: "pontos",
+      valor: 2500,
+      mensagem: "Você ganhou 2500 pontos",
+    });
+
+Object.entries(premios).forEach(([marco, premio]) => {
+  const valorMarco = Number(marco);
+
+  if (prev < valorMarco && novo >= valorMarco) {
+    ganhos.push({
+      tipo: "premio",
+      valor: valorMarco,
+      premio: premio,
+      mensagem: `Você ganhou: ${premio}`,
+    });
   }
+});
+
+    setExtrato((old) => [...ganhos, ...old]);
+
+    return novo;
+  });
+}
 
   const progressoPremio = (pontos / 10000) * 100;
 
