@@ -5,8 +5,10 @@ export default function GlobalClickHandler() {
   const { setActiveEditorId } = useEditMode();
 
   useEffect(() => {
-    const handleClick = (e) => {
-      if (e.target.closest(".ProseMirror") || e.target.closest(".tiptap-toolbar")) {
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+
+      if (target.closest(".ProseMirror") || target.closest(".tiptap-toolbar")) {
         return;
       }
 
@@ -18,7 +20,7 @@ export default function GlobalClickHandler() {
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  }, []);
+  }, [setActiveEditorId]);
 
   return null;
 }

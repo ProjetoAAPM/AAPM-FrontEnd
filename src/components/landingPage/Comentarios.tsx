@@ -8,7 +8,7 @@ const comentarios = [
     "Dá pra acompanhar os eventos fácil"
 ];
 
-function Comentarios({ isAdmin = false }: any) {
+function Comentarios() {
     const [foco, setFoco] = useState(0);
 
     useEffect(() => {
@@ -34,9 +34,8 @@ function Comentarios({ isAdmin = false }: any) {
         { id: (foco + 2), txt: texto3, estilo: visual[2] },
     ];
 
-
     return (
-        <div className="relative lg:absolute lg:right-10 xl:right-28 lg:bottom-10 xl:bottom-20 w-full max-w-[320px] md:max-w-[300px] h-[160px] z-40 ml-auto md:mr-0 mr-4 my-8 lg:my-0">
+        <div className="relative lg:absolute lg:right-28 lg:bottom-20 w-full max-w-[320px] md:max-w-[300px] h-[160px] ml-auto md:mr-0 my-8 md:my-0 mr-4 lg:mr-0 my-8 lg:my-0">
             {itens.map((item) => (
                 <div 
                     key={item.id} 
@@ -49,6 +48,5 @@ function Comentarios({ isAdmin = false }: any) {
         </div>
     );
 }
-
 
 export default Comentarios;

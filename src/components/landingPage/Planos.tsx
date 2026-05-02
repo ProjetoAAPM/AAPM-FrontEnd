@@ -16,7 +16,7 @@ function Planos() {
                 </h2>
             </div>
 
-            <div className="flex flex-wrap justify-center py-2 gap-6 lg:gap-20 xl:gap-35">
+            <div className="flex flex-wrap justify-center items-stretch py-2 gap-6 lg:gap-20 xl:gap-24">
                 
                 <CardPlano
                     fundoTitulo="bg-[#86D5FE]"
@@ -37,7 +37,6 @@ function Planos() {
                     </button>
 
                     <div className={`${comumAberto ? "block" : "hidden"} lg:block`}>
-                        {/* Reduzi o mt-7 para mt-4 e ml-10 para ml-4 */}
                         <ul className="text-left w-full space-y-1 mt-4 text-base md:text-xl font-medium ml-2 md:ml-10">
                             <li className="flex items-center gap-2">
                                 <Check size={18} className="text-green-600 stroke-3"/>
