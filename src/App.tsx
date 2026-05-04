@@ -7,11 +7,12 @@ import Pagamento from "./pages/Pagamento";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
 import Home from "./pages/Home";
+import EscolhaPlano from './pages/EscolhaPlano';
 
 function App() {
     const location = useLocation();
 
-    const esconderHeader = location.pathname === "/cadastro" || location.pathname === "/login";
+    const esconderHeader = location.pathname === "/cadastro" || location.pathname === "/login" || location.pathname === "/escolhaplano";
 
     return (
         <>
@@ -23,6 +24,7 @@ function App() {
                 <Route path='/pagamento' element={<Pagamento/>}/>
                 <Route path='/login' element={<Login/>}/>
                 <Route path='/cadastro' element={<Cadastro/>}/>
+                <Route path='/escolhaplano' element={<EscolhaPlano/>}/>
                 <Route path='*' element={<p>Página não encontrada</p>}/>
             </Routes>
             <Footer />
