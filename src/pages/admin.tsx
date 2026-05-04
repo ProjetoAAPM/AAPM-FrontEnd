@@ -1,7 +1,7 @@
-import LandingPage from "./LandingPage";
+import { Outlet } from "react-router-dom";
 
 function Admin() {
-  return <LandingPage />;
+  return <Outlet />;
 }
 
 export default Admin;

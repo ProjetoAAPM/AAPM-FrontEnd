@@ -29,7 +29,11 @@ function App() {
                 <Route path='/pagamento' element={<Pagamento />} />
                 <Route path='/login' element={<Login />} />
                 <Route path='/cadastro' element={<Cadastro />} />
-                <Route path='/admin' element={<Admin />} />
+                <Route path="/admin" element={<Admin />}>
+                    <Route index element={<LandingPage />} />
+                    <Route path="home" element={<Home />} />
+                    <Route path="usuario" element={<Home />} />
+                </Route>
                 
                 {/* Rota para páginas não encontradas */}
                 <Route path='*' element={<p>Página não encontrada</p>} />

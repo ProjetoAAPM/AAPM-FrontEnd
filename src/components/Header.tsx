@@ -8,7 +8,8 @@ function Header() {
     const { editMode, setEditMode } = useEditMode();
     const location = useLocation();
 
-    const isAdmin = location.pathname === "/admin";
+    const isAdmin = location.pathname.startsWith("/admin");
+    const isLanding = location.pathname === "/";
 
     const resetarPadrao = () => {
         if (window.confirm("Deseja voltar ao texto e imagens padrão originais?")) {
@@ -43,10 +44,43 @@ function Header() {
                     </div>
 
                     <div className="hidden lg:flex gap-10 xl:gap-28 text-white text-lg font-medium">
-                        <Link to="/home" className="hover:text-gray-300 transition-colors">Home</Link>
-                        <Link to="/novidades" className="hover:text-gray-300 transition-colors">Novidades</Link>
-                        <Link to="/pagamento" className="hover:text-gray-300 transition-colors">Pagamento</Link>
+
+                        {/* HOME */}
+                        <Link 
+                            to={isAdmin ? "/admin" : "/home"} 
+                            className="hover:text-gray-300 transition-colors"
+                        >
+                            Home
+                        </Link>
+
+                        {/* USUÁRIO (SÓ NO ADMIN) */}
+                        {isAdmin && (
+                            <Link 
+                                to="/admin/usuario" 
+                                className="hover:text-gray-300 transition-colors"
+                            >
+                                Usuário
+                            </Link>
+                        )}
+
+                        {/* NOVIDADES */}
+                        <Link 
+                            to={isAdmin ? "/admin/novidades" : "/novidades"} 
+                            className="hover:text-gray-300 transition-colors"
+                        >
+                            Novidades
+                        </Link>
+
+                        {/* PAGAMENTO */}
+                        <Link 
+                            to={isAdmin ? "/admin/pagamento" : "/pagamento"} 
+                            className="hover:text-gray-300 transition-colors"
+                        >
+                            Pagamento
+                        </Link>
+
                     </div>
+
 
                     <div className="flex gap-2 md:gap-6 items-center">
 
