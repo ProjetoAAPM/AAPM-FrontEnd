@@ -32,7 +32,7 @@ function App() {
                 <Route path="/admin" element={<Admin />}>
                     <Route index element={<LandingPage />} />
                     <Route path="home" element={<Home />} />
-                    <Route path="usuario" element={<Home />} />
+                    <Route path="usuario" element={<Home modoAdmin />} />
                 </Route>
                 
                 {/* Rota para páginas não encontradas */}
