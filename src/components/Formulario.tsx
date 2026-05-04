@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Formulario({ tipo } : any) {
     const [usuario, setUsuario] = useState('aluno');
     const [dados, setDados] = useState({ senha:'', confirmar_senha:'', dur_curso:'', data_inicio:'', data_final: ''});
+
+    const navigate = useNavigate();
 
     const guardar = (e : any) => {
         setDados({ ...dados, [e.target.name]: e.target.value });
@@ -26,6 +29,12 @@ function Formulario({ tipo } : any) {
         delete dadosFinalizados.confirmar_senha;
 
         console.log("Enviando:", dadosFinalizados);
+
+        if (tipo === 'cadastro') {
+            navigate('/escolhaplano');
+        } else {
+            navigate('/home');
+        }
     }
 
     const cores = {

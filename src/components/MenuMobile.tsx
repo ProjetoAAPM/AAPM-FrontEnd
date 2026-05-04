@@ -26,6 +26,7 @@ function MenuMobile({ isOpen, onClose }: any) {
         ${isOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"}
       `}
     >
+      
       <div className="w-full bg-[#FFD44B] h-[75px] flex items-center justify-between px-4 shadow-md">
         <div className="flex items-center">
           <img src="src/assets/icons/LogoBorda48.svg" alt="Logo" className="h-10 w-auto px-2" />
@@ -38,7 +39,7 @@ function MenuMobile({ isOpen, onClose }: any) {
 
       <nav className="flex flex-col h-[calc(100vh-75px)] px-10 pt-12 pb-10">
         <div className="flex flex-col gap-6">
-          <Link to="/" onClick={onClose} className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2">
+          <Link to="/home" onClick={onClose} className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2">
             Home
           </Link>
           <Link to="/novidades" onClick={onClose} className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2">

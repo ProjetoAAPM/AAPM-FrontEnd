@@ -10,11 +10,13 @@ import Cadastro from "./pages/Cadastro";
 import Admin from "./pages/admin";
 import { EditModeProvider } from "./context_admin/modo_editar";
 import GlobalClickHandler from "./components/admin/GlobalClickHandler";
+import EscolhaPlano from './pages/EscolhaPlano';
+
 
 function App() {
     const location = useLocation();
 
-    const esconderHeader = location.pathname === "/cadastro" || location.pathname === "/login";
+    const esconderHeader = location.pathname === "/cadastro" || location.pathname === "/login" || location.pathname === "/escolhaplano";
 
     return (
         <EditModeProvider>
@@ -29,14 +31,12 @@ function App() {
                 <Route path='/pagamento' element={<Pagamento />} />
                 <Route path='/login' element={<Login />} />
                 <Route path='/cadastro' element={<Cadastro />} />
+                <Route path='/escolhaplano' element={<EscolhaPlano/>}/>
                 <Route path="/admin" element={<Admin />}>
                     <Route index element={<LandingPage />} />
                     <Route path="home" element={<Home />} />
                     <Route path="usuario" element={<Home modoAdmin />} />
                 </Route>
-                
-                {/* Rota para páginas não encontradas */}
-                <Route path='*' element={<p>Página não encontrada</p>} />
             </Routes>
             
             <Footer />
