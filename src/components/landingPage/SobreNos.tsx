@@ -40,6 +40,34 @@ function SobreNos() {
     }
   };
 
+  // 🔥 HTML PADRÃO ORIGINAL (CORRETO)
+  const SOBRE_PADRAO = `
+    <div class="mb-8 md:mx-20 lg:mx-30 text-white">
+      <h3 class="text-xl md:text-2xl lg:text-3xl font-semibold mb-4 underline decoration-2 decoration-[#EFBF04] underline-offset-8">
+        Origem
+      </h3>
+
+      <p class="leading-relaxed text-gray-200 text-lg md:text-xl lg:text-2xl">
+        Surgimos tendo em vista a necessidade de criar uma relação mais próxima entre a escola técnica e a comunidade local, envolvendo os pais e alunos no cotidiano escolar. Temos como objetivo 
+        <span class="font-semibold text-white"> enriquecer</span> a formação dos alunos e 
+        <span class="font-semibold text-white"> oferecer</span> suporte administrativo e financeiro para atividades que vão além do currículo obrigatório. 
+      </p>
+    </div>
+
+    <div class="mb-8 md:mx-20 lg:mx-30 text-white">
+      <h3 class="text-xl md:text-2xl lg:text-3xl font-semibold mb-4 underline decoration-2 decoration-[#EFBF04] underline-offset-8">
+        Apoio ao Aluno
+      </h3>
+
+      <ul class="list-disc list-inside space-y-3 text-gray-200 text-lg md:text-xl lg:text-2xl">
+        <li>
+          <span class="font-semibold text-white">Suporte financeiro</span>, empréstimo de armários, e acesso a ferramentas de lazer e esportes.
+        </li>
+        <li>Eventos, formaturas, feiras de tecnologia e confraternizações.</li>
+      </ul>
+    </div>
+  `;
+
   return (
     <div className="max-w-[1812px] m-auto py-12 px-4 md:px-10">
       <div className="bg-[#51AAD8] py-2 mb-10 rounded-md">
@@ -51,11 +79,12 @@ function SobreNos() {
       <div className="bg-[#182033] h-auto p-6 md:p-10 rounded-lg">
         <div className="sobre-nos-wrapper relative">
           <div className="mb-8 md:mx-20 text-white">
+
             {editMode ? (
               <div className="relative">
                 <BlocoEditavel
                   id="sobre-texto"
-                  content={conteudoEditado || `... seu texto padrão ...`}
+                  content={conteudoEditado || SOBRE_PADRAO}
                 />
 
                 <div className="absolute top-4 right-4">
@@ -70,26 +99,18 @@ function SobreNos() {
               <div
                 className="conteudo-renderizado text-white"
                 dangerouslySetInnerHTML={{
-                  __html: conteudoEditado || `
-                    <div>
-                      <h3>Origem</h3>
-                      <p>Surgimos tendo em vista a necessidade de criar uma relação mais próxima entre a escola técnica e a comunidade local...</p>
-                    </div>
-                    <div>
-                      <h3>Apoio ao Aluno</h3>
-                      <ul>
-                        <li>Suporte financeiro, empréstimo de armários...</li>
-                        <li>Eventos, formaturas, feiras de tecnologia...</li>
-                      </ul>
-                    </div>
-                  `
+                  __html: conteudoEditado || SOBRE_PADRAO
                 }}
               />
             )}
+
           </div>
         </div>
 
+        {/* IMAGENS */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-10 w-full max-w-[1200px] m-auto">
+          
+          {/* FUTSAL */}
           <div className="relative">
             <div
               onClick={() => handleImageClick(fileInputRef1)}
@@ -105,9 +126,16 @@ function SobreNos() {
               </div>
             )}
 
-            <input type="file" ref={fileInputRef1} className="hidden" accept="image/*" onChange={(e) => handleFileChange(e, "futsal")} />
+            <input 
+              type="file" 
+              ref={fileInputRef1} 
+              className="hidden" 
+              accept="image/*" 
+              onChange={(e) => handleFileChange(e, "futsal")} 
+            />
           </div>
 
+          {/* GRUPO */}
           <div className="relative">
             <div
               onClick={() => handleImageClick(fileInputRef2)}
@@ -123,8 +151,15 @@ function SobreNos() {
               </div>
             )}
 
-            <input type="file" ref={fileInputRef2} className="hidden" accept="image/*" onChange={(e) => handleFileChange(e, "grupo")} />
+            <input 
+              type="file" 
+              ref={fileInputRef2} 
+              className="hidden" 
+              accept="image/*" 
+              onChange={(e) => handleFileChange(e, "grupo")} 
+            />
           </div>
+
         </div>
       </div>
     </div>
