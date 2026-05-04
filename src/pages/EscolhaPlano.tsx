@@ -3,17 +3,19 @@ import CardPlano from "../components/CardPlano";
 function EscolhaPlano() {
 
     return(
-        <div className="min-h-screen bg-[#101625] flex flex-col items-center py-10 px-4">
-           <div className="w-full max-w-5xl mb-10">
-                <div className="flex justify-center mb-6">
+        <div className="min-h-screen bg-[#101625] flex flex-col items-center py-5 ">
+           <div className="w-full max-w-5xl mb-5">
+                <div className="flex justify-center mb-30">
                      <img src="src/assets/icons/Logo48.svg" alt="logo" className="absolute h-[100px] w-auto drop-shadow-md"/>
                 </div>
-                <h1 className="bg-[#42B9F4] text-white text-center text-4xl font-bold">
-                    Escolha o seu plano
-                </h1>
+                <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] bg-[#42B9F4] py-4 mb-3 h-[80px]">
+                    <h1 className="text-white text-center text-4xl font-bold italic">
+                        Escolha o seu plano
+                    </h1>
+                </div>
            </div>
 
-           <div className="flex flex-col items-center gap-8 w-full justify-between">
+           <div className="flex flex-wrap justify-center gap-8 w-full justify-between">
                 <CardPlano
                     fundoTitulo="bg-white"
                     titulo="Plano Comum"
@@ -22,7 +24,7 @@ function EscolhaPlano() {
                     corBorda="border-none"
                     esconderBotao={false}
             
-                >     
+                >    
                 </CardPlano>
 
                 <CardPlano
