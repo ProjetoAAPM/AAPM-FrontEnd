@@ -4,7 +4,8 @@ import { useEditMode } from "../context_admin/modo_editar";
 function MenuMobile({ isOpen, onClose }: any) {
   const location = useLocation();
   const { editMode, setEditMode } = useEditMode();
-  const isAdmin = location.pathname === "/admin";
+  
+  const isAdmin = location.pathname.startsWith("/admin");
 
   const resetarPadrao = () => {
     if (window.confirm("Deseja voltar ao texto e imagens padrão originais?")) {
@@ -39,13 +40,38 @@ function MenuMobile({ isOpen, onClose }: any) {
 
       <nav className="flex flex-col h-[calc(100vh-75px)] px-10 pt-12 pb-10">
         <div className="flex flex-col gap-6">
-          <Link to="/home" onClick={onClose} className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2">
+          
+          <Link 
+            to={isAdmin ? "/admin" : "/home"} 
+            onClick={onClose} 
+            className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2"
+          >
             Home
           </Link>
-          <Link to="/novidades" onClick={onClose} className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2">
+
+          {isAdmin && (
+            <Link 
+              to="/admin/usuario" 
+              onClick={onClose} 
+              className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2"
+            >
+              Usuário
+            </Link>
+          )}
+
+          <Link 
+            to={isAdmin ? "/admin/novidades" : "/novidades"} 
+            onClick={onClose} 
+            className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2"
+          >
             Novidades
           </Link>
-          <Link to="/pagamento" onClick={onClose} className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2">
+
+          <Link 
+            to={isAdmin ? "/admin/pagamento" : "/pagamento"} 
+            onClick={onClose} 
+            className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2"
+          >
             Pagamentos
           </Link>
         </div>
