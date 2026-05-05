@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEditMode } from "../context_admin/modo_editar";
+import logoImgBorda from "/src/assets/icons/LogoBorda48.svg";
 
 function MenuMobile({ isOpen, onClose }: any) {
   const location = useLocation();
@@ -30,7 +31,7 @@ function MenuMobile({ isOpen, onClose }: any) {
       
       <div className="w-full bg-[#FFD44B] h-[75px] flex items-center justify-between px-4 shadow-md">
         <div className="flex items-center">
-          <img src="src/assets/icons/LogoBorda48.svg" alt="Logo" className="h-10 w-auto px-2" />
+          <img src={logoImgBorda} alt="Logo" className="h-10 w-auto px-2" />
           <p className="text-[#171717] font-bold text-lg">AAPM Senai Leopoldina</p>
         </div>
         <button onClick={onClose} className="text-[#1A1A1A] text-3xl font-light">

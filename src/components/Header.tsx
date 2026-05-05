@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import MenuMobile from "./MenuMobile";
 import { useState } from "react";
 import { useEditMode } from "../context_admin/modo_editar";
+import logoImg from "/src/assets/icons/Logo48.svg";
 
 function Header() {
     const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +35,7 @@ function Header() {
 
                     <div className={`flex items-center ${isAdmin ? "gap-2" : "gap-2 md:gap-3"}`}>
                         <img 
-                            src="src/assets/icons/Logo48.svg" 
+                            src={logoImg}
                             alt="Logo" 
                             className="h-[40px] md:h-[45px] w-auto object-contain"
                         />
