@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Sugestoes() {
+export default function Sugestoes({ modoAdmin = false }) {
   const [texto, setTexto] = useState("");
 
   function enviarSugestao() {
@@ -12,7 +12,6 @@ export default function Sugestoes() {
     <div className="w-full max-w-[1890px] mx-auto px-4 sm:px-6 md:px-10 min-h-[85vh]">
       <div className="bg-[#C83D3D] w-full min-h-[85vh] rounded-[15px] shadow-2xl px-4 sm:px-6 md:px-10 relative overflow-hidden">
 
-        {/* Título */}
         <div className="
           absolute top-6 sm:top-10 right-0
           bg-white text-[#101625]
@@ -25,24 +24,26 @@ export default function Sugestoes() {
           Sugestões
         </div>
 
-        {/* Subtítulo */}
-        <div className="
-          absolute top-24 sm:top-40 md:top-52 lg:top-60 left-0
-          bg-white text-[#101625]
-          text-[0.8rem] sm:text-[1rem]
-          font-black
-          px-6 sm:px-20 md:px-[200px] lg:px-[300px] xl:px-[400px]
-          py-2 rounded-r-[5px] shadow-md
-        ">
-          Você tem alguma sugestão? Compartilhe com a gente!
-        </div>
+        {!modoAdmin && (
+          <div className="
+            absolute top-24 sm:top-40 md:top-52 lg:top-60 left-0
+            bg-white text-[#101625]
+            text-[0.8rem] sm:text-[1rem]
+            font-black
+            px-6 sm:px-20 md:px-[200px] lg:px-[300px] xl:px-[400px]
+            py-2 rounded-r-[5px] shadow-md
+          ">
+            Você tem alguma sugestão? Compartilhe com a gente!
+          </div>
+        )}
 
-        {/* Conteúdo */}
-        <div className="
+        <div className={`
           absolute left-1/2 -translate-x-1/2
-          top-[180px] sm:top-[220px] md:top-[260px] lg:top-[300px]
           flex flex-col items-center gap-6 sm:gap-10 md:gap-15 w-full px-4
-        ">
+          ${modoAdmin 
+            ? "top-[120px] sm:top-[160px] md:top-[200px]" 
+            : "top-[180px] sm:top-[220px] md:top-[260px] lg:top-[300px]"}
+        `}>
           <input
             value={texto}
             onChange={(e) => setTexto(e.target.value)}

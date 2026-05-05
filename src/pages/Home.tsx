@@ -20,7 +20,7 @@ function Home({ modoAdmin = false }) {
       </section>
 
       <section className="min-h-[90vh] flex items-center justify-center">
-        <Sugestoes />
+        <Sugestoes modoAdmin={modoAdmin} />
       </section>
 
     </div>
