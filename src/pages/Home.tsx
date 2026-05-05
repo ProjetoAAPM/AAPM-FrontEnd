@@ -16,7 +16,7 @@ function Home({ modoAdmin = false }) {
       )}
 
       <section className={`min-h-[90vh] flex items-center justify-center ${modoAdmin ? "pt-24" : ""}`}>
-        <FormularioExtrato extrato={extrato} />
+        <FormularioExtrato extrato={extrato} modoAdmin={modoAdmin} />
       </section>
 
       <section className="min-h-[90vh] flex items-center justify-center">
