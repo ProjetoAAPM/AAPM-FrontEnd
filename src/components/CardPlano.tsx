@@ -42,7 +42,7 @@ function CardPlano({ titulo, fundoTitulo, className, popular, textoBtn, onClick,
                         {children}
                     </div>
 
-                    <button>
+                    <button onClick={onClick} className="w-full max-w-[224px] mx-auto h-[54px] rounded-lg font-bold shadow-md hover:scale-105 active:scale-95 transtion-all mt-6 text-xl">
                         { textoBtn || "Contribuir"}
                     </button>
                 </div>
