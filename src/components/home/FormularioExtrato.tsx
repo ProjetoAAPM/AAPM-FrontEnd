@@ -1,7 +1,16 @@
 import "../Scrollbar/scrollbar.css";
 
+interface ItemExtrato {
+  tipo: "premio" | "pontos" | "resgate" | "ganho";
+  premio?: string;
+  mensagem?: string;
+  descricao?: string;
+  valor?: number;
+  pontos?: number;
+}
+
 // Adicionei modoAdmin aqui nas props
-export default function FormularioExtrato({ extrato = [], modoAdmin = false }) {
+export default function FormularioExtrato({ extrato = [] as ItemExtrato[], modoAdmin = false }) {
   return (
     <div className="w-full max-w-[1890px] mx-auto px-3 sm:px-4 md:px-6 lg:px-10 overflow-x-hidden">
       <div className="flex flex-col lg:flex-row gap-3 lg:h-[93vh] overflow-hidden">
