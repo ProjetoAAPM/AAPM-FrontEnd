@@ -76,7 +76,6 @@ export default function Sugestoes({ modoAdmin = false }) {
         </div>
 
       </div>
-      
     </div>
   );
 }
