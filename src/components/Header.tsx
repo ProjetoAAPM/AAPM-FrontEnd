@@ -32,7 +32,7 @@ function Header() {
                         ? 'bg-[#FFD44B] rounded-none' 
                         : 'bg-[#211F1D]/80 backdrop-blur-lg rounded-none lg:rounded-full shadow-lg'}`}>
 
-                    <div className="flex items-center gap-2 md:gap-3">
+                    <div className={`flex items-center ${isAdmin ? "gap-2" : "gap-2 md:gap-3"}`}>
                         <img 
                             src="src/assets/icons/Logo48.svg" 
                             alt="Logo" 
@@ -43,9 +43,9 @@ function Header() {
                         </p>
                     </div>
 
-                    <div className="hidden lg:flex gap-10 xl:gap-28 text-white text-lg font-medium">
+                    <div className={`hidden lg:flex items-center text-white font-medium 
+                        ${isAdmin ? "gap-4 xl:gap-20 text-base xl:text-lg" : "gap-10 xl:gap-28 text-lg"}`}>
 
-                        {/* HOME */}
                         <Link 
                             to={isAdmin ? "/admin" : "/home"} 
                             className="hover:text-gray-300 transition-colors"
@@ -53,7 +53,6 @@ function Header() {
                             Home
                         </Link>
 
-                        {/* USUÁRIO (SÓ NO ADMIN) */}
                         {isAdmin && (
                             <Link 
                                 to="/admin/usuario" 
@@ -63,7 +62,6 @@ function Header() {
                             </Link>
                         )}
 
-                        {/* NOVIDADES */}
                         <Link 
                             to={isAdmin ? "/admin/novidades" : "/novidades"} 
                             className="hover:text-gray-300 transition-colors"
@@ -71,7 +69,6 @@ function Header() {
                             Novidades
                         </Link>
 
-                        {/* PAGAMENTO */}
                         <Link 
                             to={isAdmin ? "/admin/pagamento" : "/pagamento"} 
                             className="hover:text-gray-300 transition-colors"
@@ -82,14 +79,14 @@ function Header() {
                     </div>
 
 
-                    <div className="flex gap-2 md:gap-6 items-center">
+                    <div className={`flex items-center ${isAdmin ? "gap-2 xl:gap-4" : "gap-2 md:gap-6"}`}>
 
                         {isAdmin ? (
                             <>
                                 <button
                                     onClick={resetarPadrao}
-                                    className="hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full w-[160px] h-[42px] 
-                                    text-white shadow-lg text-lg font-semibold hover:bg-[#b03535] transition-all"
+                                    className={`hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full h-[42px] text-white shadow-lg font-semibold hover:bg-[#b03535] transition-all 
+                                        ${isAdmin ? "w-[130px] xl:w-[160px] text-base xl:text-lg" : "w-[160px] text-lg"}`}
                                 >
                                     Padrao
                                 </button>
@@ -103,8 +100,8 @@ function Header() {
                                         }
                                         setEditMode(!editMode);
                                     }}
-                                    className="hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full w-[160px] h-[42px] 
-                                    text-white shadow-lg text-lg font-semibold hover:bg-[#b03535] transition-all"
+                                    className={`hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full h-[42px] text-white shadow-lg font-semibold hover:bg-[#b03535] transition-all 
+                                        ${isAdmin ? "w-[130px] xl:w-[160px] text-base xl:text-lg" : "w-[160px] text-lg"}`}
                                     >
                                     {editMode ? "Salvar" : "Editar"}
                                     </button>
