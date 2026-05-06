@@ -38,56 +38,65 @@ export default function Jornal() {
     }, [editMode]);
 
     const TEXTO_COL1_PADRAO = `
-        <p class="text-md leading-relaxed">
-            Entre as principais atualizações, estão a modernização dos laboratórios e a ampliação do uso de tecnologias digitais em sala de aula, permitindo que os estudantes tenham contato direto com ferramentas utilizadas na indústria atual. Além disso, novos cursos e especializações foram incorporados à grade, acompanhando as demandas do setor produtivo e ampliando as oportunidades de qualificação.
-        </p>
-    `;
-
-    const TEXTO_COL2_PADRAO = `
-        <p class="text-md leading-relaxed">
-            A unidade do SENAI Leopoldina Mariano Ferraz tem se destacado recentemente por uma série de novidades que reforçam seu compromisso com a formação de profissionais qualificados e preparados para o mercado de trabalho. Com investimentos em infraestrutura, inovação tecnológica e metodologias de ensino mais dinâmicas, a instituição vem proporcionando uma experiência educacional cada vez mais completa aos alunos.
-        </p>
-    `;
+<p class="text-md leading-relaxed text-justify">
+Além disso, o SENAI oferece uma variedade de cursos, que vão desde formação inicial e continuada até cursos técnicos, graduação e pós-graduação, abrangendo áreas como tecnologia da informação, logística, mecânica, automação e gestão. Essa diversidade permite estudantes de diferentes perfis encontrem oportunidades de qualificação e crescimento profissional dentro da própria instituição.
+</p>
+`;
 
     const TEXTO_COL3_1_PADRAO = `
-        <p class="text-md leading-relaxed">
-            Outro destaque é o incentivo a projetos práticos e colaborativos, nos quais os alunos desenvolvem soluções reais para desafios do mercado. Essas iniciativas estimulam não apenas o conhecimento técnico, mas também habilidades como trabalho em equipe, criatividade e resolução de problemas.
-        </p>
-    `;
+<p class="text-md leading-relaxed text-justify">
+Outro diferencial é a forte conexão com o setor industrial. A unidade mantém parcerias com empresas e incentiva a participação dos alunos em estágios, possibilitando a aplicação dos conhecimentos adquiridos em situações reais de trabalho.
+Esse contato contribui para o desenvolvimento de competências técnicas e comportamentais.
+</p>
+`;
+
+    const TEXTO_COL2_PADRAO = `
+<p class="text-md leading-relaxed text-justify">
+A unidade do SENAI Leopoldina Mariano Ferraz tem se destacado recentemente por uma série de iniciativas que reforçam seu compromisso com a formação de profissionais qualificados e preparados para as exigências do mercado industrial. Integrando uma das maiores redes de educação profissional da América Latina, a escola oferece uma estrutura moderna e alinhada às demandas tecnológicas atuais, proporcionando aos alunos uma formação prática e atualizada.
+Nos últimos anos, a instituição tem ampliado significativamente sua atuação, investindo na modernização de laboratórios e na incorporação de tecnologias emergentes, como automação industrial, inteligência artificial e sistemas digitais. Eventos como o Mundo SENAI, por exemplo, aproximam os estudantes dessas inovações por meio de palestras, visitas técnicas e experiências práticas em áreas como impressão 3D, mecatrônica e eletrificação veicular.
+</p>
+`;
 
     const TEXTO_COL3_2_PADRAO = `
-        <p class="text-md leading-relaxed">
-            Com essas mudanças, o SENAI Leopoldina Mariano Ferraz segue consolidando sua posição como referência em educação profissional, preparando seus alunos para os desafios de um cenário cada vez mais tecnológico e competitivo.
-        </p>
-    `;
+<p class="text-md leading-relaxed text-justify">
+Com uma trajetória marcada pela constante evolução — desde sua criação voltada para atender à demanda industrial da região até sua consolidação como um centro de tecnologia e inovação — o SENAI Leopoldina Mariano Ferraz continua se reinventando para acompanhar as transformações da indústria. Ao investir continuamente em infraestrutura, inovação e na atualização de suas metodologias de ensino, a instituição demonstra um compromisso sólido com a excelência na formação profissional. Nesse contexto, não apenas prepara seus alunos para o ingresso no mercado de trabalho, mas também contribui ativamente para o desenvolvimento tecnológico e industrial do país. Dessa forma, o SENAI Leopoldina Mariano Ferraz se mantém como uma referência em educação profissional, formando não apenas técnicos qualificados, mas cidadãos preparados para enfrentar os desafios de um cenário cada vez mais dinâmico, competitivo e em constante transformação.
+</p>
+`;
 
     const handleImageChange = (id: string, setter: any) => {
         if (!editMode) return;
+
         const input = document.createElement("input");
         input.type = "file";
         input.accept = "image/*";
+
         input.onchange = (e) => {
             const file = (e.target as HTMLInputElement).files?.[0];
             if (!file) return;
+
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64 = reader.result as string;
                 localStorage.setItem(`jornal-${id}`, base64);
                 setter(base64);
             };
+
             reader.readAsDataURL(file);
         };
+
         input.click();
     };
 
     const renderEditableImage = (src: string, setter: any, id: string, className: string) => (
         <div className="relative">
-            <div onClick={() => handleImageChange(id, setter)}
-                 className={`relative rounded-xl overflow-hidden cursor-pointer transition-all ${editMode ? 'border-2 border-dashed border-blue-400' : ''}`}>
-                <img src={src} className={className} alt="" />
+            <div
+                onClick={() => handleImageChange(id, setter)}
+                className={`relative rounded-xl overflow-hidden cursor-pointer ${editMode ? "border-2 border-dashed border-blue-400" : ""}`}
+            >
+                <img src={src} className={className} />
                 {editMode && (
                     <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                        <img src="/src/assets/images/icone_editar.png" alt="Editar" className="w-12 h-12" />
+                        <img src="/src/assets/images/icone_editar.png" className="w-12 h-12" />
                     </div>
                 )}
             </div>
@@ -96,6 +105,7 @@ export default function Jornal() {
 
     return (
         <div className="w-full min-h-screen bg-[#101625] text-white px-8 py-20">
+
             <div className="w-full flex justify-end mb-[50px]">
                 <h1 className="bg-[#94122F] px-[500px] py-2 text-[3rem] font-bold rounded mr-[-2rem]">
                     Formatura
@@ -103,54 +113,50 @@ export default function Jornal() {
             </div>
 
             <div className="grid grid-cols-3 gap-6">
+
+                {/* COLUNA 1 */}
                 <div className="flex flex-col gap-4">
-                    {renderEditableImage(image1, setImage1, "img1", "rounded-xl w-full h-[250px] object-cover")}
 
-                    <div className="border-l-4 border-blue-500 pl-3">
-                        {editMode ? (
-                            <BlocoEditavel
-                                id="jornal-texto-col1"
-                                content={textoCol1 || TEXTO_COL1_PADRAO}
-                            />
-                        ) : (
-                            <div
-                                className="conteudo-renderizado text-md leading-relaxed"
-                                dangerouslySetInnerHTML={{ __html: textoCol1 || TEXTO_COL1_PADRAO }}
-                            />
-                        )}
-                    </div>
+                    {renderEditableImage(image1, setImage1, "img1", "rounded-xl w-full h-[300px] object-cover")}
 
-                    {renderEditableImage(image2, setImage2, "img2", "rounded-xl w-full h-[140px] object-cover")}
-                </div>
+                    <div className="text-md leading-relaxed text-justify"
+                         dangerouslySetInnerHTML={{ __html: textoCol1 || TEXTO_COL1_PADRAO }} />
 
-                <div className="flex flex-col gap-4">
-                    {editMode ? (
-                        <BlocoEditavel id="jornal-texto-col2" content={textoCol2 || TEXTO_COL2_PADRAO} />
-                    ) : (
-                        <div className="conteudo-renderizado text-md leading-relaxed"
-                             dangerouslySetInnerHTML={{ __html: textoCol2 || TEXTO_COL2_PADRAO }} />
-                    )}
+                    <div className="flex gap-4 items-start">
 
-                    {renderEditableImage(image3, setImage3, "img3", "rounded-xl w-full h-[400px] object-cover")}
-                </div>
-
-                <div className="flex flex-col gap-4">
-                    {renderEditableImage(image4, setImage4, "img4", "rounded-xl w-full h-[180px] object-cover")}
-
-                    {editMode ? (
-                        <BlocoEditavel id="jornal-texto-col3-1" content={textoCol3_1 || TEXTO_COL3_1_PADRAO} />
-                    ) : (
-                        <div className="conteudo-renderizado text-md leading-relaxed"
+                        <div className="flex-1 text-md leading-relaxed text-justify"
                              dangerouslySetInnerHTML={{ __html: textoCol3_1 || TEXTO_COL3_1_PADRAO }} />
-                    )}
 
-                    {editMode ? (
-                        <BlocoEditavel id="jornal-texto-col3-2" content={textoCol3_2 || TEXTO_COL3_2_PADRAO} />
-                    ) : (
-                        <div className="conteudo-renderizado text-md leading-relaxed"
-                             dangerouslySetInnerHTML={{ __html: textoCol3_2 || TEXTO_COL3_2_PADRAO }} />
-                    )}
+                        <div className="w-[220px] flex-shrink-0">
+                            {renderEditableImage(
+                                image2,
+                                setImage2,
+                                "img2",
+                                "rounded-xl w-full h-[200px] object-cover"
+                            )}
+                        </div>
+
+                    </div>
                 </div>
+
+                {/* COLUNA 2 */}
+                <div className="flex flex-col gap-4">
+
+                    <div className="text-md leading-relaxed text-justify"
+                         dangerouslySetInnerHTML={{ __html: textoCol2 || TEXTO_COL2_PADRAO }} />
+
+                    {renderEditableImage(image3, setImage3, "img3", "rounded-xl w-full h-[395px] object-cover")}
+                </div>
+
+                {/* COLUNA 3 */}
+                <div className="flex flex-col gap-4">
+
+                    {renderEditableImage(image4, setImage4, "img4", "rounded-xl w-full h-[370px] object-cover")}
+
+                    <div className="text-md leading-relaxed text-justify"
+                         dangerouslySetInnerHTML={{ __html: textoCol3_2 || TEXTO_COL3_2_PADRAO }} />
+                </div>
+
             </div>
         </div>
     );

@@ -1,3 +1,4 @@
+// Instalar: npm install @tiptap/react @tiptap/starter-kit @tiptap/extension-underline @tiptap/extension-text-style @tiptap/extension-color @tiptap/extension-text-align
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -20,7 +21,6 @@ export default function BlocoEditavel({ content, className = "", id, smallText =
 
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 900);
 
-  // Detecta redimensionamento da janela em tempo real
   useEffect(() => {
     const handleResize = () => {
       setIsSmallScreen(window.innerWidth < 900);
@@ -83,7 +83,6 @@ export default function BlocoEditavel({ content, className = "", id, smallText =
                         rounded-full px-3 py-2 shadow-2xl z-50
                         flex items-center gap-1 max-w-[95vw] overflow-x-auto scrollbar-hide mx-4">
 
-          {/* Botões completos em telas maiores */}
           {!isSmallScreen && (
             <>
               <button onClick={() => editor.chain().focus().toggleBold().run()}
@@ -101,7 +100,6 @@ export default function BlocoEditavel({ content, className = "", id, smallText =
             </>
           )}
 
-          {/* Botões compactos em telas menores */}
           {isSmallScreen && (
             <>
               <button onClick={() => editor.chain().focus().toggleBold().run()}
@@ -149,7 +147,7 @@ export default function BlocoEditavel({ content, className = "", id, smallText =
 
       <EditorContent
         editor={editor}
-        className={`prose prose-invert max-w-none ${className}`}
+        className={`editor-reset ${className}`}
       />
     </div>
   );
