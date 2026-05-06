@@ -17,7 +17,6 @@
     "@tiptap/extension-underline": "^3.22.5",
     "@tiptap/react": "^3.22.5",
     "@tiptap/starter-kit": "^3.22.5",
-    "ckeditor5": "^48.0.1",
     "lucide-react": "^1.9.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
