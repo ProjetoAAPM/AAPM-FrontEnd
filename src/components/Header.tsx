@@ -17,6 +17,22 @@ function Header() {
             localStorage.removeItem("sobre-texto");
             localStorage.removeItem("img-futsal");
             localStorage.removeItem("img-grupo");
+            
+            localStorage.removeItem("jornal-img1");
+            localStorage.removeItem("jornal-img2");
+            localStorage.removeItem("jornal-img3");
+            localStorage.removeItem("jornal-img4");
+            localStorage.removeItem("jornal-texto-col1");
+            localStorage.removeItem("jornal-texto-col2");
+            localStorage.removeItem("jornal-texto-col3-1");
+            localStorage.removeItem("jornal-texto-col3-2");
+
+            // Carrossel
+            localStorage.removeItem("carrossel-slides");
+
+
+
+
             setEditMode(false);
             window.location.reload();
         }
