@@ -96,8 +96,8 @@ function Header() {
                                         if (editMode) alert("Salvo com sucesso!");
                                         setEditMode(!editMode);
                                     }}
-                                    className={`hidden lg:flex items-center justify-center rounded-full h-[42px] shadow-lg font-bold transition-all w-[130px] xl:w-[160px] text-base xl:text-lg
-                                        ${editMode ? "bg-white text-black" : "bg-[#FFD44B] text-black"}`}
+                                    
+                                    className="hidden lg:flex items-center justify-center bg-[#C83D3D] text-white rounded-full h-[42px] shadow-lg font-semibold hover:bg-[#b03535] transition-all w-[130px] xl:w-[160px] text-base xl:text-lg"
                                 >
                                     {editMode ? "Salvar" : "Editar"}
                                 </button>
