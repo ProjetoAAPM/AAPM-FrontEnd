@@ -20,26 +20,25 @@ export default function Jornal() {
     const [textoCol3_1, setTextoCol3_1] = useState<string | null>(null);
     const [textoCol3_2, setTextoCol3_2] = useState<string | null>(null);
 
+    useEffect(() => {
+        const saved1 = localStorage.getItem("jornal-img1");
+        const saved2 = localStorage.getItem("jornal-img2");
+        const saved3 = localStorage.getItem("jornal-img3");
+        const saved4 = localStorage.getItem("jornal-img4");
 
-useEffect(() => {
-    const saved1 = localStorage.getItem("jornal-img1");
-    const saved2 = localStorage.getItem("jornal-img2");
-    const saved3 = localStorage.getItem("jornal-img3");
-    const saved4 = localStorage.getItem("jornal-img4");
+        if (saved1) setImage1(saved1);
+        if (saved2) setImage2(saved2);
+        if (saved3) setImage3(saved3);
+        if (saved4) setImage4(saved4);
 
-    if (saved1) setImage1(saved1);
-    if (saved2) setImage2(saved2);
-    if (saved3) setImage3(saved3);
-    if (saved4) setImage4(saved4);
-
-    setTextoCol1(localStorage.getItem("jornal-texto-col1"));
-    setTextoCol2(localStorage.getItem("jornal-texto-col2"));
-    setTextoCol3_1(localStorage.getItem("jornal-texto-col3-1"));
-    setTextoCol3_2(localStorage.getItem("jornal-texto-col3-2"));
-}, [editMode]);
+        setTextoCol1(localStorage.getItem("jornal-texto-col1"));
+        setTextoCol2(localStorage.getItem("jornal-texto-col2"));
+        setTextoCol3_1(localStorage.getItem("jornal-texto-col3-1"));
+        setTextoCol3_2(localStorage.getItem("jornal-texto-col3-2"));
+    }, [editMode]);
 
     const TEXTO_COL1_PADRAO = `
-        <p class="text-md leading-relaxed border-l-4 border-blue-500 pl-3">
+        <p class="text-md leading-relaxed">
             Entre as principais atualizações, estão a modernização dos laboratórios e a ampliação do uso de tecnologias digitais em sala de aula, permitindo que os estudantes tenham contato direto com ferramentas utilizadas na indústria atual. Além disso, novos cursos e especializações foram incorporados à grade, acompanhando as demandas do setor produtivo e ampliando as oportunidades de qualificação.
         </p>
     `;
@@ -62,17 +61,14 @@ useEffect(() => {
         </p>
     `;
 
-    const handleImageChange = (id: string, setter: React.Dispatch<React.SetStateAction<string>>) => {
+    const handleImageChange = (id: string, setter: any) => {
         if (!editMode) return;
-
         const input = document.createElement("input");
         input.type = "file";
         input.accept = "image/*";
-
         input.onchange = (e) => {
             const file = (e.target as HTMLInputElement).files?.[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64 = reader.result as string;
@@ -81,31 +77,17 @@ useEffect(() => {
             };
             reader.readAsDataURL(file);
         };
-
         input.click();
     };
 
-    const renderEditableImage = (
-        src: string,
-        setter: React.Dispatch<React.SetStateAction<string>>,
-        id: string,
-        className: string
-    ) => (
+    const renderEditableImage = (src: string, setter: any, id: string, className: string) => (
         <div className="relative">
-            <div
-                onClick={() => handleImageChange(id, setter)}
-                className={`relative rounded-xl overflow-hidden cursor-pointer transition-all
-                    ${editMode ? 'border-2 border-dashed border-blue-400' : ''}`}
-            >
+            <div onClick={() => handleImageChange(id, setter)}
+                 className={`relative rounded-xl overflow-hidden cursor-pointer transition-all ${editMode ? 'border-2 border-dashed border-blue-400' : ''}`}>
                 <img src={src} className={className} alt="" />
-
                 {editMode && (
                     <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                        <img 
-                            src="/src/assets/images/icone_editar.png" 
-                            alt="Editar" 
-                            className="w-12 h-12" 
-                        />
+                        <img src="/src/assets/images/icone_editar.png" alt="Editar" className="w-12 h-12" />
                     </div>
                 )}
             </div>
@@ -114,7 +96,6 @@ useEffect(() => {
 
     return (
         <div className="w-full min-h-screen bg-[#101625] text-white px-8 py-20">
-
             <div className="w-full flex justify-end mb-[50px]">
                 <h1 className="bg-[#94122F] px-[500px] py-2 text-[3rem] font-bold rounded mr-[-2rem]">
                     Formatura
@@ -124,33 +105,30 @@ useEffect(() => {
             <div className="grid grid-cols-3 gap-6">
                 <div className="flex flex-col gap-4">
                     {renderEditableImage(image1, setImage1, "img1", "rounded-xl w-full h-[250px] object-cover")}
-                    
-                    {editMode ? (
-                        <BlocoEditavel
-                            id="jornal-texto-col1"
-                            content={textoCol1 || TEXTO_COL1_PADRAO}
-                        />
-                    ) : (
-                        <div
-                            className="conteudo-renderizado"
-                            dangerouslySetInnerHTML={{ __html: textoCol1 || TEXTO_COL1_PADRAO }}
-                        />
-                    )}
+
+                    <div className="border-l-4 border-blue-500 pl-3">
+                        {editMode ? (
+                            <BlocoEditavel
+                                id="jornal-texto-col1"
+                                content={textoCol1 || TEXTO_COL1_PADRAO}
+                            />
+                        ) : (
+                            <div
+                                className="conteudo-renderizado text-md leading-relaxed"
+                                dangerouslySetInnerHTML={{ __html: textoCol1 || TEXTO_COL1_PADRAO }}
+                            />
+                        )}
+                    </div>
 
                     {renderEditableImage(image2, setImage2, "img2", "rounded-xl w-full h-[140px] object-cover")}
                 </div>
 
                 <div className="flex flex-col gap-4">
                     {editMode ? (
-                        <BlocoEditavel
-                            id="jornal-texto-col2"
-                            content={textoCol2 || TEXTO_COL2_PADRAO}
-                        />
+                        <BlocoEditavel id="jornal-texto-col2" content={textoCol2 || TEXTO_COL2_PADRAO} />
                     ) : (
-                        <div
-                            className="conteudo-renderizado"
-                            dangerouslySetInnerHTML={{ __html: textoCol2 || TEXTO_COL2_PADRAO }}
-                        />
+                        <div className="conteudo-renderizado text-md leading-relaxed"
+                             dangerouslySetInnerHTML={{ __html: textoCol2 || TEXTO_COL2_PADRAO }} />
                     )}
 
                     {renderEditableImage(image3, setImage3, "img3", "rounded-xl w-full h-[400px] object-cover")}
@@ -160,27 +138,17 @@ useEffect(() => {
                     {renderEditableImage(image4, setImage4, "img4", "rounded-xl w-full h-[180px] object-cover")}
 
                     {editMode ? (
-                        <BlocoEditavel
-                            id="jornal-texto-col3-1"
-                            content={textoCol3_1 || TEXTO_COL3_1_PADRAO}
-                        />
+                        <BlocoEditavel id="jornal-texto-col3-1" content={textoCol3_1 || TEXTO_COL3_1_PADRAO} />
                     ) : (
-                        <div
-                            className="conteudo-renderizado"
-                            dangerouslySetInnerHTML={{ __html: textoCol3_1 || TEXTO_COL3_1_PADRAO }}
-                        />
+                        <div className="conteudo-renderizado text-md leading-relaxed"
+                             dangerouslySetInnerHTML={{ __html: textoCol3_1 || TEXTO_COL3_1_PADRAO }} />
                     )}
 
                     {editMode ? (
-                        <BlocoEditavel
-                            id="jornal-texto-col3-2"
-                            content={textoCol3_2 || TEXTO_COL3_2_PADRAO}
-                        />
+                        <BlocoEditavel id="jornal-texto-col3-2" content={textoCol3_2 || TEXTO_COL3_2_PADRAO} />
                     ) : (
-                        <div
-                            className="conteudo-renderizado"
-                            dangerouslySetInnerHTML={{ __html: textoCol3_2 || TEXTO_COL3_2_PADRAO }}
-                        />
+                        <div className="conteudo-renderizado text-md leading-relaxed"
+                             dangerouslySetInnerHTML={{ __html: textoCol3_2 || TEXTO_COL3_2_PADRAO }} />
                     )}
                 </div>
             </div>
