@@ -10,7 +10,6 @@ function Header() {
     const location = useLocation();
 
     const isAdmin = location.pathname.startsWith("/admin");
-    const isLanding = location.pathname === "/";
 
     const resetarPadrao = () => {
         if (window.confirm("Deseja voltar ao texto e imagens padrão originais?")) {
@@ -45,10 +44,12 @@ function Header() {
                     </div>
 
                     <div className={`hidden lg:flex items-center text-white font-medium 
-                        ${isAdmin ? "gap-4 xl:gap-20 text-base xl:text-lg" : "gap-10 xl:gap-28 text-lg"}`}>
+                        ${isAdmin 
+                            ? "gap-4 xl:gap-20 text-base xl:text-lg" 
+                            : "gap-4 xl:gap-28 text-base xl:text-lg"}`}>
 
                         <Link 
-                            to={isAdmin ? "/admin" : "/home"} 
+                            to={isAdmin ? "/admin" : "/"} 
                             className="hover:text-gray-300 transition-colors"
                         >
                             Home
@@ -76,18 +77,14 @@ function Header() {
                         >
                             Pagamento
                         </Link>
-
                     </div>
 
-
                     <div className={`flex items-center ${isAdmin ? "gap-2 xl:gap-4" : "gap-2 md:gap-6"}`}>
-
                         {isAdmin ? (
                             <>
                                 <button
                                     onClick={resetarPadrao}
-                                    className={`hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full h-[42px] text-white shadow-lg font-semibold hover:bg-[#b03535] transition-all 
-                                        ${isAdmin ? "w-[130px] xl:w-[160px] text-base xl:text-lg" : "w-[160px] text-lg"}`}
+                                    className="hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full h-[42px] text-white shadow-lg font-semibold hover:bg-[#b03535] transition-all w-[130px] xl:w-[160px] text-base xl:text-lg"
                                 >
                                     Padrao
                                 </button>
@@ -96,28 +93,30 @@ function Header() {
 
                                 <button
                                     onClick={() => {
-                                        if (editMode) {
-                                        alert("Alterações salvas com sucesso!");
-                                        }
+                                        if (editMode) alert("Salvo com sucesso!");
                                         setEditMode(!editMode);
                                     }}
-                                    className={`hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full h-[42px] text-white shadow-lg font-semibold hover:bg-[#b03535] transition-all 
-                                        ${isAdmin ? "w-[130px] xl:w-[160px] text-base xl:text-lg" : "w-[160px] text-lg"}`}
-                                    >
+                                    className={`hidden lg:flex items-center justify-center rounded-full h-[42px] shadow-lg font-bold transition-all w-[130px] xl:w-[160px] text-base xl:text-lg
+                                        ${editMode ? "bg-white text-black" : "bg-[#FFD44B] text-black"}`}
+                                >
                                     {editMode ? "Salvar" : "Editar"}
-                                    </button>
+                                </button>
                             </>
                         ) : (
                             <>
-                                <Link to="/login" className="hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full w-[160px] h-[42px] 
-                                text-white shadow-lg text-lg font-semibold hover:bg-[#b03535] transition-all">
+                                <Link 
+                                    to="/login" 
+                                    className="hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full h-[42px] text-white shadow-lg font-semibold hover:bg-[#b03535] transition-all w-[120px] xl:w-[160px] text-base xl:text-lg"
+                                >
                                     Login
                                 </Link>
 
                                 <div className={`hidden lg:block w-[2px] h-8 ${isOpen ? 'bg-black/20' : 'bg-gray-500/50'}`}></div>
 
-                                <Link to="/cadastro" className="hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full w-[160px] h-[42px] 
-                                text-white shadow-lg text-lg font-semibold hover:bg-[#b03535] transition-all">
+                                <Link 
+                                    to="/cadastro" 
+                                    className="hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full h-[42px] text-white shadow-lg font-semibold hover:bg-[#b03535] transition-all w-[120px] xl:w-[160px] text-base xl:text-lg"
+                                >
                                     Cadastrar
                                 </Link>
                             </>
@@ -131,7 +130,6 @@ function Header() {
                             <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? 'opacity-0' : 'bg-white'}`}></span>
                             <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-2 bg-black' : 'bg-white'}`}></span>
                         </button>
-
                     </div>
                 </div>
             </div>
@@ -140,5 +138,4 @@ function Header() {
         </>
     );
 }
-
 export default Header;
