@@ -1,4 +1,6 @@
 import CardPlano from "../components/CardPlano";
+import Copiador from "../alerts/Copiador";
+import { Copy } from "lucide-react";
 
 function EscolhaPlano() {
 
@@ -17,26 +19,43 @@ function EscolhaPlano() {
 
            <div className="flex flex-wrap justify-center gap-8 w-full justify-between">
                 <CardPlano
-                    fundoTitulo="bg-white"
                     titulo="Plano Comum"
+                    className="bg-[#86D5FE]"
+                    fundoTitulo="bg-white mr-10 mt-10 w-[90%] h-[40px] rounded-r-xs"
                     popular={false}
-                    corBtn="bg-[#373737] text-white"
-                    corBorda="border-none"
-                    esconderBotao={false}
-            
-                >    
+                    textoBtn="Upload"
+                > 
+                    <img src="src/assets/images/qrcode.png" alt="qrcode" className="w-[120px] h-[120px] md:w-[187px] md:h-[187px] rounded-2xl " />
+                    <Copiador textoParaCopiar="https://www.sp.senai.br/">
+                            <div className="w-full max-w-[260px] md:max-w-[299px] h-[50px] bg-[#78C0E5] p-2 mt-4 rounded-lg flex items-center justify-between border-2 border-[#78C0E5] shadow-md cursor-pointer">
+                                <div className="text-left overflow-hidden">
+                                    <p className="text-xs md:text-xs font-medium">Chave Pix</p>
+                                    <p className="text-sm md:text-sm font-semibold text-[#FFFFFF] truncate">https://www.sp.senai.br/</p>
+                                </div>
+                                <Copy size={16} className="text-gray-600 flex-shrink-0 ml-2" />
+                            </div>
+                        </Copiador>
                 </CardPlano>
 
                 <CardPlano
-                    fundoTitulo="bg-white"
                     titulo="Plano Premium"
+                    className="bg-[#1D1D1D]"
+                    fundoTitulo="bg-white ml-10 mt-10 w-[90%] h-[40px] rounded-l-xs"
                     popular={true}
-                    corBtn="bg-[#86D5FE]"
-                    corBorda="border-none"
-                    esconderBotao={false}
-            
-                >     
+                    textoBtn="Upload"
+                > 
+                    <img src="src/assets/images/qrcode.png" alt="qrcode" className="w-[120px] h-[120px] md:w-[187px] md:h-[187px]  rounded-2xl " />
+                    <Copiador textoParaCopiar="https://www.sp.senai.br/">
+                            <div className="w-full max-w-[260px] md:max-w-[299px] h-[50px] bg-[#424242] p-2 mt-4 rounded-lg flex items-center justify-between shadow-md cursor-pointer">
+                                <div className="text-left overflow-hidden">
+                                    <p className="text-xs md:text-xs font-medium text-[#F0C72B]">Chave Pix</p>
+                                    <p className="text-sm md:text-sm font-semibold text-[#FFFFFF] truncate">https://www.sp.senai.br/</p>
+                                </div>
+                                <Copy size={16} className="text-[#F0C72B] flex-shrink-0 ml-2" />
+                            </div>
+                        </Copiador>
                 </CardPlano>
+
            </div>
 
         </div>
