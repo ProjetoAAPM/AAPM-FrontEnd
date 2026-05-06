@@ -3,6 +3,7 @@ import Jornal from "../components/novidades/Jornal";
 import QuadroNotas from "../components/novidades/QuadroNotas";
 
 function Novidades() {
+
     return (
         <div>
             <section id="carrossel">

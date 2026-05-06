@@ -36,6 +36,7 @@ function App() {
                     <Route index element={<LandingPage />} />
                     <Route path="home" element={<Home />} />
                     <Route path="usuario" element={<Home modoAdmin />} />
+                    <Route path="novidades" element={<Novidades />} />
                 </Route>
             </Routes>
             
