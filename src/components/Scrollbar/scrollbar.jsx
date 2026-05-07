@@ -1,4 +1,3 @@
-im
 import { useRef, useEffect } from "react";
 
 export default function ScrollArea({ children }) {

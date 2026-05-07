@@ -47,7 +47,7 @@ Object.entries(premios).forEach(([marco, premio]) => {
   const progressoPremio = (pontos / 10000) * 100;
 
   return (
-    <div className="w-full max-w-[1890px] mx-auto px-6 md:px-10">
+    <div className="w-full max-w-[1890px] mx-auto px-6 md:px-10 md:mt-2">
       
       <div className="bg-[#FFF3C2] w-full min-h-[85vh] rounded-[15px] shadow-2xl p-10">
 
