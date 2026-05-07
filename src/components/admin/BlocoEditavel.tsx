@@ -15,7 +15,7 @@ type Props = {
   smallText?: boolean;
 };
 
-export default function BlocoEditavel({ content, className = "", id, smallText = false }: Props) {
+export default function BlocoEditavel({ content, className = "", id}: Props) {
   const { editMode, activeEditorId, setActiveEditorId } = useEditMode();
   const isActive = activeEditorId === id;
 

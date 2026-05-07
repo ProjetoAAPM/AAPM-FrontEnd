@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useEditMode } from "../../context_admin/modo_editar";
-import BlocoEditavel from "../admin/BlocoEditavel";
 
 import img1 from "../../assets/images/formatura2.png";
 import img2 from "../../assets/images/carros.jpg";
@@ -114,7 +113,6 @@ Com uma trajetória marcada pela constante evolução — desde sua criação vo
 
             <div className="grid grid-cols-3 gap-6">
 
-                {/* COLUNA 1 */}
                 <div className="flex flex-col gap-4">
 
                     {renderEditableImage(image1, setImage1, "img1", "rounded-xl w-full h-[300px] object-cover")}
@@ -139,7 +137,6 @@ Com uma trajetória marcada pela constante evolução — desde sua criação vo
                     </div>
                 </div>
 
-                {/* COLUNA 2 */}
                 <div className="flex flex-col gap-4">
 
                     <div className="text-md leading-relaxed text-justify"
@@ -148,7 +145,6 @@ Com uma trajetória marcada pela constante evolução — desde sua criação vo
                     {renderEditableImage(image3, setImage3, "img3", "rounded-xl w-full h-[395px] object-cover")}
                 </div>
 
-                {/* COLUNA 3 */}
                 <div className="flex flex-col gap-4">
 
                     {renderEditableImage(image4, setImage4, "img4", "rounded-xl w-full h-[370px] object-cover")}
