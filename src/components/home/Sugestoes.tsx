@@ -22,6 +22,7 @@ export default function Sugestoes({ modoAdmin = false }) {
           whitespace-nowrap
         ">
           Sugestões
+          
         </div>
 
         {!modoAdmin && (

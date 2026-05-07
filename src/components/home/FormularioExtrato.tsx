@@ -9,7 +9,6 @@ interface ItemExtrato {
   pontos?: number;
 }
 
-// Adicionei modoAdmin aqui nas props
 export default function FormularioExtrato({ extrato = [] as ItemExtrato[], modoAdmin = false }) {
   return (
     <div className="w-full max-w-[1890px] mx-auto px-3 sm:px-4 md:px-6 lg:px-10 overflow-x-hidden">
@@ -20,6 +19,12 @@ export default function FormularioExtrato({ extrato = [] as ItemExtrato[], modoA
           <div className="absolute top-6 sm:top-10 left-0 bg-white text-[#101625] text-[1.5rem] sm:text-[2rem] md:text-[3rem] font-black px-[120px] sm:px-[200px] md:px-[450px] py-1 rounded-r-[10px] shadow-md whitespace-nowrap">
             Formulários
           </div>
+
+          {modoAdmin && (
+            <button className="hidden lg:flex items-center justify-center bg-[#C83D3D] text-white rounded-full h-[45px] shadow-lg font-semibold hover:bg-[#b03535] transition-all w-[130px] xl:w-[160px] text-base xl:text-lg absolute top-8 sm:top-14 right-6 sm:right-25 z-20">
+              Criar formulário
+            </button>
+          )}
 
           <div className="mt-[90px] sm:mt-[100px] md:mt-[120px] bg-white flex-1 rounded-[10px] shadow-md overflow-y-auto scroll-modern min-h-0">
             <div className="min-h-[600px] md:h-[1500px]">

@@ -65,7 +65,7 @@ function Header() {
                             : "gap-4 xl:gap-28 text-base xl:text-lg"}`}>
 
                         <Link 
-                            to={isAdmin ? "/admin" : "/"} 
+                            to={isAdmin ? "/admin" : "/home"} 
                             className="hover:text-gray-300 transition-colors"
                         >
                             Home
