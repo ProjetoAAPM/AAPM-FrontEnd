@@ -204,3 +204,18 @@
   }
 }
 
+.editor-reset {
+  all: unset;
+  display: block;
+  width: 100%;
+  color: inherit;
+  font: inherit;
+}
+
+.editor-reset p {
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
+  text-align: inherit;
+}
+
