@@ -6,7 +6,7 @@ function QuadroNotas() {
 
   useEffect(() => {
     const checkScreen = () => {
-      setIsMobile(window.innerWidth < 640); // sm breakpoint
+      setIsMobile(window.innerWidth < 640);
     };
 
     checkScreen();
@@ -33,22 +33,22 @@ function QuadroNotas() {
     "bg-[#C06161]"
   ];
 
-  // adiciona 1 a mais no mobile
+
   const posts = isMobile ? [...basePosts, "bg-[#6196C0]"] : basePosts;
 
   return (
     <div className="w-full flex flex-col items-center">
       
-      <div className="self-start bg-[#14358F] text-white text-[1.5rem] sm:text-[2rem] md:text-[3rem] font-black px-[120px] sm:px-[200px] md:px-[450px] rounded-r-[10px] shadow-md mb-3">
+      <div className="self-start bg-[#14358F] text-white text-[1.1rem] sm:text-[2rem] md:text-[3rem] font-black px-[90px] sm:px-[200px] md:px-[400px] rounded-r-[10px] shadow-md mb-3">
         Quadro de Notas
       </div>
 
       <div
-        className="w-[95%] max-w-[1500px] min-h-[720px] bg-no-repeat bg-center bg-cover flex items-center justify-center p-4"
+        className="w-[95%] max-w-[1350px] min-h-[720px] bg-no-repeat bg-center bg-cover flex items-center justify-center p-4"
         style={{ backgroundImage: `url(${fundo})` }}
       >
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-12">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 sm:gap-8 md:gap-12">
           {posts.map((color, i) => (
             <div
               key={i}
