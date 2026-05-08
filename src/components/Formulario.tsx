@@ -5,14 +5,22 @@ function Formulario({ tipo } : any) {
 
     const [usuario, setUsuario] = useState('aluno');
 
-    const [dados, setDados] = useState({
-        email: '',
-        senha:'',
-        confirmar_senha:'',
-        dur_curso:'',
-        data_inicio:'',
-        data_final: ''
-    });
+    const [dados, setDados] = useState<{
+    email: string;
+    senha: string;
+    confirmar_senha?: string;
+    dur_curso?: string;
+    data_inicio?: string;
+    data_final?: string;
+    [key: string]: any; 
+}>({
+    email: '',
+    senha: '',
+    confirmar_senha: '',
+    dur_curso: '',
+    data_inicio: '',
+    data_final: ''
+});
 
     const navigate = useNavigate();
 
@@ -46,6 +54,7 @@ function Formulario({ tipo } : any) {
             navigate('/escolhaplano');
 
         } else {
+            //login teste para redirecionar para a rota admin
 
             if (
                 dados.email === "admin@gmail.com" &&
