@@ -96,7 +96,6 @@ export default function Jornal() {
 
             <div className="grid grid-cols-3 gap-6">
 
-                {/* COLUNA 1 */}
                 <div className="flex flex-col gap-4">
 
                     {renderEditableImage(image1, setImage1, "img1", "w-full h-[300px] object-cover")}
@@ -134,7 +133,6 @@ export default function Jornal() {
                     </div>
                 </div>
 
-                {/* COLUNA 2 */}
                 <div className="flex flex-col gap-4">
 
                     {editMode ? (
@@ -151,7 +149,6 @@ export default function Jornal() {
                     {renderEditableImage(image3, setImage3, "img3", "w-full h-[395px] object-cover")}
                 </div>
 
-                {/* COLUNA 3 */}
                 <div className="flex flex-col gap-4">
 
                     {renderEditableImage(image4, setImage4, "img4", "w-full h-[370px] object-cover")}

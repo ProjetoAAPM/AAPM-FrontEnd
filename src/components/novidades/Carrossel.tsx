@@ -9,7 +9,7 @@ import img5 from "../../assets/images/DesafioIdeias.jpg";
 import img6 from "../../assets/images/auditorio.jpg";
 import img7 from "../../assets/images/carros.jpg";
 
-import { useEditMode } from "../../context_admin/modo_editar";   // ajuste o caminho se necessário
+import { useEditMode } from "../../context_admin/modo_editar"; 
 
 const initialSlides = [img1, img2, img3, img4, img5, img6, img7];
 
@@ -98,7 +98,7 @@ const Carrossel: React.FC = () => {
               >
                 <div>
                   <img 
-                    src="/src/assets/images/icone_editar.png" 
+                    src="/src/assets/icons/icone_editar.png" 
                     alt="Editar" 
                     className="w-10 h-10" 
                   />

@@ -37,6 +37,7 @@ function App() {
                     <Route path="home" element={<Home />} />
                     <Route path="usuario" element={<Home modoAdmin />} />
                     <Route path="novidades" element={<Novidades />} />
+                    <Route path="pagamento" element={<Pagamento isAdmin={true} />} />
                 </Route>
             </Routes>
             

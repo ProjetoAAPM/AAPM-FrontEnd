@@ -89,7 +89,7 @@ function SobreNos() {
 
                 <div className="absolute top-4 right-4">
                   <img 
-                    src="src/assets/images/icone_editar.png" 
+                    src="src/assets/icons/icone_editar.png" 
                     alt="Editar" 
                     className="w-7 h-7" 
                   />
@@ -122,7 +122,7 @@ function SobreNos() {
 
             {editMode && (
               <div className="absolute top-4 right-4">
-                <img src="src/assets/images/icone_editar.png" alt="Editar" className="w-7 h-7" />
+                <img src="src/assets/icons/icone_editar.png" alt="Editar" className="w-7 h-7" />
               </div>
             )}
 
@@ -147,7 +147,7 @@ function SobreNos() {
 
             {editMode && (
               <div className="absolute top-4 right-4">
-                <img src="src/assets/images/icone_editar.png" alt="Editar" className="w-7 h-7" />
+                <img src="src/assets/icons/icone_editar.png" alt="Editar" className="w-7 h-7" />
               </div>
             )}
 
