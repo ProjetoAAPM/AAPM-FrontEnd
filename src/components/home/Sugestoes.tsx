@@ -1,5 +1,6 @@
 import { useState } from "react";
-import SugestaoCard from './SugestaoCard';
+import SugestaoCard from './admin/SugestaoCard';
+import "../Scrollbar/scrollbar.css";
 
 interface SugestoesProps {
   modoAdmin?: boolean;
@@ -38,14 +39,15 @@ export default function Sugestoes({ modoAdmin = false }: SugestoesProps) {
         )}
 
         <div className={`
-          left-1/2 -translate-x-1/2 flex flex-col items-center w-full px-4 relative
+          left-1/2  -translate-x-1/2 flex flex-col items-center w-full px-4 relative
           ${modoAdmin 
             ? "mt-[120px] sm:mt-[160px] md:mt-[200px]" 
             : "mt-[180px] sm:mt-[220px] md:mt-[260px] lg:mt-[300px]"}
         `}>
           
           <div className={`
-            bg-white rounded-[12px] shadow-md overflow-hidden w-full 
+            ${modoAdmin ? "bg-[#D86062]" : "bg-white"} 
+            rounded-[12px] shadow-md overflow-y-hidden overflow-x-hidden w-full
             max-w-[500px] sm:max-w-[800px] md:max-w-[1100px] lg:max-w-[1300px]
             ${modoAdmin 
               ? "h-[120px] sm:h-[180px] md:h-[240px] lg:h-[350px]" 
@@ -54,7 +56,10 @@ export default function Sugestoes({ modoAdmin = false }: SugestoesProps) {
           `}>
             
             {modoAdmin ? (
-              <div className="w-full h-full p-4 overflow-y-auto scrollbar-thin">
+            <div className="w-full h-full overflow-y-auto scrollbar-thin scrollbar-thumb-[#8A8A8A] scrollbar-track-transparent">
+  
+              <div className="p-4">
+                
                 {listaDeStrings.length > 0 ? (
                   <div className="flex flex-col gap-2">
                     {listaDeStrings.map((str, index) => (
@@ -68,11 +73,15 @@ export default function Sugestoes({ modoAdmin = false }: SugestoesProps) {
                   </div>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <p className="text-[#A8A8A8] font-bold uppercase">Nenhuma Sugestão</p>
+                    <p className="text-[#A8A8A8] font-bold uppercase">
+                      Nenhuma Sugestão
+                    </p>
                   </div>
                 )}
+
               </div>
-            ) : (
+            </div>
+          ) : (
 
               <textarea
                 value={texto}
