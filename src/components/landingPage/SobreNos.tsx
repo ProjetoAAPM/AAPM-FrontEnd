@@ -40,7 +40,6 @@ function SobreNos() {
     }
   };
 
-  // 🔥 HTML PADRÃO ORIGINAL (CORRETO)
   const SOBRE_PADRAO = `
     <div class="mb-8 md:mx-20 lg:mx-30 text-white">
       <h3 class="text-xl md:text-2xl lg:text-3xl font-semibold mb-4 underline decoration-2 decoration-[#EFBF04] underline-offset-8">
@@ -107,10 +106,8 @@ function SobreNos() {
           </div>
         </div>
 
-        {/* IMAGENS */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-10 w-full max-w-[1200px] m-auto">
           
-          {/* FUTSAL */}
           <div className="relative">
             <div
               onClick={() => handleImageClick(fileInputRef1)}
@@ -135,7 +132,6 @@ function SobreNos() {
             />
           </div>
 
-          {/* GRUPO */}
           <div className="relative">
             <div
               onClick={() => handleImageClick(fileInputRef2)}

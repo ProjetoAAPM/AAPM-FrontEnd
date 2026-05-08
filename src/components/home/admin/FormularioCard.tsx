@@ -1,222 +1,308 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface FormularioCardProps {
-  onSalvar?: () => void;
+  onSalvar?: (dados: any) => void;
+  onExcluir?: () => void;
   somenteVisualizacao?: boolean;
+  dadosIniciais?: {
+    titulo?: string;
+    local?: string;
+    data?: string;
+    hora?: string;
+    link?: string;
+  };
 }
 
 const FormularioCard = ({
   onSalvar,
-  somenteVisualizacao = false
+  onExcluir,
+  somenteVisualizacao = false,
+  dadosIniciais = {}
 }: FormularioCardProps) => {
+  
+  const [isEditing, setIsEditing] = useState(!somenteVisualizacao);
+  const [dados, setDados] = useState({
+    titulo: dadosIniciais.titulo || "",
+    local: dadosIniciais.local || "",
+    data: dadosIniciais.data || "",
+    hora: dadosIniciais.hora || "",
+    link: dadosIniciais.link || "",
+  });
 
-  return (
-    <div className="w-full">
-      <div className="bg-[#93C2E5] rounded-[14px] px-3 sm:px-5 py-4 shadow-sm">
+  const handleChange = (campo: string, valor: string) => {
+    setDados(prev => ({ ...prev, [campo]: valor }));
+  };
 
-        <div className="flex items-center gap-3 mb-4">
+  const handleSalvar = () => {
+    onSalvar?.(dados);
+    setIsEditing(false);
+  };
 
-          <div className="flex-1">
-            <input
-              type="text"
-              placeholder="Título"
-              disabled={somenteVisualizacao}
-              className="
-                w-[1100px]
-                h-[28px]
-                rounded-[6px]
-                bg-[#E8E8E8]
-                px-7
-                text-[#5F5F5F]
-                font-black
-                text-[0.95rem]
-                outline-none
-                placeholder:text-[#5F5F5F]
-                placeholder:font-black
-                disabled:cursor-default
-              "
-            />
-          </div>
+  const handleEditar = () => {
+    setIsEditing(true);
+  };
 
-          {!somenteVisualizacao && (
+
+return (
+  <div className="w-full">
+    <div className="bg-[#93C2E5] rounded-[18px] px-4 py-4 shadow-sm">
+
+      <div className="flex items-center gap-5 mb-5">
+
+        <input
+          type="text"
+          placeholder="Título"
+          value={dados.titulo}
+          disabled={!isEditing}
+          onChange={(e) => handleChange("titulo", e.target.value)}
+          className="
+            flex-1
+            h-[36px]
+            bg-[#ECECEC]
+            rounded-[10px]
+            px-8
+            text-[#101625]
+            font-black
+            text-[1.1rem]
+            outline-none
+            placeholder:text-[#6D6D6D]
+            disabled:text-black
+          "
+        />
+
+        {isEditing && (
+          <button
+            onClick={handleSalvar}
+            className="
+              min-w-[128px]
+              h-[38px]
+              bg-[#C83D3D]
+              rounded-full
+              text-white
+              font-black
+              text-[1rem]
+              shadow-md
+              hover:brightness-95
+              transition-all
+            "
+          >
+            Salvar
+          </button>
+        )}
+
+        {!isEditing && somenteVisualizacao && (
+          <div className="flex gap-7">
             <button
-              onClick={onSalvar}
+              onClick={handleEditar}
               className="
-                min-w-[162px]
-                h-[33px]
-                rounded-full
+                w-[92px]
+                h-[38px]
                 bg-[#C83D3D]
-                text-white
-                font-black
-                text-[1rem]
+                rounded-[14px]
                 shadow-md
+                flex
+                items-center
+                justify-center
                 hover:brightness-95
                 transition-all
               "
             >
-              Salvar
+              <img
+                src="/src/assets/icons/Editar.svg"
+                alt="Editar"
+                className="w-6 h-6"
+              />
             </button>
-          )}
 
-        </div>
+            <button
+              onClick={onExcluir}
+              className="
+                w-[92px]
+                h-[38px]
+                bg-[#C83D3D]
+                rounded-[14px]
+                shadow-md
+                flex
+                items-center
+                justify-center
+                hover:brightness-95
+                transition-all
+              "
+            >
+              <img
+                src="/src/assets/icons/Excluir.svg"
+                alt="Excluir"
+                className="w-6 h-6"
+              />
+            </button>
+          </div>
+        )}
+      </div>
 
-        <div className="flex items-center gap-3 mb-4">
+      <div className="flex flex-col gap-5">
+
+        <div className="flex items-center gap-6">
 
           <div
             className="
-              min-w-[94px]
-              h-[33px]
-              rounded-[7px]
+              min-w-[108px]
+              h-[34px]
               bg-[#ECECEC]
-              flex items-center
-              px-3
+              rounded-[8px]
+              flex
+              items-center
+              px-4
             "
           >
-            <span className="text-black font-black text-[1rem] bg-[#F3F3F3]">
+            <span className="font-black text-[1.1rem] text-black">
               Local:
             </span>
           </div>
 
           <input
             type="text"
+            value={dados.local}
+            disabled={!isEditing}
+            onChange={(e) => handleChange("local", e.target.value)}
             placeholder="Exemplo: Auditório"
-            disabled={somenteVisualizacao}
             className="
               flex-1
-              h-[33px]
+              h-[38px]
+              bg-[#ECECEC]
               rounded-[14px]
-              bg-[#EDEDED]
               px-8
-              text-[#757575]
-              font-semibold
-              text-[0.95rem]
+              text-[1rem]
+              text-black
               outline-none
-              placeholder:text-[#757575]
-              disabled:cursor-default
+              font-semibold
+              placeholder:text-[#767676]
             "
           />
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 mb-4">
+        <div className="flex gap-6">
 
-          <div className="flex items-center gap-3 flex-1">
+          <div className="flex-1 flex items-center gap-6">
 
             <div
               className="
-                min-w-[94px]
-                h-[33px]
-                rounded-[7px]
+                min-w-[108px]
+                h-[34px]
                 bg-[#ECECEC]
-                flex items-center
-                px-3
+                rounded-[8px]
+                flex
+                items-center
+                px-4
               "
             >
-              <span className="text-black font-black text-[1rem]">
+              <span className="font-black text-[1.1rem] text-black">
                 Data:
               </span>
             </div>
 
             <input
               type="text"
+              value={dados.data}
+              disabled={!isEditing}
+              onChange={(e) => handleChange("data", e.target.value)}
               placeholder="00/00/0000"
-              disabled={somenteVisualizacao}
               className="
                 flex-1
-                h-[33px]
+                h-[38px]
+                bg-[#A9A9A9]
                 rounded-[14px]
-                bg-[#A0A0A0]
-                px-6
+                px-8
                 text-center
-                text-[#666666]
                 font-black
                 text-[1rem]
+                text-[#4D4D4D]
                 outline-none
-                placeholder:text-[#666666]
-                disabled:cursor-default
               "
             />
           </div>
 
-          <div className="flex items-center gap-3 flex-1">
+          <div className="flex-1 flex items-center gap-6">
 
             <div
               className="
-                min-w-[94px]
-                h-[33px]
-                rounded-[7px]
+                min-w-[108px]
+                h-[34px]
                 bg-[#ECECEC]
-                flex items-center
-                px-3
+                rounded-[8px]
+                flex
+                items-center
+                px-4
               "
             >
-              <span className="text-black font-black text-[1rem] bg-[#F3F3F3]">
+              <span className="font-black text-[1.1rem] text-black">
                 Hora:
               </span>
             </div>
 
             <input
               type="text"
+              value={dados.hora}
+              disabled={!isEditing}
+              onChange={(e) => handleChange("hora", e.target.value)}
               placeholder="00:00"
-              disabled={somenteVisualizacao}
               className="
                 flex-1
-                h-[33px]
+                h-[38px]
+                bg-[#A9A9A9]
                 rounded-[14px]
-                bg-[#A0A0A0]
-                px-6
+                px-8
                 text-center
-                text-[#666666]
                 font-black
                 text-[1rem]
+                text-[#4D4D4D]
                 outline-none
-                placeholder:text-[#666666]
-                disabled:cursor-default
               "
             />
           </div>
-
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-6">
 
           <div
             className="
-              min-w-[94px]
-              h-[33px]
-              rounded-[7px]
+              min-w-[108px]
+              h-[34px]
               bg-[#ECECEC]
-              flex items-center
-              px-3
+              rounded-[8px]
+              flex
+              items-center
+              px-4
             "
           >
-            <span className="text-black font-black text-[1rem] bg-[#F3F3F3]">
+            <span className="font-black text-[1.1rem] text-black">
               Link:
             </span>
           </div>
 
           <input
             type="text"
+            value={dados.link}
+            disabled={!isEditing}
+            onChange={(e) => handleChange("link", e.target.value)}
             placeholder="Exemplo: www.senai.com.br"
-            disabled={somenteVisualizacao}
             className="
               flex-1
-              h-[33px]
+              h-[38px]
+              bg-[#ECECEC]
               rounded-[14px]
-              bg-[#D3D3D3]
               px-8
-              text-[#757575]
+              text-[#0047FF]
               font-semibold
-              text-[0.9rem]
               outline-none
-              placeholder:text-[#757575]
-              disabled:cursor-default
+              placeholder:text-[#767676]
             "
           />
         </div>
-
       </div>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default FormularioCard;

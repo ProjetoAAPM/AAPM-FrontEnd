@@ -6,40 +6,92 @@ interface CardPagamentoProps {
   onOpenComprovante: () => void;
 }
 
-const CardPagamento = ({ data, onOpenComprovante }: CardPagamentoProps) => {
+const CardPagamento = ({
+  data,
+  onOpenComprovante
+}: CardPagamentoProps) => {
+
   return (
-    <div className="max-w-[1300px] bg-white rounded-[12px] p-5 flex items-center justify-between text-black relative group shadow-md border border-gray-100 hover:shadow-lg transition-all overflow-hidden">
-      
-      <div className="flex-1">
-        <p className="font-bold text-[15px]">
-          Nome: <span className="font-medium text-gray-700">{data.nome}</span>
+    <div
+      className="
+        w-full
+        min-h-[72px]
+        bg-white
+        rounded-[12px]
+        overflow-hidden
+        flex
+        items-stretch
+        shadow-md
+      "
+    >
+
+      <div className="flex-1 px-5 py-4 flex flex-col justify-center">
+
+        <p className="font-bold text-[0.72rem] text-black">
+          Nome: {data.nome}
         </p>
-        <p className="font-bold text-[15px] mt-1">
-          Curso: <span className="font-medium text-gray-700">{data.curso}</span>
+
+        <p className="font-bold text-[0.72rem] text-black mt-1">
+          Curso: {data.curso}
         </p>
       </div>
 
-      <div className="w-[1px] h-12 bg-gray-500 mx-8 hidden md:block" />
+      <div className="w-[1px] bg-[#BDBDBD] my-4" />
 
-      <div className="flex items-center gap-8">
-        
-        <div className="text-right">
-          <p className="font-bold text-[15px]">Valor: {data.valor.toFixed(2).replace('.', ',')} R$</p>
-          <p className="font-bold text-[15px] mt-1">Data: {data.data}</p>
-        </div>
+      <div
+        className="
+          w-[180px]
+          px-4
+          flex
+          flex-col
+          justify-center
+          text-[0.72rem]
+          font-bold
+          text-black
+        "
+      >
+        <p>
+          Valor: {data.valor.toFixed(2).replace(".", ",")} R$
+        </p>
 
-        <div className={`
-          min-w-[110px] px-6 py-2.5 rounded-[8px] font-bold text-center text-sm
-          ${data.status === 'Pendente' ? 'bg-[#FFD966] text-black' : 
-            data.status === 'Aprovado' ? 'bg-[#4FA8D1] text-white' : 
-            'bg-[#C83D3D] text-white'}
-        `}>
-          {data.status}
-        </div>
+        <p className="mt-2">
+          Data: {data.data}
+        </p>
+      </div>
+
+      <div
+        className={`
+          w-[110px]
+          flex
+          items-center
+          justify-center
+          text-[0.70rem]
+          font-bold
+
+          ${data.status === "Pendente" && "bg-[#F2D755] text-black"}
+          ${data.status === "Aprovado" && "bg-[#46A9E0] text-white"}
+          ${data.status === "Reprovado" && "bg-[#C92E2E] text-white"}
+        `}
+      >
+        {data.status}
+      </div>
+
+      <div className="w-[130px] flex items-center justify-center bg-white">
 
         <button
           onClick={onOpenComprovante}
-          className="bg-[#C83D3D] hover:bg-[#b22f2f] text-white px-7 py-2.5 rounded-full font-bold text-sm shadow-md transition-all active:scale-95 whitespace-nowrap"
+          className="
+            bg-[#C83D3D]
+            hover:brightness-95
+            transition-all
+            text-white
+            text-[0.68rem]
+            font-bold
+            px-5
+            h-[32px]
+            rounded-full
+            shadow-md
+          "
         >
           Comprovante
         </button>

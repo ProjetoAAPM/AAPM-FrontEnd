@@ -2,166 +2,160 @@ import { useState } from "react";
 import "../Scrollbar/scrollbar.css";
 import FormularioCard from "./admin/FormularioCard";
 
-interface ItemExtrato {
-    tipo: "premio" | "pontos" | "resgate" | "ganho";
-    premio?: string;
-    mensagem?: string;
-    descricao?: string;
-    valor?: number;
-    pontos?: number;
+interface FormularioData {
+  titulo: string;
+  local: string;
+  data: string;
+  hora: string;
+  link: string;
 }
 
-interface FormularioSalvo {
-    id: number;
-}
-
-export default function FormularioExtrato({ extrato = [] as ItemExtrato[], modoAdmin = false }) {
-
+export default function FormularioExtrato({ modoAdmin = false }) {
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
 
-    const [formulariosSalvos, setFormulariosSalvos] = useState<FormularioSalvo[]>([]);
+    const [formulariosSalvos, setFormulariosSalvos] = useState<
+        (FormularioData & { id: number })[]
+    >([]);
 
-    function salvarFormulario() {
-
-        const novoFormulario = {
-            id: Date.now()
+    const salvarNovoFormulario = (dadosDigitados: FormularioData) => {
+        const novo = {
+            id: Date.now(),
+            ...dadosDigitados
         };
 
-        setFormulariosSalvos([
-            novoFormulario,
-            ...formulariosSalvos
-        ]);
-
+        setFormulariosSalvos(prev => [novo, ...prev]);
         setMostrarFormulario(false);
-    }
+    };
+
+    const excluirFormulario = (id: number) => {
+        setFormulariosSalvos(prev =>
+            prev.filter(formulario => formulario.id !== id)
+        );
+    };
 
     return (
-        <div className="w-full max-w-[1890px] mx-auto px-3 sm:px-4 md:px-6 lg:px-10 overflow-x-hidden mt-2">
-            <div className="flex flex-col lg:flex-row gap-3 lg:h-[93vh] overflow-hidden">
+        <div className="w-full max-w-[1890px] mx-auto px-4 mt-2">
 
-                <div className={`bg-[#DDF4FF] w-full ${modoAdmin ? "lg:w-full" : "lg:w-3/4"} min-h-[50vh] lg:h-full rounded-[15px] shadow-2xl flex flex-col px-4 sm:px-6 md:px-10 py-6 relative overflow-hidden`}>
+            <div className="flex flex-col lg:flex-row gap-3 lg:h-[93vh]">
 
-                    <div className="absolute top-6 sm:top-10 left-0 bg-white text-[#101625] text-[1.5rem] sm:text-[2rem] md:text-[3rem] font-black px-[120px] sm:px-[200px] md:px-[450px] py-1 rounded-r-[10px] shadow-md whitespace-nowrap">
+                <div
+                    className={`
+                        bg-[#DDF4FF]
+                        w-full
+                        ${modoAdmin ? "lg:w-full" : "lg:w-3/4"}
+                        rounded-[15px]
+                        shadow-2xl
+                        flex
+                        flex-col
+                        px-10
+                        py-6
+                        relative
+                        overflow-hidden
+                    `}
+                >
+
+                    <div
+                        className="
+                            absolute
+                            top-10
+                            left-0
+                            bg-white
+                            text-[#101625]
+                            text-[3rem]
+                            font-black
+                            px-[450px]
+                            py-1
+                            rounded-r-[10px]
+                            shadow-md
+                        "
+                    >
                         Formulários
                     </div>
 
                     {modoAdmin && (
                         <button
-                            onClick={() => setMostrarFormulario(true)}
-                            className="hidden lg:flex items-center justify-center bg-[#C83D3D] text-white rounded-full h-[45px] shadow-lg font-semibold hover:bg-[#b03535] transition-all w-[130px] xl:w-[160px] text-base xl:text-lg absolute top-8 sm:top-14 right-6 sm:right-60 z-20"
+                            onClick={() =>
+                                setMostrarFormulario(!mostrarFormulario)
+                            }
+                            className="
+                                bg-[#C83D3D]
+                                text-white
+                                rounded-full
+                                h-[45px]
+                                px-6
+                                absolute
+                                top-14
+                                right-60
+                                z-20
+                                font-bold
+                                hover:brightness-95
+                                transition-all
+                            "
                         >
-                            Criar formulário
+                            {mostrarFormulario
+                                ? "Cancelar"
+                                : "Criar formulário"}
                         </button>
                     )}
 
-                    <div className="mt-[90px] sm:mt-[100px] md:mt-[120px] bg-white flex-1 rounded-[10px] shadow-md overflow-y-auto scroll-modern min-h-0">
-                        
-                        <div className="w-full h-full p-3 sm:p-4 md:p-6">
-                            
-                            <div className="flex flex-col gap-4">
+                    <div
+                        className="
+                            mt-[120px]
+                            bg-white
+                            flex-1
+                            rounded-[10px]
+                            shadow-md
+                            overflow-hidden
+                        "
+                    >
+
+                        <div
+                            className="
+                                h-full
+                                overflow-y-scroll
+                                scroll-modern
+                                px-1
+                                py-5
+                            "
+                        >
+
+                            <div className="flex flex-col gap-9">
 
                                 {modoAdmin && mostrarFormulario && (
-                                    <FormularioCard onSalvar={salvarFormulario} />
+                                    <FormularioCard
+                                        onSalvar={salvarNovoFormulario}
+                                        somenteVisualizacao={false}
+                                    />
                                 )}
 
                                 {formulariosSalvos.map((formulario) => (
                                     <FormularioCard
                                         key={formulario.id}
+                                        dadosIniciais={formulario}
                                         somenteVisualizacao={true}
+                                        onExcluir={() =>
+                                            excluirFormulario(formulario.id)
+                                        }
                                     />
                                 ))}
 
+                                {formulariosSalvos.length === 0 &&
+                                    !mostrarFormulario && (
+                                        <div
+                                            className="
+                                                text-center
+                                                py-20
+                                                text-gray-500
+                                                font-medium
+                                            "
+                                        >
+                                            Nenhum formulário salvo ainda.
+                                        </div>
+                                    )}
                             </div>
-
                         </div>
-
                     </div>
                 </div>
-
-                {!modoAdmin && (
-                    <div className="bg-[#BBE1FE] w-full lg:w-1/4 min-h-[50vh] lg:h-full rounded-[15px] shadow-2xl p-3 sm:p-4 relative flex flex-col overflow-hidden">
-
-                        <div className="absolute top-6 sm:top-10 right-0 bg-white text-[#101625] text-[1.2rem] sm:text-[1.5rem] md:text-[2rem] font-black px-[80px] sm:px-[100px] md:px-[140px] py-1 rounded-l-[10px] shadow-md whitespace-nowrap">
-                            Extrato
-                        </div>
-
-                        <div className="mt-[90px] sm:mt-[110px] md:mt-[130px] flex-1 rounded-[10px] bg-[#BBE1FE] overflow-hidden min-h-0">
-                            
-                            <div className="h-full overflow-y-auto scroll-modern pr-2 sm:pr-3">
-                                
-                                <div className="p-2 sm:p-4 space-y-3">
-
-                                    {extrato.map((item, i) => (
-                                        <div key={i} className="bg-[#FFFFFF] rounded-[8px] p-3 shadow-sm flex justify-between items-center">
-
-                                            {item.tipo === "premio" && (
-                                                <div>
-                                                    <p className="text-[12px] sm:text-[14px] font-semibold text-yellow-700">
-                                                        Prêmio desbloqueado
-                                                    </p>
-
-                                                    <p className="text-[13px] sm:text-[15px] font-bold text-black">
-                                                        {item.premio}
-                                                    </p>
-                                                </div>
-                                            )}
-
-                                            <div>
-
-                                                {item.tipo === "pontos" && (
-                                                    <>
-                                                        <p className="text-[12px] sm:text-[14px] font-semibold text-gray-700">
-                                                            Ganho de pontos
-                                                        </p>
-
-                                                        <p className="text-[13px] sm:text-[15px] font-bold text-black">
-                                                            {item.mensagem || item.descricao}
-                                                        </p>
-                                                    </>
-                                                )}
-
-                                                {item.tipo === "resgate" && (
-                                                    <>
-                                                        <p className="text-[12px] sm:text-[14px] font-semibold text-gray-700">
-                                                            Reivindicação de pontos
-                                                        </p>
-
-                                                        <p className="text-[12px] sm:text-[14px] text-gray-400 font-semibold">
-                                                            Brinde: {item.premio}
-                                                        </p>
-                                                    </>
-                                                )}
-
-                                            </div>
-
-                                            <div>
-
-                                                {item.tipo === "ganho" && (
-                                                    <p className="text-green-600 font-bold text-[14px] sm:text-[16px]">
-                                                        +{item.valor || item.pontos}p
-                                                    </p>
-                                                )}
-
-                                                {item.tipo === "resgate" && (
-                                                    <span className="text-gray-400 text-lg sm:text-xl">
-                                                        ⭐
-                                                    </span>
-                                                )}
-
-                                            </div>
-
-                                        </div>
-                                    ))}
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                )}
-
             </div>
         </div>
     );

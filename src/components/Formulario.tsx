@@ -58,7 +58,7 @@ function Formulario({ tipo } : any) {
 
             if (
                 dados.email === "admin@gmail.com" &&
-                dados.senha === "admin123"
+                dados.senha === "12345"
             ) {
 
                 navigate('/admin');

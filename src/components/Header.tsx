@@ -27,11 +27,7 @@ function Header() {
             localStorage.removeItem("jornal-texto-col3-1");
             localStorage.removeItem("jornal-texto-col3-2");
 
-            // Carrossel
             localStorage.removeItem("carrossel-slides");
-
-
-
 
             setEditMode(false);
             window.location.reload();
