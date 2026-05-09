@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import LandingPage from "./pages/LandingPage";
@@ -8,41 +8,57 @@ import Pagamento from "./pages/Pagamento";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
 import Admin from "./pages/admin";
-import { EditModeProvider } from "./context_admin/modo_editar";
+import { EditModeProvider } from "./contexts/admin/modo_editar";
 import GlobalClickHandler from "./components/admin/GlobalClickHandler";
 import EscolhaPlano from './pages/EscolhaPlano';
+import { AuthProvider, useAuth } from "./contexts/admin/AuthContext";
 
+// Componente para proteger rotas admin
+function PrivateRoute({ children }: { children: React.ReactElement }) {
+    const { isAdmin } = useAuth();
+    return isAdmin ? children : <Navigate to="/login" replace />;
+}
 
 function App() {
     const location = useLocation();
 
-    const esconderHeader = location.pathname === "/cadastro" || location.pathname === "/login" || location.pathname === "/escolhaplano";
+    const esconderHeader = location.pathname === "/cadastro" || 
+                          location.pathname === "/login" || 
+                          location.pathname === "/escolhaplano";
 
     return (
-        <EditModeProvider>
-            <GlobalClickHandler />
-            
-            {!esconderHeader && <Header />}
-            
-            <Routes>
-                <Route path='/' element={<LandingPage />} />
-                <Route path='/home' element={<Home />} />
-                <Route path='/novidades' element={<Novidades />} />
-                <Route path='/pagamento' element={<Pagamento />} />
-                <Route path='/login' element={<Login />} />
-                <Route path='/cadastro' element={<Cadastro />} />
-                <Route path='/escolhaplano' element={<EscolhaPlano/>}/>
-                <Route path="/admin" element={<Admin />}>
-                    <Route index element={<LandingPage />} />
-                    <Route path="home" element={<Home />} />
-                    <Route path="usuario" element={<Home modoAdmin />} />
-                    <Route path="novidades" element={<Novidades />} />
-                    <Route path="pagamento" element={<Pagamento isAdmin={true} />} />
-                </Route>
-            </Routes>
-            
-            <Footer />
-        </EditModeProvider>
+        <AuthProvider>
+            <EditModeProvider>
+                <GlobalClickHandler />
+                
+                {!esconderHeader && <Header />}
+                
+                <Routes>
+                    <Route path='/' element={<LandingPage />} />
+                    <Route path='/home' element={<Home />} />
+                    <Route path='/novidades' element={<Novidades />} />
+                    <Route path='/pagamento' element={<Pagamento />} />
+                    <Route path='/login' element={<Login />} />
+                    <Route path='/cadastro' element={<Cadastro />} />
+                    <Route path='/escolhaplano' element={<EscolhaPlano/>}/>
+
+                    {/* Rota Admin Protegida */}
+                    <Route path="/admin" element={
+                        <PrivateRoute>
+                            <Admin />
+                        </PrivateRoute>
+                    }>
+                        <Route index element={<LandingPage />} />
+                        <Route path="home" element={<Home />} />
+                        <Route path="usuario" element={<Home modoAdmin />} />
+                        <Route path="novidades" element={<Novidades />} />
+                        <Route path="pagamento" element={<Pagamento isAdmin={true} />} />
+                    </Route>
+                </Routes>
+                
+                <Footer />
+            </EditModeProvider>
+        </AuthProvider>
     );
 }
 

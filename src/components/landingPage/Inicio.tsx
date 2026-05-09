@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Comentarios from "../landingPage/Comentarios";
 import BlocoEditavel from "../admin/BlocoEditavel";
-import { useEditMode } from "../../context_admin/modo_editar";
+import { useEditMode } from "../../contexts/admin/modo_editar";
 
 function Inicio() {
   const { editMode } = useEditMode();

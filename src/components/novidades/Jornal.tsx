@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useEditMode } from "../../context_admin/modo_editar";
+import { useEditMode } from "../../contexts/admin/modo_editar";
 import BlocoEditavel from "../admin/BlocoEditavel";
 
 import img1 from "../../assets/images/formatura2.png";

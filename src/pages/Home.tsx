@@ -4,7 +4,7 @@ import FormularioExtrato from "../components/home/FormularioExtrato";
 import Sugestoes from "../components/home/Sugestoes";
 
 function Home({ modoAdmin = false }) {
-  const [extrato, setExtrato] = useState([]);
+  const [extrato, setExtrato] = useState<any[]>([]);
 
   return (
     <div className="bg-[#101625]">
@@ -15,8 +15,19 @@ function Home({ modoAdmin = false }) {
         </section>
       )}
 
-      <section className={`min-h-[90vh] flex items-center justify-center ${modoAdmin ? "pt-24" : ""}`}>
-        <FormularioExtrato extrato={extrato} modoAdmin={modoAdmin} />
+      <section
+        className={`
+          min-h-[90vh]
+          flex
+          items-center
+          justify-center
+          ${modoAdmin ? "pt-24" : ""}
+        `}
+      >
+        <FormularioExtrato
+          extrato={extrato}
+          modoAdmin={modoAdmin}
+        />
       </section>
 
       <section className="min-h-[90vh] flex items-center justify-center">
@@ -26,4 +37,5 @@ function Home({ modoAdmin = false }) {
     </div>
   );
 }
+
 export default Home;

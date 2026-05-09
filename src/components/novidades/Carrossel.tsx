@@ -9,7 +9,7 @@ import img5 from "../../assets/images/DesafioIdeias.jpg";
 import img6 from "../../assets/images/auditorio.jpg";
 import img7 from "../../assets/images/carros.jpg";
 
-import { useEditMode } from "../../context_admin/modo_editar"; 
+import { useEditMode } from "../../contexts/admin/modo_editar"; 
 
 const initialSlides = [img1, img2, img3, img4, img5, img6, img7];
 

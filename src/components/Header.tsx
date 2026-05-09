@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import MenuMobile from "./MenuMobile";
 import { useState } from "react";
-import { useEditMode } from "../context_admin/modo_editar";
+import { useEditMode } from "../contexts/admin/modo_editar";
 import logoImg from "/src/assets/icons/Logo48.svg";
 
 function Header() {
