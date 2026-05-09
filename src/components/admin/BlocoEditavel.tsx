@@ -5,7 +5,7 @@ import Underline from "@tiptap/extension-underline";
 import { TextStyle } from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
 import TextAlign from "@tiptap/extension-text-align";
-import { useEditMode } from "../../contexts/admin/modo_editar";
+import { useEditMode } from "../../contexts/modo_editar";
 import { useEffect, useState } from "react";
 
 type Props = {

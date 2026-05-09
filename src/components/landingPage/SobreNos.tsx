@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import BlocoEditavel from "../admin/BlocoEditavel";
-import { useEditMode } from "../../contexts/admin/modo_editar";
+import { useEditMode } from "../../contexts/modo_editar";
 
 function SobreNos() {
   const { editMode } = useEditMode();

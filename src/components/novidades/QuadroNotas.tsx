@@ -6,7 +6,7 @@ function QuadroNotas() {
 
   useEffect(() => {
     const checkScreen = () => {
-      setIsMobile(window.innerWidth < 640); // sm breakpoint
+      setIsMobile(window.innerWidth < 640);
     };
 
     checkScreen();
@@ -33,7 +33,6 @@ function QuadroNotas() {
     "bg-[#C06161]"
   ];
 
-  // adiciona 1 a mais no mobile
   const posts = isMobile ? [...basePosts, "bg-[#6196C0]"] : basePosts;
 
   return (

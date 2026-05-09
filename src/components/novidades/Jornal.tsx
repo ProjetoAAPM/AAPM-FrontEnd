@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useEditMode } from "../../contexts/admin/modo_editar";
+import { useEditMode } from "../../contexts/modo_editar";
 import BlocoEditavel from "../admin/BlocoEditavel";
-
 import img1 from "../../assets/images/formatura2.png";
 import img2 from "../../assets/images/carros.jpg";
 import img3 from "../../assets/images/medalhasDesafio.jpg";

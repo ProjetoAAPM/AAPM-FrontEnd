@@ -39,7 +39,6 @@ function Formulario({ tipo }: any) {
                 alert("Email ou senha incorretos!");
             }
         } else {
-            // Cadastro normal
             navigate('/escolhaplano');
         }
     };

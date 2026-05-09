@@ -12,7 +12,6 @@ export interface IPagamento {
   status: "Pendente" | "Aprovado" | "Reprovado";
 }
 
-//apenas para testes de comportamento do painel: Reprovados, Aprovados,Pendende e Total 
 const MOCK_PAGAMENTOS: IPagamento[] = [
   { id: 1, nome: "Pedro Henrique", curso: "Tecnico Desenvolvimento de Sistemas", valor: 100.0, data: "12/03/2026", status: "Pendente" },
   { id: 2, nome: "Pedro Lucas", curso: "Tecnico Mecatronica", valor: 50.0, data: "06/03/2026", status: "Aprovado" },

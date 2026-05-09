@@ -39,7 +39,6 @@ export default function ScrollArea({ children }) {
 
   return (
     <div className="relative h-full w-full">
-      {/* CONTEÚDO SCROLL */}
       <div
         ref={containerRef}
         className="h-full overflow-y-auto pr-4 scroll-hidden"
@@ -47,7 +46,6 @@ export default function ScrollArea({ children }) {
         {children}
       </div>
 
-      {/* SCROLLBAR CUSTOM */}
       <div className="absolute top-0 right-2 h-full w-[10px]">
         <div
           ref={thumbRef}

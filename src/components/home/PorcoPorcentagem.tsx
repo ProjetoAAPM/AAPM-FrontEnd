@@ -1,6 +1,10 @@
 import porquinho from "../../assets/images/Porquinho.png";
 
-export default function PorcoPorcentagem({ progresso }) {
+type PorcoPorcentagemProps = {
+  progresso: number;
+};
+
+export default function PorcoPorcentagem({progresso,}: PorcoPorcentagemProps) {
   return (
     <div
       className="

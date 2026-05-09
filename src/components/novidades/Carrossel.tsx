@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-
 import img1 from "../../assets/images/DesafioIdeiaspessoas.jpg";
 import img2 from "../../assets/images/medalhasSenai.jpg";
 import img3 from "../../assets/images/formatura.png";
@@ -8,8 +7,7 @@ import img4 from "../../assets/images/quadraSenai.jpg";
 import img5 from "../../assets/images/DesafioIdeias.jpg";
 import img6 from "../../assets/images/auditorio.jpg";
 import img7 from "../../assets/images/carros.jpg";
-
-import { useEditMode } from "../../contexts/admin/modo_editar"; 
+import { useEditMode } from "../../contexts/modo_editar"; 
 
 const initialSlides = [img1, img2, img3, img4, img5, img6, img7];
 

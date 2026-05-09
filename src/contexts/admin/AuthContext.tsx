@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import type { ReactNode } from 'react';   // ← Importação correta de tipo
+import type { ReactNode } from 'react';
 
 interface AuthContextType {
   isAdmin: boolean;

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useEditMode } from "../../contexts/admin/modo_editar";
+import { useEditMode } from "../../contexts/modo_editar";
 
 export default function GlobalClickHandler() {
   const { setActiveEditorId } = useEditMode();

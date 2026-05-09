@@ -10,14 +10,27 @@ const premios = {
   7500: "Camiseta",
   10000: "Dia da pizza"
 };
-export default function Pontuacao({ setExtrato }) {
+
+type ExtratoItem = {
+  tipo: string;
+  valor: number;
+  mensagem: string;
+  premio?: string;
+};
+
+type PontuacaoProps = {
+  setExtrato: React.Dispatch<React.SetStateAction<ExtratoItem[]>>;
+};
+
+export default function Pontuacao({ setExtrato }: PontuacaoProps) {
   const [pontos, setPontos] = useState(0);
 
   function comprar() {
   setPontos((prev) => {
     const novo = prev >= 10000 ? 0 : prev + 2500;
 
-    const ganhos = [];
+
+    const ganhos: ExtratoItem[] = [];
 
     ganhos.push({
       tipo: "pontos",

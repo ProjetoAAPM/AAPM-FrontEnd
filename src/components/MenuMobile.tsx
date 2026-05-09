@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { useEditMode } from "../contexts/admin/modo_editar";
+import { useEditMode } from "../contexts/modo_editar";
 import logoImgBorda from "/src/assets/icons/LogoBorda48.svg";
 
 function MenuMobile({ isOpen, onClose }: any) {
