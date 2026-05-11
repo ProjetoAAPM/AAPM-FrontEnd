@@ -11,9 +11,9 @@ function Pagamento() {
                     fundoTitulo="bg-[#86D5FE] w-full h-[80px] rounded-t-xl italic"
                     popular={false}
                     textoBtn="Pagar"
-                    corBtn="bg-[#86D5FE] italic"   
+                    corBtn="bg-[#86D5FE] italic"
                 >
-                    <p className="bg-[#86D5FE]/80 rounded-md p-4 mx-6 text-xl mb-2"> 
+                    <p className="bg-[#86D5FE]/80 rounded-md p-4 mx-6 text-[22px] mb-2"> 
                         Esse plano permite acompanhar as iniciativas da plataforma, participar das atividades disponíveis e acumular pontos que podem ser utilizados para conquistar brindes e recompensas ao longo do período.
                     </p>
                 </CardPlano>
@@ -21,12 +21,12 @@ function Pagamento() {
                 <CardPlano
                     titulo="Plano Comum"
                     className="bg-linear-to-r from-[#FFF4C9] to-[#EDD98D] border-3 border-[#EFBF04]"
-                    fundoTitulo="bg-linear-to-r from-[#F1D052] via-[#F0C72B] to-[#EFBF04] w-full h-[80px] rounded-t-xl italic"
+                    fundoTitulo="bg-linear-to-r from-[#F1D052] via-[#F0C72B] to-[#EFBF04] w-full h-[90px] rounded-t-xl italic"
                     popular={true}
                     textoBtn="Pagar"
                     corBtn="bg-linear-to-r from-[#F1D052] via-[#F0C72B] to-[#EFBF04] italic"   
                 >
-                    <p className="bg-[#EFC10E]/80 rounded-md p-4 mx-6 text-xl mb-2"> 
+                    <p className="bg-[#EFC10E]/80 rounded-md p-4 mx-6 text-[22px] mb-2"> 
                         O Plano Premium oferece vantagens exclusivas que permitem acumular pontos mais rapidamente e acessar recompensas diferenciadas. Além disso, usuários premium recebem maior destaque no sistema de gamificação e benefícios especiais em campanhas e eventos.
                     </p>
                 </CardPlano>
@@ -39,8 +39,8 @@ function Pagamento() {
                     textoBtn="Turbinar!"
                     corBtn="bg-[#C83D3D] italic"   
                 >
-                    <div className="bg-[#C83D3D]/80 w-full h-[40px] -mt-20 mb-10 text-2xl font-bold italic">R$80/ativação</div>
-                    <p className="bg-[#C83D3D]/80 rounded-md p-4 mx-6 text-xl mb-2">
+                    <div className="bg-[#C83D3D]/80 w-full h-[40px] -mt-10 mb-10 text-2xl font-bold italic">R$80 <span className="text-[22px] font-medium">/ ativação</span></div>
+                    <p className="bg-[#C83D3D]/80 rounded-md p-4 mx-6 text-[22px] mb-2">
                         Essa opção permite aumentar sua pontuação rapidamente, ajudando a desbloquear brindes e recompensas disponíveis no sistema. Ao ativá-la, o usuário recebe um reforço em seus pontos acumulados, acelerando seu progresso na plataforma.
                     </p>
                 </CardPlano>
