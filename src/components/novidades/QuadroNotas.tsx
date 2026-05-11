@@ -5,14 +5,10 @@ function QuadroNotas() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const checkScreen = () => {
-      setIsMobile(window.innerWidth < 640);
-    };
-
-    checkScreen();
-    window.addEventListener("resize", checkScreen);
-
-    return () => window.removeEventListener("resize", checkScreen);
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
   const basePosts = [
@@ -37,25 +33,22 @@ function QuadroNotas() {
 
   return (
     <div className="w-full flex flex-col items-center">
-      
-      <div className="self-start bg-[#14358F] text-white text-[1.5rem] sm:text-[2rem] md:text-[3rem] font-black px-[120px] sm:px-[200px] md:px-[450px] rounded-r-[10px] shadow-md mb-3">
+      <div className="self-start bg-[#14358F] text-white font-black text-[1.2rem] sm:text-[2rem] md:text-[3rem] px-10 sm:px-[200px] md:px-[400px] rounded-r-md mb-3">
         Quadro de Notas
       </div>
 
       <div
-        className="w-[95%] max-w-[1500px] min-h-[720px] bg-no-repeat bg-center bg-cover flex items-center justify-center p-4"
+        className="w-[95%] max-w-[1500px] min-h-[400px] sm:min-h-[600px] md:min-h-[700px] lg:min-h-[720px] bg-cover bg-center flex items-center justify-center p-2 sm:p-4"
         style={{ backgroundImage: `url(${fundo})` }}
       >
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-12">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6 md:gap-10">
           {posts.map((color, i) => (
             <div
               key={i}
-              className={`w-[130px] sm:w-[130px] md:w-[180px] aspect-square ${color} shadow-md`}
+              className={`w-[70px] sm:w-[120px] md:w-[150px] lg:w-[180px] aspect-square ${color}`}
             />
           ))}
         </div>
-
       </div>
     </div>
   );

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Comentarios from "../landingPage/Comentarios";
 import BlocoEditavel from "../admin/BlocoEditavel";
 import { useEditMode } from "../../contexts/modo_editar";
+import iconeEditar from "../../assets/icons/icone_editar.png"; 
+
 
 function Inicio() {
   const { editMode } = useEditMode();
@@ -46,7 +48,7 @@ function Inicio() {
               />
               <div className="absolute top-4 right-4">
                 <img
-                  src="src/assets/icons/icone_editar.png"
+                  src={iconeEditar}
                   alt="Editar"
                   className="w-7 h-7"
                 />

@@ -52,28 +52,43 @@ export default function FormularioExtrato({ modoAdmin = false, extrato }: Formul
     };
 
     return (
-        <div className="w-full max-w-[1890px] mx-auto px-4 mt-2">
+        <div className="w-full max-w-[1890px] mx-auto px-3 sm:px-4 md:px-6 mt-2">
             <div className="flex flex-col lg:flex-row gap-3 lg:h-[93vh]">
-                <div className={`bg-[#DDF4FF] ${modoAdmin ? "w-full" : "w-full lg:w-3/4"} h-[93vh] rounded-[15px] shadow-2xl flex flex-col px-5 md:px-10 py-6 relative overflow-hidden`}>
-                    <div className="absolute top-8 left-0 bg-white text-[#101625] text-[2rem] md:text-[3rem] font-black px-[120px] md:px-[450px] py-1 rounded-r-[10px] shadow-md z-10">
+                <div className={`bg-[#DDF4FF] ${modoAdmin ? "w-full" : "w-full lg:w-3/4"} h-[93vh] rounded-[15px] shadow-2xl flex flex-col px-3 sm:px-5 md:px-10 py-6 relative overflow-hidden`}>
+                    <div className="absolute top-8 left-0 bg-white text-[#101625] text-[1.5rem] sm:text-[2rem] md:text-[3rem] font-black px-20 sm:px-32 md:px-[280px] lg:px-[400px] xl:px-[600px] py-1 rounded-r-[10px] shadow-md z-10 max-w-[90%]">
                         Formulários
                     </div>
+
                     {modoAdmin && (
-                        <button onClick={() => setMostrarFormulario(!mostrarFormulario)} className="absolute top-12 right-10 z-20 bg-[#C83D3D] text-white rounded-full px-8 py-3 font-bold hover:brightness-95 transition-all">
+                        <button
+                            onClick={() => setMostrarFormulario(!mostrarFormulario)}
+                            className="absolute top-21 md:top-40 lg:top-60 right-3 sm:right-6 md:right-10 z-20 bg-[#C83D3D] text-white rounded-full px-4 sm:px-6 md:px-8 py-2 sm:py-3 font-bold hover:brightness-95 transition-all whitespace-nowrap"
+                        >
                             {mostrarFormulario ? "Cancelar" : "Criar formulário"}
                         </button>
                     )}
-                    <div className="mt-[110px] bg-white flex-1 rounded-[10px] shadow-md overflow-hidden min-h-0">
+
+                    <div className={`mt-[110px] bg-white rounded-[12px] shadow-md w-full max-w-[95%] sm:max-w-[800px] md:max-w-[1100px] lg:max-w-[1300px] mx-auto ${modoAdmin ? "min-h-[400px] sm:h-[240px] md:h-[320px] lg:h-[450px]" : "min-h-[400px] sm:h-[220px] md:h-[280px] lg:h-[350px]"} overflow-hidden`}>
                         <div className="h-full overflow-y-auto scroll-modern px-2 py-5">
                             <div className="flex flex-col gap-6">
                                 {modoAdmin && mostrarFormulario && (
-                                    <FormularioCard onSalvar={salvarNovoFormulario} somenteVisualizacao={false} />
+                                    <FormularioCard
+                                        onSalvar={salvarNovoFormulario}
+                                        somenteVisualizacao={false}
+                                    />
                                 )}
+
                                 {formulariosSalvos.map((formulario) => (
-                                    <FormularioCard key={formulario.id} dadosIniciais={formulario} somenteVisualizacao={!modoAdmin} onExcluir={() => excluirFormulario(formulario.id!)} />
+                                    <FormularioCard
+                                        key={formulario.id}
+                                        dadosIniciais={formulario}
+                                        somenteVisualizacao={!modoAdmin}
+                                        onExcluir={() => excluirFormulario(formulario.id!)}
+                                    />
                                 ))}
+
                                 {formulariosSalvos.length === 0 && !mostrarFormulario && (
-                                    <div className="h-[400px] flex items-center justify-center text-gray-500 font-semibold">
+                                    <div className="h-[300px] flex items-center justify-center text-gray-500 font-semibold text-center px-4">
                                         Nenhum formulário salvo ainda.
                                     </div>
                                 )}
@@ -81,11 +96,13 @@ export default function FormularioExtrato({ modoAdmin = false, extrato }: Formul
                         </div>
                     </div>
                 </div>
+
                 {!modoAdmin && (
-                    <div className="bg-[#BBE1FE] w-full lg:w-1/4 h-[93vh] rounded-[15px] shadow-2xl p-4 relative flex flex-col overflow-hidden">
-                        <div className="absolute top-8 right-0 bg-white text-[#101625] text-[2rem] font-black px-[120px] py-1 rounded-l-[10px] shadow-md">
+                    <div className="bg-[#BBE1FE] w-full lg:w-1/4 h-[93vh] rounded-[15px] shadow-2xl p-3 sm:p-4 relative flex flex-col overflow-hidden">
+                        <div className="absolute top-8 right-0 bg-white text-[#101625] text-[1.5rem] sm:text-[2rem] font-black px-10 sm:px-16 md:px-[120px] py-1 rounded-l-[10px] shadow-md">
                             Extrato
                         </div>
+
                         <div className="mt-[110px] flex-1 rounded-[10px] overflow-hidden min-h-0">
                             <div className="h-full overflow-y-auto scroll-modern pr-2">
                                 <div className="p-2 space-y-3">
@@ -94,27 +111,45 @@ export default function FormularioExtrato({ modoAdmin = false, extrato }: Formul
                                             <div>
                                                 {item.tipo === "premio" && (
                                                     <>
-                                                        <p className="text-[14px] font-semibold text-yellow-700">Prêmio desbloqueado</p>
-                                                        <p className="text-[15px] font-bold text-black">{item.premio}</p>
+                                                        <p className="text-[14px] font-semibold text-yellow-700">
+                                                            Prêmio desbloqueado
+                                                        </p>
+                                                        <p className="text-[15px] font-bold text-black">
+                                                            {item.premio}
+                                                        </p>
                                                     </>
                                                 )}
+
                                                 {item.tipo === "pontos" && (
                                                     <>
-                                                        <p className="text-[14px] font-semibold text-gray-700">Ganho de pontos</p>
-                                                        <p className="text-[15px] font-bold text-black">{item.mensagem || item.descricao}</p>
+                                                        <p className="text-[14px] font-semibold text-gray-700">
+                                                            Ganho de pontos
+                                                        </p>
+                                                        <p className="text-[15px] font-bold text-black">
+                                                            {item.mensagem || item.descricao}
+                                                        </p>
                                                     </>
                                                 )}
+
                                                 {item.tipo === "resgate" && (
                                                     <>
-                                                        <p className="text-[14px] font-semibold text-gray-700">Reivindicação de pontos</p>
-                                                        <p className="text-[14px] text-gray-400 font-semibold">Brinde: {item.premio}</p>
+                                                        <p className="text-[14px] font-semibold text-gray-700">
+                                                            Reivindicação de pontos
+                                                        </p>
+                                                        <p className="text-[14px] text-gray-400 font-semibold">
+                                                            Brinde: {item.premio}
+                                                        </p>
                                                     </>
                                                 )}
                                             </div>
+
                                             <div>
                                                 {item.tipo === "ganho" && (
-                                                    <p className="text-green-600 font-bold text-[16px]">+{item.valor || item.pontos}p</p>
+                                                    <p className="text-green-600 font-bold text-[16px]">
+                                                        +{item.valor || item.pontos}p
+                                                    </p>
                                                 )}
+
                                                 {item.tipo === "resgate" && (
                                                     <span className="text-gray-400 text-xl">⭐</span>
                                                 )}

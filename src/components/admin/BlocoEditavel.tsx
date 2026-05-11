@@ -1,4 +1,4 @@
-// Instalar: npm install @tiptap/react @tiptap/starter-kit @tiptap/extension-underline @tiptap/extension-text-style @tiptap/extension-color @tiptap/extension-text-align
+// Instalar: npm install @tiptap/react@latest @tiptap/starter-kit@latest @tiptap/extension-underline@latest @tiptap/extension-text-style@latest @tiptap/extension-color@latest @tiptap/extension-text-align@latest
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
