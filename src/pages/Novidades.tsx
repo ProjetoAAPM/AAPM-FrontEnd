@@ -5,7 +5,7 @@ import QuadroNotas from "../components/novidades/QuadroNotas";
 function Novidades() {
     return (
         <div>
-            <section id="carrossel" className="min-h-[100vh]">
+            <section id="carrossel" className="w-full h-auto">
                 <Carrossel />
             </section>
 
