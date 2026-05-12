@@ -1,9 +1,16 @@
 import { Link } from "react-router-dom";
 import MenuMobile from "./MenuMobile";
+import ModalPerfil from "./ModalPerfil";
 import { useState } from "react";
 
 function Header() {
     const [isOpen, setIsOpen] = useState(false);
+    const [perfilOpen, setPerfilOpen] = useState(false);
+
+const [usuario, setUsuario] = useState({
+    nome: "Maysa",
+    foto: "https://i.pravatar.cc/150?img=32"
+});
 
     return (
         <>
@@ -13,7 +20,7 @@ function Header() {
                 <div className={`w-full max-w-[1812px] h-[75px] flex items-center justify-between px-4 md:px-6 transition-all duration-300
                     ${isOpen 
                         ? 'bg-[#FFD44B] rounded-none' 
-                        : 'bg-[#211F1D]/80 backdrop-blur-lg rounded-none lg:rounded-full shadow-lg'}`}>
+                        : 'bg-[#211F1D]/80 backdrop-blur-lg rounded-none lg:rounded-full shadow-[0_0_25px_rgba(255,255,255,0.35)]'}`}>
 
                     <div className="flex items-center gap-2 md:gap-3">
                         <img src="src/assets/icons/Logo48.svg" alt="Logo" className="h-[40px] md:h-[45px] w-auto object-contain"/>
@@ -29,22 +36,38 @@ function Header() {
                     </div>
 
                     <div className="flex gap-2 md:gap-6 items-center">
-                        <Link to="/login" className="hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full w-[160px] h-[42px] 
-                        text-white shadow-lg text-lg font-semibold hover:bg-[#b03535] transition-all">
-                            Login
-                        </Link>
-
-                        <div className={`hidden lg:block w-[2px] h-8 ${isOpen ? 'bg-black/20' : 'bg-gray-500/50'}`}></div>
-
-                        <Link to="/cadastro" className="hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full w-[160px] h-[42px] 
-                        text-white shadow-lg text-lg font-semibold hover:bg-[#b03535] transition-all">
-                            Cadastrar
-                        </Link>
-
+                        {usuario ? (
+                            <div
+                                onClick={() => setPerfilOpen(true)}
+                                className="hidden lg:flex items-center gap-3 cursor-pointer">
+                                <img
+                                    src={usuario.foto}
+                                    alt="Foto do usuário"
+                                    className="w-11 h-11 rounded-full object-cover border-2 border-white hover:scale-105 transition-transform"/>
+                                <p className="text-white font-medium text-lg hover:text-gray-300 transition-colors">
+                                    {usuario.nome}
+                                </p>
+                            </div>
+                        ) : (
+                            <>
+                                <Link
+                                    to="/login"
+                                    className="hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full w-[160px] h-[42px] 
+                                    text-white shadow-lg text-lg font-semibold hover:bg-[#b03535] transition-all">
+                                    Login
+                                </Link>
+                                <div className={`hidden lg:block w-[2px] h-8 ${isOpen ? 'bg-black/20' : 'bg-gray-500/50'}`}></div>
+                                <Link
+                                    to="/cadastro"
+                                    className="hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full w-[160px] h-[42px] 
+                                    text-white shadow-lg text-lg font-semibold hover:bg-[#b03535] transition-all">
+                                    Cadastrar
+                                </Link>
+                            </>
+                        )}
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 z-[60]"
-                        >
+                            className="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 z-[60]">
                             <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2 bg-black' : 'bg-white'}`}></span>
                             <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? 'opacity-0' : 'bg-white'}`}></span>
                             <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-2 bg-black' : 'bg-white'}`}></span>
@@ -54,6 +77,11 @@ function Header() {
             </div>
 
             <MenuMobile isOpen={isOpen} onClose={() => setIsOpen(false)}/>
+            <ModalPerfil
+                perfilOpen={perfilOpen}
+                setPerfilOpen={setPerfilOpen}
+                usuario={usuario}
+            />
         </>
     );
 }
