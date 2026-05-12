@@ -14,10 +14,7 @@ function Novidades() {
                 <Jornal />
             </section>
 
-            <section
-                id="quadroNotas"
-                className="bg-[#101625] min-h-[90vh] flex justify-center py-5"
-            >
+            <section id="quadroNotas" className="bg-[#101625] flex justify-center py-5 xl:py-5">
                 <QuadroNotas />
             </section>
         </div>

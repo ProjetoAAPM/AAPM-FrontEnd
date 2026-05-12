@@ -33,21 +33,21 @@ export default function Jornal() {
     }, [editMode]);
 
     const TEXTO_COL1_PADRAO = `
-<p>Além disso, o SENAI oferece uma variedade de cursos...</p>
+<p>Além disso, o SENAI oferece uma variedade de cursos, que vão desde formação inicial e continuada até cursos técnicos, graduação e pós-graduação, abrangendo áreas como tecnologia da informação, logística, mecânica, automação e gestão. Essa diversidade permite estudantes de diferentes perfis encontrem oportunidades de qualificação e crescimento profissional dentro da própria instituição.</p>
 `;
 
     const TEXTO_COL3_1_PADRAO = `
-<p>Outro diferencial é a forte conexão com o setor industrial...</p>
+<p>Outro diferencial é a forte conexão com o setor industrial. A unidade mantém parcerias com empresas e incentiva a participação dos alunos em estágios, possibilitando a aplicação dos conhecimentos adquiridos em situações reais de trabalho. Esse contato contribui para o desenvolvimento de competências técnicas e comportamentais.</p>
 `;
 
     const TEXTO_COL2_PADRAO = `
-<p>A unidade do SENAI Leopoldina Mariano Ferraz tem se destacado...</p>
-<p>Nos últimos anos, a instituição tem ampliado significativamente...</p>
+<p>A unidade do SENAI Leopoldina Mariano Ferraz tem se destacado recentemente por uma série de iniciativas que reforçam seu compromisso com a formação de profissionais qualificados e preparados para as exigências do mercado industrial. Integrando uma das maiores redes de educação profissional da América Latina, a escola oferece uma estrutura moderna e alinhada às demandas tecnológicas atuais, proporcionando aos alunos uma formação prática e atualizada.</p>
+<p>Nos últimos anos, a instituição tem ampliado significativamente sua atuação, investindo na modernização de laboratórios e na incorporação de tecnologias emergentes, como automação industrial, inteligência artificial e sistemas digitais. Eventos como o Mundo SENAI, por exemplo, aproximam os estudantes dessas inovações por meio de palestras, visitas técnicas e experiências práticas em áreas como impressão 3D, mecatrônica e eletrificação veicular.</p>
 `;
 
     const TEXTO_COL3_2_PADRAO = `
-<p>Com uma trajetória marcada pela constante evolução...</p>
-<p>Ao investir continuamente em infraestrutura...</p>
+<p>Com uma trajetória marcada pela constante evolução — desde sua criação voltada para atender à demanda industrial da região até sua consolidação como um centro de tecnologia e inovação — o SENAI Leopoldina Mariano Ferraz continua se reinventando para acompanhar as transformações da indústria. Ao investir continuamente em infraestrutura, inovação e na atualização de suas metodologias de ensino, a instituição demonstra um compromisso sólido com a excelência na formação profissional.</p>
+<p>Nesse contexto, não apenas prepara seus alunos para o ingresso no mercado de trabalho, mas também contribui ativamente para o desenvolvimento tecnológico e industrial do país. Dessa forma, o SENAI Leopoldina Mariano Ferraz se mantém como uma referência em educação profissional, formando não apenas técnicos qualificados, mas cidadãos preparados para enfrentar os desafios de um cenário cada vez mais dinâmico, competitivo e em constante transformação.</p>
 `;
 
     const IconeEditarOverlay = () => (
@@ -97,28 +97,32 @@ export default function Jornal() {
         editMode ? (
             <div className="relative">
                 <IconeEditarOverlay />
-                <BlocoEditavel id={id} content={content} className="text-md leading-relaxed text-justify" />
+                <BlocoEditavel id={id} content={content} className="text-sm sm:text-base leading-relaxed text-justify" />
             </div>
         ) : (
-            children
+            <div className="text-sm sm:text-base leading-relaxed text-justify">
+                {children}
+            </div>
         )
     );
 
     return (
-        <div className="w-full min-h-screen bg-[#101625] text-white px-8 py-20">
+        <div className="w-full min-h-screen bg-[#101625] text-white py-[70px] overflow-x-hidden">
 
             <div className="w-full flex justify-end mb-[50px]">
-                <h1 className="bg-[#94122F] px-[500px] py-2 text-[3rem] font-bold rounded mr-[-2rem]">
+                <h1 className="bg-[#94122F] 
+                    px-[100px] sm:px-[200px] md:px-[250px] lg:px-[500px]
+                    py-2 
+                    text-[1.2rem] sm:text-[2rem] md:text-[2.5rem] lg:text-[3rem] 
+                    font-bold rounded-l mr-[-2rem]">
                     Formatura
                 </h1>
             </div>
 
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-4 sm:px-6 lg:px-10">
 
-                {/* COLUNA 1 */}
                 <div className="flex flex-col gap-4">
-
-                    {renderEditableImage(image1, setImage1, "img1", "w-full h-[300px] object-cover")}
+                    {renderEditableImage(image1, setImage1, "img1", "w-full h-[250px] lg:h-[300px] object-cover")}
 
                     {wrapText(
                         "jornal-texto-col1",
@@ -126,8 +130,7 @@ export default function Jornal() {
                         <div dangerouslySetInnerHTML={{ __html: textoCol1 || TEXTO_COL1_PADRAO }} />
                     )}
 
-                    <div className="flex gap-4 items-start">
-
+                    <div className="flex flex-col sm:flex-row gap-4 items-start">
                         <div className="flex-1">
                             {wrapText(
                                 "jornal-texto-col3-1",
@@ -136,37 +139,32 @@ export default function Jornal() {
                             )}
                         </div>
 
-                        <div className="w-[220px] flex-shrink-0">
-                            {renderEditableImage(image2, setImage2, "img2", "w-full h-[200px] object-cover")}
+                        <div className="w-full sm:w-[220px] flex-shrink-0">
+                            {renderEditableImage(image2, setImage2, "img2", "w-full h-[260px] md:h-[160px] lg:h-[200px] object-cover")}
                         </div>
-
                     </div>
                 </div>
 
-                {/* COLUNA 2 */}
                 <div className="flex flex-col gap-4">
-
                     {wrapText(
                         "jornal-texto-col2",
                         textoCol2 || TEXTO_COL2_PADRAO,
                         <div dangerouslySetInnerHTML={{ __html: textoCol2 || TEXTO_COL2_PADRAO }} />
                     )}
 
-                    {renderEditableImage(image3, setImage3, "img3", "w-full h-[395px] object-cover")}
-
+                    {renderEditableImage(image3, setImage3, "img3", "w-full h-[300px] lg:h-[395px] object-cover")}
                 </div>
 
-                {/* COLUNA 3 */}
                 <div className="flex flex-col gap-4">
-
-                    {renderEditableImage(image4, setImage4, "img4", "w-full h-[370px] object-cover")}
+                    <div className="hidden md:block">
+                        {renderEditableImage(image4, setImage4, "img4", "w-full h-[300px] lg:h-[370px] object-cover")}
+                    </div>
 
                     {wrapText(
                         "jornal-texto-col3-2",
                         textoCol3_2 || TEXTO_COL3_2_PADRAO,
                         <div dangerouslySetInnerHTML={{ __html: textoCol3_2 || TEXTO_COL3_2_PADRAO }} />
                     )}
-
                 </div>
 
             </div>
