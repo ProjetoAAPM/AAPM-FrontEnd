@@ -9,7 +9,7 @@ export default function Jornal() {
 
       <div className="w-full flex justify-end mb-[50px]">
         <h1 className="bg-[#94122F] 
-          px-[100px] sm:px-[200px] md:px-[250px] lg:px-[400px]
+          px-[100px] sm:px-[200px] md:px-[250px] lg:px-[400px] xl:px-[] 2xl:px-[]
           py-2 
           text-[1.2rem] sm:text-[2rem] md:text-[2.5rem] lg:text-[3rem] 
           font-bold rounded-l"
