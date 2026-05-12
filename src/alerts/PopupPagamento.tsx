@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Copiador from "../alerts/Copiador";
 import { Copy } from "lucide-react";
 import { X } from "lucide-react";
@@ -8,7 +9,18 @@ interface PopupProps {
 }
 
 function PopupPagamento({ isOpen, onClose }: PopupProps) {
+    const [comprovante, setComprovante] = useState<File | null>(null);
     if (!isOpen) return null;
+
+    const handleConfirmar = () => {
+        if (comprovante) {
+            alert("Comprovante enviado!")
+            setComprovante(null);
+            onClose();
+        } else {
+            alert("Anexe o comprovante primeiro!");
+        }
+    }
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -39,11 +51,24 @@ function PopupPagamento({ isOpen, onClose }: PopupProps) {
                         </div>
                     </Copiador>
 
-                    <label className={`w-full max-x[300px] h-30 mt-3 rounded-md bg-[#F5F5F5] flex flex-col items-center justify-center p-2 cursor-pointer border-2 border-[#383636]/50`}>
-                        <p className="text-base font-semibold text-[#888888]">Arraste o arquivo até aqui!</p>
+                    <label className={`w-full max-x[300px] h-30 mt-3 rounded-md bg-[#F5F5F5] flex flex-col items-center justify-center p-2 cursor-pointer border-2 border-[#383636]/50`}
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={(e) => {
+                            e.preventDefault();
+                            const file = e.dataTransfer.files[0];
+                            if (file) setComprovante(file);
+                        }}
+                    >
+                        <input type="file" className="hidden" onChange={(e) => setComprovante(e.target.files?.[0] || null)} />
+
+                        <p className="text-base font-semibold text-[#888888]">
+                            {comprovante ? comprovante.name : "Arraste o arquivo até aqui!"}
+                        </p>
                     </label>
 
-                    <button className="w-full max-w-[180px] mx-auto h-[54px] mt-4 rounded-xl text-white font-bold shadow-md hover:scale-105 active:scale-95 transtion-all text-2xl cursor-pointer bg-[#373737]">
+                    <button 
+                        onClick={handleConfirmar}
+                        className="w-full max-w-[180px] mx-auto h-[54px] mt-4 rounded-xl text-white font-bold shadow-md hover:scale-105 active:scale-95 transtion-all text-2xl cursor-pointer bg-[#373737]">
                         Upload
                     </button>
 
