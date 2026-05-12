@@ -22,7 +22,7 @@ const MOCK_PAGAMENTOS: IPagamento[] = [
 
 const PagamentoAdmin = () => {
     const [lista, setLista] = useState<IPagamento[]>(MOCK_PAGAMENTOS);
-    const [filtro, setFiltro] = useState<"Todos" | "Pendentes">("Todos");
+    const [filtro, setFiltro] = useState< "Todos" | "Pendentes" | "Aprovados" | "Reprovados">("Todos");
     const [showDropdown, setShowDropdown] = useState(false);
     const [itemParaModal, setItemParaModal] = useState<IPagamento | null>(null);
 
@@ -35,7 +35,14 @@ const PagamentoAdmin = () => {
         total: lista.length
     }), [lista]);
 
-    const dadosExibidos = lista.filter(p => filtro === "Todos" || p.status === "Pendente");
+    const dadosExibidos = lista.filter((p) => {
+        if (filtro === "Todos") return true;
+        if (filtro === "Pendentes") return p.status === "Pendente";
+        if (filtro === "Aprovados") return p.status === "Aprovado";
+        if (filtro === "Reprovados") return p.status === "Reprovado";
+
+        return true;
+    });
 
     return (
         <div className="bg-[#0F121D] min-h-screen flex flex-col pt-20 sm:pt-24 md:pt-28 overflow-hidden px-2 sm:px-4 md:px-0">
@@ -79,7 +86,7 @@ const PagamentoAdmin = () => {
 
                         {showDropdown && (
                             <div className="absolute top-11 sm:top-12 md:top-13 left-0 bg-white rounded-xl shadow-2xl py-2 z-50 w-40 sm:w-44 md:w-48">
-                                {["Todos", "Pendentes"].map((opt) => (
+                                {["Todos", "Pendentes", "Aprovados", "Reprovados"].map((opt) => (
                                     <button
                                         key={opt}
                                         onClick={() => {
@@ -129,8 +136,15 @@ const PagamentoAdmin = () => {
                         );
                         setItemParaModal(null);
                     }}
+
                     onReject={(id) => {
-                        setLista(prev => prev.filter(item => item.id !== id));
+                        setLista((prev) =>
+                            prev.map((item) =>
+                                item.id === id
+                                    ? { ...item, status: "Reprovado" }
+                                    : item
+                            )
+                        );
                         setItemParaModal(null);
                     }}
                 />
