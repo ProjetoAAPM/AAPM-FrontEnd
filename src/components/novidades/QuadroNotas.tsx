@@ -83,14 +83,14 @@ function QuadroNotas() {
             <div className="flex items-center gap-4">
               <div className="w-4 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 2xl:w-8 2xl:h-8 bg-[#6196C0] rounded-sm"></div>
               <p className="bg-[#B9B9B9] px-[25px] text-white text-sm sm:text-md md:text-lg lg:text-xl">
-                Avisos Importantes
+                Eventos Externos
               </p>
             </div>
 
             <div className="flex items-center gap-4">
               <div className="w-4 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 2xl:w-8 2xl:h-8 bg-[#C0BD61] rounded-sm"></div>
               <p className="bg-[#B9B9B9] px-[25px] text-white text-sm sm:text-md md:text-lg lg:text-xl">
-                Informações Gerais
+                Ações Governamentais
               </p>
             </div>
 

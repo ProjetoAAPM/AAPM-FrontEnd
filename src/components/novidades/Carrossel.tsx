@@ -39,13 +39,16 @@ const Carrossel: React.FC = () => {
     <div
       className="
       w-full
-      h-[35vh]
-      sm:h-[45vh]
-      md:h-[60vh]
+      pt-[75px]
+      md:pt-0
+      h-[50vh]
+      sm:h-[60vh]
+      md:h-[70vh]
       lg:h-[80vh]
       xl:h-[100vh]
       2xl:h-[100vh]
-      relative overflow-hidden"
+      relative overflow-hidden
+    "
     >
       <div
         className="flex transition-transform duration-700 h-full will-change-transform"
