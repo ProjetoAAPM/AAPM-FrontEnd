@@ -49,7 +49,7 @@ Object.entries(premios).forEach(([marco, premio]) => {
   return (
     <div className="w-full max-w-[1890px] mx-auto px-6 md:px-10">
       
-      <div className="bg-[#FFF3C2] w-full min-h-[85vh] rounded-[15px] shadow-2xl p-10">
+      <div className="bg-[#FFEEA8] w-full min-h-[85vh] rounded-[15px] shadow-2xl p-10">
 
         <div className="flex flex-col items-center gap-15">
           <BarraPontos progresso={progressoPremio} />

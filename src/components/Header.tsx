@@ -40,10 +40,13 @@ const [usuario, setUsuario] = useState({
                             <div
                                 onClick={() => setPerfilOpen(true)}
                                 className="hidden lg:flex items-center gap-3 cursor-pointer">
-                                <img
-                                    src={usuario.foto}
-                                    alt="Foto do usuário"
-                                    className="w-11 h-11 rounded-full object-cover border-2 border-white hover:scale-105 transition-transform"/>
+                                <div className="rounded-full bg-gradient-to-r from-[#1D2235] via-[#4B4D57] to-[#1F2A33] hover:scale-105 transition-transform">
+                                    <img
+                                        src={usuario.foto}
+                                        alt="Foto do usuário"
+                                        className="w-11 h-11 rounded-full object-cover bg-[#171717]"
+                                    />
+                                </div>
                                 <p className="text-white font-medium text-lg hover:text-gray-300 transition-colors">
                                     {usuario.nome}
                                 </p>
@@ -65,18 +68,40 @@ const [usuario, setUsuario] = useState({
                                 </Link>
                             </>
                         )}
-                        <button
-                            onClick={() => setIsOpen(!isOpen)}
-                            className="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 z-[60]">
-                            <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2 bg-black' : 'bg-white'}`}></span>
-                            <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? 'opacity-0' : 'bg-white'}`}></span>
-                            <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-2 bg-black' : 'bg-white'}`}></span>
-                        </button>
+                        <div className="flex items-center gap-3 lg:hidden">
+                            {usuario && (
+                                <button
+                                    onClick={() => setPerfilOpen(true)}
+                                    className="w-10 h-10 rounded-full overflow-hidden border-2 border-white"
+                                >
+                                 <div className="rounded-full bg-gradient-to-r from-[#1D2235] via-[#4B4D57] to-[#1F2A33] hover:scale-105 transition-transform">
+                                    <img
+                                        src={usuario.foto}
+                                        alt="Foto do usuário"
+                                        className="w-11 h-11 rounded-full object-cover bg-[#171717]"
+                                    />
+                                </div>
+                                </button>
+                            )}
+
+                            <button
+                                onClick={() => setIsOpen(!isOpen)}
+                                className="flex flex-col justify-center items-center w-10 h-10 gap-1.5 z-[60]"
+                            >
+                                <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2 bg-black' : 'bg-white'}`}></span>
+                                <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? 'opacity-0' : 'bg-white'}`}></span>
+                                <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-2 bg-black' : 'bg-white'}`}></span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <MenuMobile isOpen={isOpen} onClose={() => setIsOpen(false)}/>
+            <MenuMobile
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+                usuario={usuario}
+                />
             <ModalPerfil
                 perfilOpen={perfilOpen}
                 setPerfilOpen={setPerfilOpen}

@@ -8,11 +8,11 @@ export default function ModalPerfil({
 
     return (
 
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[100] flex items-top justify-end p-10">
-            <div className="w-[480px] h-[850px] rounded-[10px] bg-gradient-to-r from-[#1D2235] via-[#4B4D57] to-[#1F2A33] shadow-2xl relative overflow-hidden">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[100] flex items-top justify-end">
+            <div className="w-[480px] h-[760px] rounded-l-[5px] bg-gradient-to-r from-[#1D2235] via-[#4B4D57] to-[#1F2A33] shadow-2xl relative mr-[10px] overflow-hidden">
                 <button
                     onClick={() => setPerfilOpen(false)}
-                    className="absolute top-4 right-4 text-white text-3xl hover:scale-110 transition-transform"
+                    className="absolute top-1 right-4 text-white text-4xl hover:scale-110 hover:cursor-pointer transition-transform"
                 >
                     ×
                 </button>
@@ -30,7 +30,7 @@ export default function ModalPerfil({
                         </p>
                     </div>
                 </div>
-                <div className="px-10 mt-16 flex flex-col gap-10">
+                <div className="px-10 mt-10 flex flex-col gap-10">
                     <div>
                         <div className="bg-[#4D4D4D] w-[130px] h-[32px] flex items-center justify-center shadow">
                             <p className="text-white font-semibold text-2xl">
@@ -76,8 +76,8 @@ export default function ModalPerfil({
                             </div>
                         </div>
                     </div>
-                    <div className="flex justify-center mt-16">
-                        <button className="w-[250px] h-[75px] bg-[#4D4D4D] rounded-[25px] text-white text-5xl font-bold shadow-lg hover:scale-105 transition-transform">
+                    <div className="flex justify-center mt-3">
+                        <button className="w-[180px] h-[70px] bg-[#4D4D4D] rounded-[20px] text-white text-4xl font-bold shadow-lg hover:scale-102 hover:cursor-pointer transition-transform">
                             Editar
                         </button>
                     </div>

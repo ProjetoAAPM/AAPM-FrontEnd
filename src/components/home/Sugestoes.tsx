@@ -68,6 +68,7 @@ export default function Sugestoes() {
               font-extrabold
               text-[1rem] sm:text-[1.5rem] md:text-[2rem]
               hover:scale-105 transition
+              hover:cursor-pointer
             "
           >
             Enviar
