@@ -26,6 +26,10 @@ function Formulario({ tipo } : any) {
         }
     }
 
+    const loginGoogle = () => {
+        window.location.href = "http://localhost:5000/login/google";
+    };
+
     const cores = {
         aluno: { bg: 'bg-[#C83D3D]', bg_label: 'bg-[#902C2D]', btn: 'bg-[#383636]', titulo: 'text-[#FFFFFF]' },
         docente: { bg: 'bg-[#86D5FE]', bg_label: 'bg-[#2C6090]', btn: 'bg-[#383636]', titulo: 'text-[#16334D]' },
@@ -124,6 +128,19 @@ function Formulario({ tipo } : any) {
                         <input type="password" name="senha" onChange={guardar} className={estiloInput}/>
                     </div>
 
+                    {tipo === 'login' && (
+                        <div className="w-full flex justify-start pl-15 -mt-3">
+                            <a 
+                                href="https://pess.sesisenaispedu.org.br/Portal.aspx"
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-[#101625] text-sm font-semibold underline underline-offset-4 cursor-pointer"
+                            >
+                                Esqueceu a senha?
+                            </a>
+                        </div>
+                    )}
+
                     {tipo !== 'login' && (
                         <div className="flex flex-col">
                             <label className={estiloLabel}>Confirmar Senha:</label>
@@ -131,10 +148,26 @@ function Formulario({ tipo } : any) {
                         </div>
                     )}
 
-                    <div className="flex justify-center mt-4">
+                    <div className="flex justify-center mt-4 gap-6">
                         <button type="submit" className={`${tema.btn} ${tipo === 'login' ? 'w-[170px] h-[50px] rounded-full text-[#373737]' : 'w-[170px] h-[50px] rounded-2xl text-[#FFFFFF]'} text-xl font-bold shadow-md cursor-pointer`} >{tipo === 'login' ? 'Entrar' : 'Cadastrar-se'}</button>
-                    </div>
 
+                        {tipo === 'login' && (
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={loginGoogle}
+                                    className="w-[170px] h-[50px] bg-white border border-gray-300 rounded-full flex items-center justify-center gap-3 text-gray-700 font-semibold shadow-sm hover:bg-gray-50 cursor-pointer transition-all"
+                                >
+                                    <img 
+                                        src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" 
+                                        alt="Google" 
+                                        className="w-6 h-6"
+                                    />
+                                   
+                                </button>
+                            </>
+                        )}
+                    </div>
                 </div>
             </form>
         </div>
