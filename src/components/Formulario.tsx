@@ -19,17 +19,6 @@ function Formulario({ tipo } : any) {
             return;
         }
 
-        let dadosFinalizados = { ...dados };
-        if (usuario === 'aluno') {
-            dadosFinalizados.dur_curso = `${dados.data_inicio} até ${dados.data_final}`;
-
-            delete dadosFinalizados.data_inicio;
-            delete dadosFinalizados.data_final;
-        }
-        delete dadosFinalizados.confirmar_senha;
-
-        console.log("Enviando:", dadosFinalizados);
-
         if (tipo === 'cadastro') {
             navigate('/escolhaplano');
         } else {
@@ -47,12 +36,12 @@ function Formulario({ tipo } : any) {
 
     const estiloLabel = `${tema.bg_label} w-fit py-2 px-14 rounded-r-full mb-2 text-lg inset-shadow-sm inset-shadow-indigo-700/10 ${tipo === 'login' ? ' text-[#373737] font-bold' : 'pl-20  -ml-18.5 text-[#FFFFFF] font-semibold' }`;
 
-    const estiloInput = `h-[40px] p-1 bg-white rounded-md ${tipo === 'login' ? 'w-[380px] mx-15 shadow-md' : 'mx-2 shadow-md'}`;
+    const estiloInput = `h-[40px] p-3 bg-white rounded-md ${tipo === 'login' ? 'w-[380px] mx-15 shadow-md' : 'mx-2 shadow-md'}`;
 
     return (
         <div className="w-full flex justify-center py-20">
-            <form onSubmit={enviar} className={`${tema.bg} ${tipo === 'login' ? 'min-h-[500px] w-[500px] mt-35' : 'max-w-[848px] w-full mt-20 mb-20'}  py-10 rounded-xl flex flex-col items-center gap-6`}>
-                <img src="src/assets/icons/Logo48.svg" alt="logo" className={`${tipo === 'login' ? 'top-[170px]' : 'top-[110px]'} absolute h-[100px] w-auto drop-shadow-md`}/>
+            <form onSubmit={enviar} className={`${tema.bg} ${tipo === 'login' ? 'min-h-[500px] w-[500px] mt-35' : 'max-w-[848px] w-full mt-20'} py-10 rounded-xl flex flex-col items-center gap-6 relative`}>
+                <img src="src/assets/icons/Logo48.svg" alt="logo" className={`${tipo === 'login' ? '-top-[50px]' : '-top-[50px]'} absolute h-[100px] w-auto drop-shadow-md`}/>
                 <h2 className={`text-4xl font-bold italic mt-4 ${tema.titulo}`}>
                     {tipo === 'login' ? 'Faça seu Login' : 'Faça seu Cadastro'}
                 </h2>
@@ -93,12 +82,29 @@ function Formulario({ tipo } : any) {
                                         <div className="grid grid-cols-4 gap-4">
                                             <div className="flex flex-col">
                                                 <label className="text-white text-lg text-center font-semibold mb-2">Data Inicio</label>
-                                                <input type="date" name="data_inicio" onChange={guardar} className={estiloInput}/>
+                                                <input 
+                                                    type="date" 
+                                                name="data_inicio" 
+                                                onChange={guardar}
+                                                onClick={(e) => (e.target as HTMLInputElement).showPicker()}
+                                                onFocus={(e) => (e.target.style.color = 'black')}
+                                                onBlur={(e) => (e.target.style.color = e.target.value ? 'black' : 'transparent')}
+                                                style={{ color: dados.data_inicio ? 'black' : 'transparent' }}
+                                                className={`${estiloInput} pl-3 pr-3 cursor-pointer`}
+                                                />
                                             </div>
 
                                             <div className="flex flex-col">
                                                 <label className="text-white text-lg text-center font-semibold mb-2">Data Final</label>
-                                                <input type="date" name="data_final" onChange={guardar} className={estiloInput}/>
+                                                <input 
+                                                    type="date" 
+                                                    name="data_final" 
+                                                    onChange={guardar}
+                                                    onFocus={(e) => (e.target.style.color = 'black')}
+                                                    onBlur={(e) => (e.target.style.color = e.target.value ? 'black' : 'transparent')}
+                                                    style={{ color: dados.data_final ? 'black' : 'transparent' }}
+                                                    className={`${estiloInput} pl-3 pr-3 cursor-pointer`}
+                                                />
                                             </div>
                                         </div>
                                     </div> 
