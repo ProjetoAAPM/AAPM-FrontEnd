@@ -5,7 +5,7 @@ export default function FormularioExtrato({ extrato = [] }) {
     <div className="w-full max-w-[1890px] mx-auto px-3 sm:px-4 md:px-6 lg:px-10 overflow-x-hidden">
       <div className="flex flex-col lg:flex-row gap-3 lg:h-[93vh] overflow-hidden">
 
-        <div className="bg-[#DDF4FF] w-full lg:w-3/4 min-h-[50vh] lg:h-full rounded-[15px] shadow-2xl flex flex-col px-4 sm:px-6 md:px-10 py-6 relative overflow-hidden">
+        <div className="bg-[#DDF4FF] w-full lg:w-3/4 h-full lg:h-full rounded-[15px] shadow-2xl flex flex-col px-4 sm:px-6 md:px-10 py-6 relative overflow-hidden">
           
           <div className="absolute top-6 sm:top-10 left-0 bg-white text-[#101625] text-[1.5rem] sm:text-[2rem] md:text-[3rem] font-black px-[120px] sm:px-[200px] md:px-[450px] py-1 rounded-r-[10px] shadow-md whitespace-nowrap">
             Formulários
@@ -19,8 +19,8 @@ export default function FormularioExtrato({ extrato = [] }) {
 
         </div>
 
-        <div className="bg-[#BBE1FE] w-full lg:w-1/4 min-h-[50vh] lg:h-full rounded-[15px] shadow-2xl p-3 sm:p-4 relative flex flex-col overflow-hidden">
-          
+        <div className="bg-[#BBE1FE] w-full lg:w-1/4 h-[60vh] sm:h-[70vh] md:h-[80vh] lg:h-full rounded-[15px] shadow-2xl p-3 sm:p-4 relative flex flex-col overflow-hidden">
+
           <div className="absolute top-6 sm:top-10 right-0 bg-white text-[#101625] text-[1.2rem] sm:text-[1.5rem] md:text-[2rem] font-black px-[80px] sm:px-[100px] md:px-[140px] py-1 rounded-l-[10px] shadow-md whitespace-nowrap">
             Extrato
           </div>

@@ -7,8 +7,8 @@ function MenuMobile({ isOpen, onClose, usuario } : any) {
       <>
         <div
           className={`
-            absolute top-[75px] left-0
-            w-full h-auto
+            fixed top-[75px] left-0
+            w-full h-screen
             bg-[#211F1D]
             supports-[backdrop-filter]:bg-[#211F1D]/80
             backdrop-blur-lg
