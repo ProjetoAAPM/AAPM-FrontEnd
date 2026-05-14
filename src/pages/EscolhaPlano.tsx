@@ -49,7 +49,7 @@ function EscolhaPlano() {
                             </div>
                         </Copiador>
 
-                        <label className={`w-full max-x[300px] h-40 mt-3 rounded-sm bg-[#F5F5F5] flex flex-col items-center justify-center p-2 cursor-pointer`}
+                        <label className={`w-[90%] max-w-[400px] min-h-[160px] mt-3 rounded-sm bg-[#F5F5F5] flex flex-col items-center justify-center cursor-pointer`}
                             onDragOver={(e) => e.preventDefault()}
                             onDrop={(e) => {
                                 e.preventDefault();
@@ -95,7 +95,7 @@ function EscolhaPlano() {
                             </div>
                         </Copiador>
 
-                        <label className={`w-full max-x[300px] h-40 mt-3 rounded-sm bg-[#F5F5F5] flex flex-col items-center justify-center p-2 cursor-pointer`}
+                        <label className={`w-[90%] max-w-[400px] h-40 mt-3 mb-3 rounded-sm bg-[#F5F5F5] flex flex-col items-center justify-center p-2 cursor-pointer`}
                             onDragOver={(e) => e.preventDefault()}
                             onDrop={(e) => {
                                 e.preventDefault();

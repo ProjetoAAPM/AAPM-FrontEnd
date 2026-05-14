@@ -38,7 +38,7 @@ function CardPlano({ titulo, fundoTitulo, className, popular, textoBtn, corBtn, 
                 </div>
 
                 
-                <div className="px-6 md:px-8 flex flex-col grow w-full">
+                <div className=" flex flex-col grow w-full">
                     <div className="flex-1 flex flex-col items-center justify-center">
                         {children}
                     </div>
