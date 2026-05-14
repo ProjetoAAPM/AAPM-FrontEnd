@@ -27,7 +27,7 @@ function Inicio() {
   `;
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center md:items-start overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center md:items-start overflow-x-hidden">
       <video
         src="src/assets/video/jundiai.mp4"
         autoPlay

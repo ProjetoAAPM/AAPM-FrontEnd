@@ -78,11 +78,13 @@ export default function BlocoEditavel({ content, className = "", id}: Props) {
       }}
     >
       {editMode && isActive && (
-        <div className="tiptap-toolbar absolute -top-16 left-1/2 -translate-x-1/2 
-                        bg-[#1F2937]/95 backdrop-blur-xl border border-gray-600 
-                        rounded-full px-3 py-2 shadow-2xl z-50
-                        flex items-center gap-1 max-w-[95vw] overflow-x-auto scrollbar-hide mx-4">
-
+        <div className="tiptap-toolbar absolute -top-16 left-1/2 
+                -translate-x-1/2
+                bg-[#1F2937]/95 backdrop-blur-xl border border-gray-400
+                rounded-full px-3 py-2 shadow-2xl z-50
+                flex items-center gap-1 max-w-[95vw]
+                overflow-x-auto scrollbar-hide mx-4
+                text-white">
           {!isSmallScreen && (
             <>
               <button onClick={() => editor.chain().focus().toggleBold().run()}
