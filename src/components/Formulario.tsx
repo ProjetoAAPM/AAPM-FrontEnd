@@ -1,17 +1,22 @@
-import { useState } from "react";
+import { useState} from "react";
 import { useNavigate } from "react-router-dom";
+import type { ChangeEvent, SyntheticEvent } from 'react';
 
 function Formulario({ tipo } : any) {
-    const [usuario, setUsuario] = useState('aluno');
-    const [dados, setDados] = useState({ senha:'', confirmar_senha:'', dur_curso:'', data_inicio:'', data_final: ''});
+
+    const [dados, setDados] = useState({ nome: '', email: '', senha: '', confirmar_senha: '', curso: '', especialidade: '', data_inicio: '', data_final: '', tipo_usuario: 'aluno'});
 
     const navigate = useNavigate();
 
-    const guardar = (e : any) => {
+    const guardar = (e : ChangeEvent<HTMLInputElement>) => {
         setDados({ ...dados, [e.target.name]: e.target.value });
     }
 
-    const enviar = (e : any) => {
+    const alternarUsuario = (selecao: 'aluno' | 'docente') => {
+        setDados({ ...dados, tipo_usuario: selecao})
+    }
+
+    const enviar = (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
         e.preventDefault();
 
         if (tipo !== 'login' && dados.senha !== dados.confirmar_senha) {
@@ -19,12 +24,18 @@ function Formulario({ tipo } : any) {
             return;
         }
 
-        if (tipo === 'cadastro') {
-            navigate('/escolhaplano');
-        } else {
-            navigate('/home');
+        if (dados.tipo_usuario === 'aluno' && !dados.curso) {
+            alert("Informe o seu curso!")
+            return;
         }
-    }
+
+        if (dados.tipo_usuario === 'docente' && !dados.especialidade) {
+            alert("Informe sua especialidade!")
+            return;
+        }
+            
+        navigate(tipo === 'cadastro' ? '/escolhaplano' : '/home');
+    };
 
     const loginGoogle = () => {
         window.location.href = "http://localhost:5000/login/google";
@@ -36,7 +47,7 @@ function Formulario({ tipo } : any) {
         login: { bg: 'bg-[#FFEFAF]', bg_label: 'bg-[#FFDB4B]', btn: 'bg-[#FFDB4B]', titulo: 'text-[#101625]' }
     };
 
-    const tema = tipo === 'login' ? cores.login : (usuario === 'aluno' ? cores.aluno : cores.docente);
+    const tema = tipo === 'login' ? cores.login : (dados.tipo_usuario === 'aluno' ? cores.aluno : cores.docente);
 
     const estiloLabel = `${tema.bg_label} w-fit py-2 px-14 rounded-r-full mb-2 text-lg inset-shadow-sm inset-shadow-indigo-700/10 ${tipo === 'login' ? ' text-[#373737] font-bold' : 'pl-20  -ml-18.5 text-[#FFFFFF] font-semibold' }`;
 
@@ -54,13 +65,13 @@ function Formulario({ tipo } : any) {
                     {tipo !== 'login' && (
                         <div className="flex flex-col w-full">
                             <label className={estiloLabel}>Nome:</label>
-                            <input type="text" name="nome" onChange={guardar} className={estiloInput} />
+                            <input type="text" name="nome" value={dados.nome} onChange={guardar} className={estiloInput} required/>
                         </div>
                     )}
 
                     <div className="flex flex-col">
                         <label className={estiloLabel}>E-mail:</label>
-                        <input type="email" name="email" onChange={guardar} className={estiloInput}/>
+                        <input type="email" name="email" value={dados.email} onChange={guardar} className={estiloInput} required/>
                     </div>
 
                     {tipo !== 'login' && (
@@ -68,16 +79,37 @@ function Formulario({ tipo } : any) {
                             <div className="flex flex-col">
                                 <label className={estiloLabel}>Você é?</label>
                                 <div className="grid grid-cols-5 gap-6">
-                                    <button type="button" onClick={() => setUsuario('aluno')} className={`w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer ${usuario === 'aluno' ? 'bg-[#383636] text-white ' : 'bg-[#DDDDDD] text-black'}`}>Aluno</button>
-                                    <button type="button" onClick={() => setUsuario('docente')} className={`w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer ${usuario === 'docente' ? 'bg-[#383636] text-white ' : 'bg-[#DDDDDD] text-black'}`}>Docente</button>
+                                    <button 
+                                        type="button" 
+                                        onClick={() => alternarUsuario('aluno')} 
+                                        className={`
+                                            w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer
+                                            ${dados.tipo_usuario === 'aluno' 
+                                                ? 'bg-[#383636] text-white ' 
+                                                : 'bg-[#DDDDDD] text-black'}`}
+                                    >
+                                        Aluno
+                                    </button>
+
+                                    <button 
+                                        type="button" 
+                                        onClick={() => alternarUsuario('docente')} 
+                                        className={`
+                                            w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer 
+                                            ${dados.tipo_usuario === 'docente' 
+                                                ? 'bg-[#383636] text-white ' 
+                                                : 'bg-[#DDDDDD] text-black'}`}
+                                    >
+                                        Docente
+                                    </button>
                                 </div>
                             </div>
 
-                            {usuario === 'aluno' ? (
+                            {dados.tipo_usuario === 'aluno' ? (
                                 <>
                                     <div className="flex flex-col">
                                         <label className={estiloLabel}>Curso:</label>
-                                        <input type="text" name="curso" onChange={guardar} className={estiloInput}/>
+                                        <input type="text" name="curso" value={dados.curso} onChange={guardar} className={estiloInput} required/>
                                     </div> 
 
                                     <div className=" flex flex-col">
@@ -88,13 +120,15 @@ function Formulario({ tipo } : any) {
                                                 <label className="text-white text-lg text-center font-semibold mb-2">Data Inicio</label>
                                                 <input 
                                                     type="date" 
-                                                name="data_inicio" 
-                                                onChange={guardar}
-                                                onClick={(e) => (e.target as HTMLInputElement).showPicker()}
-                                                onFocus={(e) => (e.target.style.color = 'black')}
-                                                onBlur={(e) => (e.target.style.color = e.target.value ? 'black' : 'transparent')}
-                                                style={{ color: dados.data_inicio ? 'black' : 'transparent' }}
-                                                className={`${estiloInput} pl-3 pr-3 cursor-pointer`}
+                                                    name="data_inicio"
+                                                    value={dados.data_inicio}
+                                                    onChange={guardar}
+                                                    onClick={(e) => (e.target as HTMLInputElement).showPicker()}
+                                                    onFocus={(e) => (e.target.style.color = 'black')}
+                                                    onBlur={(e) => (e.target.style.color = e.target.value ? 'black' : 'transparent')}
+                                                    style={{ color: dados.data_inicio ? 'black' : 'transparent' }}
+                                                    className={`${estiloInput} pl-3 pr-3 cursor-pointer`}
+                                                    required
                                                 />
                                             </div>
 
@@ -102,12 +136,14 @@ function Formulario({ tipo } : any) {
                                                 <label className="text-white text-lg text-center font-semibold mb-2">Data Final</label>
                                                 <input 
                                                     type="date" 
-                                                    name="data_final" 
+                                                    name="data_final"
+                                                    value={dados.data_final} 
                                                     onChange={guardar}
                                                     onFocus={(e) => (e.target.style.color = 'black')}
                                                     onBlur={(e) => (e.target.style.color = e.target.value ? 'black' : 'transparent')}
                                                     style={{ color: dados.data_final ? 'black' : 'transparent' }}
                                                     className={`${estiloInput} pl-3 pr-3 cursor-pointer`}
+                                                    required
                                                 />
                                             </div>
                                         </div>
@@ -117,7 +153,7 @@ function Formulario({ tipo } : any) {
                             ) : (
                                 <div className="flex flex-col">
                                     <label className={estiloLabel}>Especialidade:</label>
-                                    <input type="text" name="especialidade" onChange={guardar} className={estiloInput}/>
+                                    <input type="text" name="especialidade" value={dados.especialidade} onChange={guardar} className={estiloInput} required/>
                                 </div>
                             )}
                         </>
@@ -125,7 +161,7 @@ function Formulario({ tipo } : any) {
 
                     <div className="flex flex-col">
                         <label className={estiloLabel}>Senha:</label>
-                        <input type="password" name="senha" onChange={guardar} className={estiloInput}/>
+                        <input type="password" name="senha" value={dados.senha} onChange={guardar} className={estiloInput} required/>
                     </div>
 
                     {tipo === 'login' && (
@@ -144,7 +180,7 @@ function Formulario({ tipo } : any) {
                     {tipo !== 'login' && (
                         <div className="flex flex-col">
                             <label className={estiloLabel}>Confirmar Senha:</label>
-                            <input type="password" name="confirmar_senha" onChange={guardar} className={estiloInput}/>
+                            <input type="password" name="confirmar_senha" value={dados.confirmar_senha} onChange={guardar} className={estiloInput} required/>
                         </div>
                     )}
 
