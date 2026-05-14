@@ -33,7 +33,7 @@ export default function Sugestoes({ modoAdmin = false }: SugestoesProps) {
     return (
         <div className="w-full max-w-[1890px] mx-auto px-4 sm:px-6 md:px-10 min-h-[85vh] mt-5 md:mt-2 mb-2">
             <div className="bg-[#C83D3D] w-full min-h-[85vh] rounded-[15px] shadow-2xl px-4 sm:px-6 md:px-10 relative overflow-hidden pb-20">
-                <div className="absolute top-6 sm:top-10 right-0 bg-white text-[#101625] text-[1.5rem] sm:text-[2.5rem] md:text-[3rem] lg:text-[4rem] font-black px-20 sm:px-32 md:px-[300px] lg:px-[400px] xl:px-[600px] py-2 rounded-l-[10px] shadow-md z-20">
+                <div className="absolute top-8 right-0 bg-white text-[#101625] text-[1.5rem] sm:text-[2rem] md:text-[3rem] font-black px-20 sm:px-32 md:px-[280px] lg:px-[400px] xl:px-[600px] py-1 rounded-l-[10px] shadow-md z-10 flex items-center justify-center max-w-[90%]">
                     Sugestões
                 </div>
 

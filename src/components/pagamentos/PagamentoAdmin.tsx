@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import CardPagamento from "./CardPagamento";
 import CardComprovante from "./CardComprovante";
 import "../Scrollbar/scrollbar.css";
+import filtro from "../../assets/icons/icone_filtro.svg";
 
 export interface IPagamento {
     id: number;
