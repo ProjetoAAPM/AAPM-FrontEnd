@@ -116,7 +116,7 @@ export default function Sugestoes({ modoAdmin = false }: SugestoesProps) {
                                     <img
                                         src={filtroIcon}
                                         alt="filtro"
-                                        className="w-full h-full scale-[1.8] sm:scale-[2] md:scale-[2.5] transform object-contain md:-mr-15 translate-y-1 sm:translate-y-2 md:translate-y-3"
+                                        className="w-full h-full scale-[1.8] sm:scale-[2] md:scale-[2] transform object-contain md:-mr-15 translate-y-1 sm:translate-y-2 md:translate-y-2"
                                     />
                                 </div>
 

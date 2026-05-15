@@ -2,10 +2,10 @@ import { Link, useLocation } from "react-router-dom";
 import { useEditMode } from "../contexts/modo_editar";
 import logoImgBorda from "/src/assets/icons/LogoBorda48.svg";
 
-function MenuMobile({ isOpen, onClose }: any) {
+function MenuMobile({ isOpen, onClose, usuario }: any) {
   const location = useLocation();
   const { editMode, setEditMode } = useEditMode();
-  
+
   const isAdmin = location.pathname.startsWith("/admin");
 
   const resetarPadrao = () => {
@@ -14,6 +14,19 @@ function MenuMobile({ isOpen, onClose }: any) {
       localStorage.removeItem("sobre-texto");
       localStorage.removeItem("img-futsal");
       localStorage.removeItem("img-grupo");
+
+      localStorage.removeItem("jornal-img1");
+      localStorage.removeItem("jornal-img2");
+      localStorage.removeItem("jornal-img3");
+      localStorage.removeItem("jornal-img4");
+
+      localStorage.removeItem("jornal-texto-col1");
+      localStorage.removeItem("jornal-texto-col2");
+      localStorage.removeItem("jornal-texto-col3-1");
+      localStorage.removeItem("jornal-texto-col3-2");
+
+      localStorage.removeItem("carrossel-slides");
+
       setEditMode(false);
       onClose();
       window.location.reload();
@@ -28,12 +41,14 @@ function MenuMobile({ isOpen, onClose }: any) {
         ${isOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"}
       `}
     >
-      
       <div className="w-full bg-[#FFD44B] h-[75px] flex items-center justify-between px-4 shadow-md">
         <div className="flex items-center">
           <img src={logoImgBorda} alt="Logo" className="h-10 w-auto px-2" />
-          <p className="text-[#171717] font-bold text-lg">AAPM Senai Leopoldina</p>
+          <p className="text-[#171717] font-bold text-lg">
+            AAPM Senai Leopoldina
+          </p>
         </div>
+
         <button onClick={onClose} className="text-[#1A1A1A] text-3xl font-light">
           ✕
         </button>
@@ -41,36 +56,35 @@ function MenuMobile({ isOpen, onClose }: any) {
 
       <nav className="flex flex-col h-[calc(100vh-75px)] px-10 pt-12 pb-10">
         <div className="flex flex-col gap-6">
-          
-          <Link 
-            to={isAdmin ? "/admin" : "/home"} 
-            onClick={onClose} 
+          <Link
+            to={isAdmin ? "/admin" : "/home"}
+            onClick={onClose}
             className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2"
           >
             Home
           </Link>
 
           {isAdmin && (
-            <Link 
-              to="/admin/usuario" 
-              onClick={onClose} 
+            <Link
+              to="/admin/usuario"
+              onClick={onClose}
               className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2"
             >
               Usuário
             </Link>
           )}
 
-          <Link 
-            to={isAdmin ? "/admin/novidades" : "/novidades"} 
-            onClick={onClose} 
+          <Link
+            to={isAdmin ? "/admin/novidades" : "/novidades"}
+            onClick={onClose}
             className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2"
           >
             Novidades
           </Link>
 
-          <Link 
-            to={isAdmin ? "/admin/pagamento" : "/pagamento"} 
-            onClick={onClose} 
+          <Link
+            to={isAdmin ? "/admin/pagamento" : "/pagamento"}
+            onClick={onClose}
             className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2"
           >
             Pagamentos
@@ -89,9 +103,7 @@ function MenuMobile({ isOpen, onClose }: any) {
 
               <button
                 onClick={() => {
-                  if (editMode) {
-                    alert("Salvo com sucesso!");
-                  }
+                  if (editMode) alert("Salvo com sucesso!");
                   setEditMode(!editMode);
                   onClose();
                 }}

@@ -1,28 +1,58 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/admin/AuthContext";
+import type { ChangeEvent, SyntheticEvent } from "react";
+import { ChevronDown } from "lucide-react";
 
 function Formulario({ tipo }: any) {
 
-    const [usuario, setUsuario] = useState('aluno');
-
     const [dados, setDados] = useState({
+        nome: '',
         email: '',
         senha: '',
         confirmar_senha: '',
-        dur_curso: '',
+        curso: '',
+        especialidade: '',
         data_inicio: '',
-        data_final: ''
+        data_final: '',
+        tipo_usuario: 'aluno'
     });
 
     const navigate = useNavigate();
-    const { login } = useAuth();   // ← Novo
 
-    const guardar = (e: any) => {
+    const { login } = useAuth();
+
+    const guardar = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setDados({ ...dados, [e.target.name]: e.target.value });
     };
 
-    const enviar = (e: any) => {
+    const alternarUsuario = (selecao: 'aluno' | 'docente') => {
+        setDados({ ...dados, tipo_usuario: selecao });
+    };
+
+    const cursos = [
+        "Tec Administração",
+        "Tec Desenvolvimento de Sistemas",
+        "Tec Eletroeletrônica",
+        "Tec Manutenção de Sistemas Metroferroviários",
+        "Tec Mecânica",
+        "Tec Mecatrônica",
+        "Tec Segurança do Trabalho",
+        "CAI Mecânico de Usinagem",
+        "CAI Eletricista de Manutenção Eletroeletrônica",
+        "CAI Ferramenteiro de Moldes para Plásticos"
+    ];
+
+    const especialidades = [
+        "Gestão",
+        "TI",
+        "Elétrica",
+        "Mecânica",
+        "Segurança"
+    ];
+
+    const enviar = (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
+
         e.preventDefault();
 
         if (tipo !== 'login' && dados.senha !== dados.confirmar_senha) {
@@ -31,6 +61,7 @@ function Formulario({ tipo }: any) {
         }
 
         if (tipo === 'login') {
+
             const sucesso = login(dados.email, dados.senha);
 
             if (sucesso) {
@@ -38,9 +69,25 @@ function Formulario({ tipo }: any) {
             } else {
                 alert("Email ou senha incorretos!");
             }
-        } else {
-            navigate('/escolhaplano');
+
+            return;
         }
+
+        if (dados.tipo_usuario === 'aluno' && !dados.curso) {
+            alert("Informe o seu curso!");
+            return;
+        }
+
+        if (dados.tipo_usuario === 'docente' && !dados.especialidade) {
+            alert("Informe sua especialidade!");
+            return;
+        }
+
+        navigate('/escolhaplano');
+    };
+
+    const loginGoogle = () => {
+        window.location.href = "http://localhost:5000/login/google";
     };
 
     const cores = {
@@ -64,7 +111,12 @@ function Formulario({ tipo }: any) {
         }
     };
 
-    const tema = tipo === 'login' ? cores.login : (usuario === 'aluno' ? cores.aluno : cores.docente);
+    const tema =
+        tipo === 'login'
+            ? cores.login
+            : (dados.tipo_usuario === 'aluno'
+                ? cores.aluno
+                : cores.docente);
 
     const estiloLabel = `
         ${tema.bg_label}
@@ -77,7 +129,7 @@ function Formulario({ tipo }: any) {
     `;
 
     const estiloInput = `
-        h-[40px] p-1 bg-white rounded-md
+        h-[40px] p-3 bg-white rounded-md
         ${tipo === 'login'
             ? 'w-[380px] mx-15 shadow-md'
             : 'mx-2 shadow-md'
@@ -95,7 +147,7 @@ function Formulario({ tipo }: any) {
                         ? 'min-h-[500px] w-[500px] mt-35'
                         : 'max-w-[848px] w-full mt-20 mb-20'
                     }
-                    py-10 rounded-xl flex flex-col items-center gap-6
+                    py-10 rounded-xl flex flex-col items-center gap-6 relative
                 `}
             >
 
@@ -104,15 +156,17 @@ function Formulario({ tipo }: any) {
                     alt="logo"
                     className={`
                         ${tipo === 'login'
-                            ? 'top-[170px]'
-                            : 'top-[110px]'
+                            ? '-top-[50px]'
+                            : '-top-[50px]'
                         }
                         absolute h-[100px] w-auto drop-shadow-md
                     `}
                 />
 
                 <h2 className={`text-4xl font-bold italic mt-4 ${tema.titulo}`}>
-                    {tipo === 'login' ? 'Faça seu Login' : 'Faça seu Cadastro'}
+                    {tipo === 'login'
+                        ? 'Faça seu Login'
+                        : 'Faça seu Cadastro'}
                 </h2>
 
                 <div className="w-full max-w-[700px] flex flex-col gap-8">
@@ -120,92 +174,269 @@ function Formulario({ tipo }: any) {
                     {tipo !== 'login' && (
                         <div className="flex flex-col w-full">
                             <label className={estiloLabel}>Nome:</label>
+
                             <input
                                 type="text"
                                 name="nome"
+                                value={dados.nome}
                                 onChange={guardar}
                                 className={estiloInput}
+                                required
                             />
                         </div>
                     )}
 
                     <div className="flex flex-col">
+
                         <label className={estiloLabel}>E-mail:</label>
+
                         <input
                             type="email"
                             name="email"
+                            value={dados.email}
                             onChange={guardar}
                             className={estiloInput}
+                            required
                         />
+
                     </div>
 
                     {tipo !== 'login' && (
                         <>
+
                             <div className="flex flex-col">
+
                                 <label className={estiloLabel}>Você é?</label>
+
                                 <div className="grid grid-cols-5 gap-6">
+
                                     <button
                                         type="button"
-                                        onClick={() => setUsuario('aluno')}
-                                        className={`w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer
-                                            ${usuario === 'aluno' ? 'bg-[#383636] text-white' : 'bg-[#DDDDDD] text-black'}`}
+                                        onClick={() => alternarUsuario('aluno')}
+                                        className={`
+                                            w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer
+                                            ${dados.tipo_usuario === 'aluno'
+                                                ? 'bg-[#383636] text-white'
+                                                : 'bg-[#DDDDDD] text-black'}
+                                        `}
                                     >
                                         Aluno
                                     </button>
+
                                     <button
                                         type="button"
-                                        onClick={() => setUsuario('docente')}
-                                        className={`w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer
-                                            ${usuario === 'docente' ? 'bg-[#383636] text-white' : 'bg-[#DDDDDD] text-black'}`}
+                                        onClick={() => alternarUsuario('docente')}
+                                        className={`
+                                            w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer
+                                            ${dados.tipo_usuario === 'docente'
+                                                ? 'bg-[#383636] text-white'
+                                                : 'bg-[#DDDDDD] text-black'}
+                                        `}
                                     >
                                         Docente
                                     </button>
+
                                 </div>
+
                             </div>
 
-                            {usuario === 'aluno' ? (
+                            {dados.tipo_usuario === 'aluno' ? (
                                 <>
-                                    <div className="flex flex-col">
+
+                                    <div className="relative flex flex-col">
+
                                         <label className={estiloLabel}>Curso:</label>
-                                        <input type="text" name="curso" onChange={guardar} className={estiloInput} />
+
+                                        <select
+                                            name="curso"
+                                            value={dados.curso}
+                                            onChange={guardar}
+                                            className="h-[40px] p-2 m-1.5 bg-white rounded-md shadow-md appearance-none"
+                                            required
+                                        >
+
+                                            <option value="">Selecione seu curso</option>
+
+                                            {cursos.map((item) => (
+                                                <option key={item} value={item}>
+                                                    {item}
+                                                </option>
+                                            ))}
+
+                                        </select>
+
+                                        <div className="absolute right-3 top-20 -translate-y-1/2 pointer-events-none">
+                                            <ChevronDown size={20} className="text-gray-500" />
+                                        </div>
+
                                     </div>
 
                                     <div className="flex flex-col">
-                                        <label className={estiloLabel}>Duração do Curso:</label>
+
+                                        <label className={estiloLabel}>
+                                            Duração do Curso:
+                                        </label>
+
                                         <div className="grid grid-cols-4 gap-4">
+
                                             <div className="flex flex-col">
-                                                <label className="text-white text-lg text-center font-semibold mb-2">Data Inicio</label>
-                                                <input type="date" name="data_inicio" onChange={guardar} className={estiloInput} />
+
+                                                <label className="text-white text-lg text-center font-semibold mb-2">
+                                                    Data Inicio
+                                                </label>
+
+                                                <input
+                                                    type="date"
+                                                    name="data_inicio"
+                                                    value={dados.data_inicio}
+                                                    onChange={guardar}
+                                                    onClick={(e) => (e.target as HTMLInputElement).showPicker()}
+                                                    onFocus={(e) => (e.target.style.color = 'black')}
+                                                    onBlur={(e) => (
+                                                        e.target.style.color =
+                                                            e.target.value
+                                                                ? 'black'
+                                                                : 'transparent'
+                                                    )}
+                                                    style={{
+                                                        color: dados.data_inicio
+                                                            ? 'black'
+                                                            : 'transparent'
+                                                    }}
+                                                    className={`${estiloInput} pl-3 pr-3 cursor-pointer`}
+                                                    required
+                                                />
+
                                             </div>
+
                                             <div className="flex flex-col">
-                                                <label className="text-white text-lg text-center font-semibold mb-2">Data Final</label>
-                                                <input type="date" name="data_final" onChange={guardar} className={estiloInput} />
+
+                                                <label className="text-white text-lg text-center font-semibold mb-2">
+                                                    Data Final
+                                                </label>
+
+                                                <input
+                                                    type="date"
+                                                    name="data_final"
+                                                    value={dados.data_final}
+                                                    onChange={guardar}
+                                                    onFocus={(e) => (e.target.style.color = 'black')}
+                                                    onBlur={(e) => (
+                                                        e.target.style.color =
+                                                            e.target.value
+                                                                ? 'black'
+                                                                : 'transparent'
+                                                    )}
+                                                    style={{
+                                                        color: dados.data_final
+                                                            ? 'black'
+                                                            : 'transparent'
+                                                    }}
+                                                    className={`${estiloInput} pl-3 pr-3 cursor-pointer`}
+                                                    required
+                                                />
+
                                             </div>
+
                                         </div>
+
                                     </div>
+
                                 </>
                             ) : (
-                                <div className="flex flex-col">
-                                    <label className={estiloLabel}>Especialidade:</label>
-                                    <input type="text" name="especialidade" onChange={guardar} className={estiloInput} />
+
+                                <div className="relative flex flex-col">
+
+                                    <label className={estiloLabel}>
+                                        Especialidade:
+                                    </label>
+
+                                    <select
+                                        name="especialidade"
+                                        value={dados.especialidade}
+                                        onChange={guardar}
+                                        className="h-[40px] p-2 m-1.5 bg-white rounded-md shadow-md appearance-none"
+                                        required
+                                    >
+
+                                        <option value="">
+                                            Selecione seu nicho
+                                        </option>
+
+                                        {especialidades.map((nicho) => (
+                                            <option key={nicho} value={nicho}>
+                                                {nicho}
+                                            </option>
+                                        ))}
+
+                                    </select>
+
+                                    <div className="absolute right-3 top-20 -translate-y-1/2 pointer-events-none">
+                                        <ChevronDown size={20} className="text-gray-500" />
+                                    </div>
+
                                 </div>
+
                             )}
+
                         </>
                     )}
 
                     <div className="flex flex-col">
+
                         <label className={estiloLabel}>Senha:</label>
-                        <input type="password" name="senha" onChange={guardar} className={estiloInput} />
+
+                        <input
+                            type="password"
+                            name="senha"
+                            value={dados.senha}
+                            onChange={guardar}
+                            className={estiloInput}
+                            required
+                        />
+
                     </div>
 
-                    {tipo !== 'login' && (
-                        <div className="flex flex-col">
-                            <label className={estiloLabel}>Confirmar Senha:</label>
-                            <input type="password" name="confirmar_senha" onChange={guardar} className={estiloInput} />
+                    {tipo === 'login' && (
+
+                        <div className="w-full flex justify-start pl-15 -mt-3">
+
+                            <a
+                                href="https://pess.sesisenaispedu.org.br/Portal.aspx"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[#101625] text-sm font-semibold underline underline-offset-4 cursor-pointer"
+                            >
+                                Esqueceu a senha?
+                            </a>
+
                         </div>
+
                     )}
 
-                    <div className="flex justify-center mt-4">
+                    {tipo !== 'login' && (
+
+                        <div className="flex flex-col">
+
+                            <label className={estiloLabel}>
+                                Confirmar Senha:
+                            </label>
+
+                            <input
+                                type="password"
+                                name="confirmar_senha"
+                                value={dados.confirmar_senha}
+                                onChange={guardar}
+                                className={estiloInput}
+                                required
+                            />
+
+                        </div>
+
+                    )}
+
+                    <div className="flex justify-center mt-4 gap-6">
+
                         <button
                             type="submit"
                             className={`
@@ -217,11 +448,35 @@ function Formulario({ tipo }: any) {
                                 text-xl font-bold shadow-md cursor-pointer
                             `}
                         >
-                            {tipo === 'login' ? 'Entrar' : 'Cadastrar-se'}
+                            {tipo === 'login'
+                                ? 'Entrar'
+                                : 'Cadastrar-se'}
                         </button>
+
+                        {tipo === 'login' && (
+
+                            <button
+                                type="button"
+                                onClick={loginGoogle}
+                                className="w-[170px] h-[50px] bg-white border border-gray-300 rounded-full flex items-center justify-center gap-3 text-gray-700 font-semibold shadow-sm hover:bg-gray-50 cursor-pointer transition-all"
+                            >
+
+                                <img
+                                    src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg"
+                                    alt="Google"
+                                    className="w-6 h-6"
+                                />
+
+                            </button>
+
+                        )}
+
                     </div>
+
                 </div>
+
             </form>
+
         </div>
     );
 }
