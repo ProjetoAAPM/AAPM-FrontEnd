@@ -1,6 +1,8 @@
 import { useState} from "react";
 import { useNavigate } from "react-router-dom";
 import type { ChangeEvent, SyntheticEvent } from 'react';
+import { ChevronDown } from "lucide-react";
+
 
 function Formulario({ tipo } : any) {
 
@@ -8,13 +10,28 @@ function Formulario({ tipo } : any) {
 
     const navigate = useNavigate();
 
-    const guardar = (e : ChangeEvent<HTMLInputElement>) => {
+    const guardar = (e : ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setDados({ ...dados, [e.target.name]: e.target.value });
     }
 
     const alternarUsuario = (selecao: 'aluno' | 'docente') => {
         setDados({ ...dados, tipo_usuario: selecao})
     }
+
+    const cursos = [
+        "Tec Administração", 
+        "Tec Desenvolvimento de Sistemas", 
+        "Tec Eletroeletrônica", 
+        "Tec Manutenção de Sistemas Metroferroviários", 
+        "Tec Mecânica", 
+        "Tec Mecatrônica", 
+        "Tec Segurança do Trabalho", 
+        "CAI Mecânico de Usinagem", 
+        "CAI Eletricista de Manutenção Eletroeletrônica", 
+        "CAI Ferramenteiro de Moldes para Plásticos"
+    ];
+
+    const especialidades = ["Gestão", "TI", "Elétrica", "Mecânica", "Segurança"];
 
     const enviar = (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
         e.preventDefault();
@@ -107,9 +124,24 @@ function Formulario({ tipo } : any) {
 
                             {dados.tipo_usuario === 'aluno' ? (
                                 <>
-                                    <div className="flex flex-col">
+                                    <div className="relative flex flex-col">
                                         <label className={estiloLabel}>Curso:</label>
-                                        <input type="text" name="curso" value={dados.curso} onChange={guardar} className={estiloInput} required/>
+                                        <select 
+                                            name="curso" 
+                                            value={dados.curso} 
+                                            onChange={guardar} 
+                                            className="h-[40px] p-2 m-1.5 bg-white rounded-md shadow-md appearance-none"
+                                            required
+                                        >
+                                            <option value="">Selecione seu curso</option>
+                                            {cursos.map((item) => (
+                                                <option key={item} value={item}>{item}</option>
+                                            ))}
+                                        </select>
+
+                                        <div className="absolute right-3 top-20 -translate-y-1/2 pointer-events-none">
+                                            <ChevronDown size={20} className="text-gray-500" />
+                                        </div>
                                     </div> 
 
                                     <div className=" flex flex-col">
@@ -151,10 +183,25 @@ function Formulario({ tipo } : any) {
         
                                 </>
                             ) : (
-                                <div className="flex flex-col">
+                                <div className="relative flex flex-col">
                                     <label className={estiloLabel}>Especialidade:</label>
-                                    <input type="text" name="especialidade" value={dados.especialidade} onChange={guardar} className={estiloInput} required/>
-                                </div>
+                                    <select 
+                                        name="especialidade" 
+                                        value={dados.especialidade} 
+                                        onChange={guardar} 
+                                        className="h-[40px] p-2 m-1.5 bg-white rounded-md shadow-md appearance-none"
+                                        required
+                                    >
+                                        <option value="">Selecione seu nicho</option>
+                                        {especialidades.map((nicho) => (
+                                            <option key={nicho} value={nicho}>{nicho}</option>
+                                        ))}
+                                    </select>
+
+                                    <div className="absolute right-3 top-20 -translate-y-1/2 pointer-events-none">
+                                        <ChevronDown size={20} className="text-gray-500" />
+                                    </div>
+                            </div>
                             )}
                         </>
                     )}
