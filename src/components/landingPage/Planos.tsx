@@ -30,7 +30,7 @@ function Planos() {
                     corBtn="bg-[#86D5FE] italic mb-10"
                     onClick={() => navigate("/cadastro")}
                 >
-                    <div className="bg-[#86D5FE]/80 w-full h-[40px] -mt-18 mb-10 text-2xl font-bold italic">R$50 <span className="text-[22px] font-medium">/ 3 meses</span></div>
+                    <div className="bg-[#86D5FE]/80 w-full h-[40px] -mt-17 mb-10 text-[26px] font-bold italic">R$50 <span className="text-[22px] font-medium">/ 3 meses</span></div>
 
                     <p className="text-lg md:text-2xl pl-6 pr-6 font-medium leading-tight">Participe no seu ritmo, contribuindo aos poucos e aproveitando as atividades ao longo do ano.</p>
                     
@@ -66,7 +66,7 @@ function Planos() {
                     onClick={() => navigate("/cadastro")}
                 >
 
-                    <div className="bg-linear-to-r from-[#F1D052] via-[#F0C72B] to-[#EFBF04] w-full h-[40px] -mt-6 mb-10 text-2xl font-bold italic">R$100 <span className="text-[22px] font-medium">/ 6 meses</span></div>
+                    <div className="bg-linear-to-r from-[#F1D052] via-[#F0C72B] to-[#EFBF04] w-full h-[40px] -mt-6 mb-10 text-[26px] font-bold italic">R$100 <span className="text-[22px] font-medium">/ 6 meses</span></div>
 
                     <p className="text-lg md:text-2xl pl-6 pr-6 font-medium leading-tight">Participe por mais tempo, contribuindo de forma contínua e aproveitando benefícios adicionais ao longo do ano.</p>
                     
@@ -97,7 +97,7 @@ function Planos() {
                 </CardPlano>
 
                 <CardPlano
-                    titulo="Turbine seus Pontos!"
+                    titulo="Doação Solidária"
                     className="bg-[#FFFFFF] border-3 border-[#C83D3D]"
                     fundoTitulo="bg-[#C83D3D] w-full h-[80px] rounded-t-xl italic"
                     popular={false}
@@ -106,7 +106,7 @@ function Planos() {
                     onClick={() => navigate("/cadastro")}
                 >
                     
-                    <div className="bg-[#C83D3D]/80 w-full h-[40px] -mt-4 mb-10 text-2xl font-bold italic">R$80 <span className="text-[22px] font-medium">/ ativação</span></div>
+                    <div className="bg-[#C83D3D]/80 w-full h-[40px] -mt-4 mb-10 text-[26px] font-medium italic items-center">Contribuir <span className="text-[26px] font-bold">Agora</span></div>
                     <div className="w-full flex flex-col items-center">
                         <p className="text-lg md:text-2xl font-medium leading-tight text-center">Sua contribuição apoia alunos e melhora o dia a dia na escola. Qualquer valor faz diferença.</p>
                         
