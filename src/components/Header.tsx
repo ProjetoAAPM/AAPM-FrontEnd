@@ -101,10 +101,10 @@ function Header() {
 
                     </div>
 
-                    <div className="hidden lg:flex gap-10 xl:gap-28 text-white text-lg font-medium">
+                    <div className="hidden lg:flex gap-6 xl:gap-16 2xl:gap-28 text-white text-sm xl:text-base 2xl:text-lg font-medium">
 
                         <Link
-                            to={isAdmin ? "/admin" : "/"}
+                            to={isAdmin ? "/admin" : "/home"}
                             className="hover:text-gray-300 transition-colors"
                         >
                             Home

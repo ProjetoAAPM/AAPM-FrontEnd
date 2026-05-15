@@ -51,6 +51,23 @@ export default function FormularioExtrato({ modoAdmin = false, extrato }: Formul
         setFormulariosSalvos(novaLista);
     };
 
+    const formulariosVisiveis = formulariosSalvos.filter((formulario) => {
+    const [dia, mes, ano] = formulario.data.split("/");
+    const [hora, minuto] = formulario.hora.split(":");
+
+    const dataHoraFormulario = new Date(
+        Number(ano),
+        Number(mes) - 1,
+        Number(dia),
+        Number(hora),
+        Number(minuto)
+    );
+
+    const agora = new Date();
+
+    return dataHoraFormulario >= agora;
+});
+
     return (
         <div className="w-full max-w-[1890px] mx-auto px-3 sm:px-4 md:px-6 mt-2">
             <div className="flex flex-col lg:flex-row gap-3 lg:h-[93vh]">
@@ -61,6 +78,7 @@ export default function FormularioExtrato({ modoAdmin = false, extrato }: Formul
 
                     {modoAdmin && (
                         <button
+                            onClick={() => setMostrarFormulario(!mostrarFormulario)}
                             className="absolute top-21 md:top-31 [@media(min-width:1330px)]:top-36 [@media(min-width:1600px)]:top-10 right-3 sm:right-6 md:right-10 z-20 bg-[#C83D3D] text-white rounded-full px-4 sm:px-6 md:px-8 py-2 sm:py-3 font-bold hover:brightness-95 transition-all whitespace-nowrap"
                         >
                             {mostrarFormulario ? "Cancelar" : "Criar formulário"}
@@ -77,7 +95,7 @@ export default function FormularioExtrato({ modoAdmin = false, extrato }: Formul
                                     />
                                 )}
 
-                                {formulariosSalvos.map((formulario) => (
+                                {(modoAdmin ? formulariosSalvos : formulariosVisiveis).map((formulario) => (
                                     <FormularioCard
                                         key={formulario.id}
                                         dadosIniciais={formulario}
@@ -87,7 +105,7 @@ export default function FormularioExtrato({ modoAdmin = false, extrato }: Formul
                                 ))}
 
                                 {formulariosSalvos.length === 0 && !mostrarFormulario && (
-                                    <div className="h-[300px] flex items-center justify-center text-gray-500 font-semibold text-center px-4">
+                                    <div className="py-[180px] md:max-[1329px]:py-[135px] min-[1330px]:py-[175px] flex items-center justify-center text-gray-500 font-semibold text-center px-4">
                                         Nenhum formulário salvo ainda.
                                     </div>
                                 )}

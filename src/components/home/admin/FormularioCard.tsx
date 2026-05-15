@@ -32,8 +32,34 @@ const FormularioCard = ({
     });
 
     const handleChange = (campo: string, valor: string) => {
-        setDados((prev) => ({ ...prev, [campo]: valor }));
-    };
+
+    if (campo === "data") {
+        valor = valor.replace(/[^\d/]/g, "");
+
+        if (valor.length > 10) return;
+
+        valor = valor
+            .replace(/^(\d{2})(\d)/, "$1/$2")
+            .replace(/^(\d{2})\/(\d{2})(\d)/, "$1/$2/$3");
+    }
+
+    if (campo === "hora") {
+        valor = valor.replace(/[^\d:]/g, "");
+
+        if (valor.length > 5) return;
+
+        valor = valor.replace(/^(\d{2})(\d)/, "$1:$2");
+    }
+
+    if (campo === "link") {
+        valor = valor.trim();
+    }
+
+    setDados((prev) => ({
+        ...prev,
+        [campo]: valor,
+    }));
+};
 
     const handleSalvar = () => {
         onSalvar?.(dados);
