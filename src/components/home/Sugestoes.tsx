@@ -9,7 +9,7 @@ export default function Sugestoes() {
   }
 
   return (
-    <div className="w-full max-w-[1890px] mx-auto px-4 sm:px-6 md:px-10 min-h-[85vh]">
+    <div className="w-full max-w-[1890px] mx-auto px-4 sm:px-6 md:px-10 min-h-[80vh]">
       <div className="bg-[#C83D3D] w-full min-h-[85vh] rounded-[15px] shadow-2xl px-4 sm:px-6 md:px-10 relative overflow-hidden">
 
 

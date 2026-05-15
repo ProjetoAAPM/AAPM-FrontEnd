@@ -3,7 +3,7 @@ import "../Scrollbar/scrollbar.css";
 export default function FormularioExtrato({ extrato = [] }) {
   return (
     <div className="w-full max-w-[1890px] mx-auto px-3 sm:px-4 md:px-6 lg:px-10 overflow-x-hidden">
-      <div className="flex flex-col lg:flex-row gap-3 lg:h-[93vh] overflow-hidden">
+      <div className="flex flex-col lg:flex-row gap-3 lg:h-[95vh] overflow-hidden">
 
         <div className="bg-[#DDF4FF] w-full lg:w-3/4 h-full lg:h-full rounded-[15px] shadow-2xl flex flex-col px-4 sm:px-6 md:px-10 py-6 relative overflow-hidden">
           

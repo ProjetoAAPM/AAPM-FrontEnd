@@ -109,6 +109,7 @@ function Home() {
 
           2xl:min-h-[90vh]
           2xl:px-5
+          2xl:pb-2
         "
       >
         <Sugestoes />

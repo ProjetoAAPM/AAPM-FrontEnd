@@ -46,7 +46,27 @@ export default function ModalPerfil({
     return (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[100] flex items-top justify-end">
 
-            <div className="w-[480px] h-[820px] rounded-l-[5px] bg-gradient-to-r from-[#1D2235] via-[#4B4D57] to-[#1F2A33] shadow-2xl relative mr-[10px] overflow-hidden">
+            <div
+                className={`
+                    rounded-l-[5px]
+                    bg-gradient-to-r
+                    from-[#1D2235]
+                    via-[#4B4D57]
+                    to-[#1F2A33]
+                    shadow-2xl
+                    relative
+                    mr-[10px]
+                    overflow-hidden
+                    transition-all
+                    duration-300
+
+                    ${
+                    editando
+                        ? "w-[480px] h-[820px]"
+                        : "w-[480px] h-[750px]"
+                    }
+                `}
+            >
 
                 <button
                     onClick={() => setPerfilOpen(false)}
