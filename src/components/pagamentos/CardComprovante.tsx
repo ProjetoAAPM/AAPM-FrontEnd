@@ -1,5 +1,5 @@
 import React from "react";
-import type { IPagamento } from "./PagamentoAdmin";
+import type { IPagamento } from "../../Services/api";
 import "../Scrollbar/scrollbar.css";
 import LogoBorda48 from "../../assets/icons/LogoBorda48.svg";
 import GaleryIcon from "../../assets/images/galery.svg";
@@ -17,6 +17,9 @@ const CardComprovante: React.FC<ModalProps> = ({
   onApprove,
   onReject,
 }) => {
+
+  const isPDF = data.comprovante_url?.toLowerCase().endsWith('.pdf');
+
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/80 backdrop-blur-[3px] p-3 font-['Montserrat']">
 
@@ -69,11 +72,31 @@ const CardComprovante: React.FC<ModalProps> = ({
 
               <div className="w-full md:flex-1 flex justify-center md:justify-end">
                 <div className="relative w-full max-w-[300px] aspect-[1/1.1] bg-[#3B4A54] rounded-t-[15px] flex items-center justify-center overflow-hidden shadow-xl translate-y-[2px]">
-                  <img 
-                    src={GaleryIcon} 
-                    alt="Preview" 
-                    className="w-[70%] h-[70%] object-contain opacity-90"
-                  />
+
+                  {data.comprovante_url ? (
+                    isPDF ? (
+                      <iframe
+                        src={`${data.comprovante_url}#toolbar=0&navpanes=0&scrollbar=0`}
+                        className="w-full h-full border-0 rounded-t-[15px]"
+                        title="Comprovante PDF"
+                      />
+                    ) : (
+                      <img 
+                        src={data.comprovante_url} 
+                        alt="Comprovante" 
+                        className="w-full h-full object-contain bg-white"
+                        onError={(e) => {
+                          e.currentTarget.src = GaleryIcon;
+                        }}
+                      />
+                    )
+                  ) : (
+                    <img 
+                      src={GaleryIcon} 
+                      alt="Preview" 
+                      className="w-[70%] h-[70%] object-contain opacity-90"
+                    />
+                  )}
                 </div>
               </div>
             </div>

@@ -1,33 +1,39 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import CardPagamento from "./CardPagamento";
 import CardComprovante from "./CardComprovante";
 import "../Scrollbar/scrollbar.css";
 import filtro from "../../assets/icons/icone_filtro.svg";
-
-export interface IPagamento {
-    id: number;
-    nome: string;
-    curso: string;
-    valor: number;
-    data: string;
-    status: "Pendente" | "Aprovado" | "Reprovado";
-}
-
-const MOCK_PAGAMENTOS: IPagamento[] = [
-    { id: 1, nome: "Pedro Henrique", curso: "Tecnico Desenvolvimento de Sistemas", valor: 100.0, data: "12/03/2026", status: "Pendente" },
-    { id: 2, nome: "Pedro Lucas", curso: "Tecnico Mecatronica", valor: 50.0, data: "06/03/2026", status: "Aprovado" },
-    { id: 3, nome: "Leonardo Silva", curso: "Tecnico Eletrônica", valor: 100.0, data: "27/01/2025", status: "Reprovado" },
-    { id: 4, nome: "João Vitor", curso: "Tecnico Administração", valor: 50.0, data: "22/07/2025", status: "Pendente" },
-    { id: 5, nome: "Jefferson Mendes", curso: "Tecnico Logistica", valor: 50.0, data: "21/12/2025", status: "Aprovado" },
-];
+import { pagamentoAdminService, type IPagamento } from "../../Services/api";
 
 const PagamentoAdmin = () => {
-    const [lista, setLista] = useState<IPagamento[]>(MOCK_PAGAMENTOS);
-    const [filtro, setFiltro] = useState< "Todos" | "Pendentes" | "Aprovados" | "Reprovados">("Todos");
+    const [lista, setLista] = useState<IPagamento[]>([]);
+    const [filtro, setFiltro] = useState<"Todos" | "Pendentes" | "Aprovados" | "Reprovados">("Todos");
     const [showDropdown, setShowDropdown] = useState(false);
     const [itemParaModal, setItemParaModal] = useState<IPagamento | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleAtualizar = () => setFiltro("Todos");
+    const carregarPagamentos = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const pagamentos = await pagamentoAdminService.listarPagamentos(filtro);
+            setLista(pagamentos);
+        } catch (err) {
+            console.error(err);
+            setError("Erro ao carregar pagamentos. Verifique se o backend está rodando.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        carregarPagamentos();
+    }, [filtro]);
+
+    const handleAtualizar = () => {
+        carregarPagamentos();
+    };
 
     const stats = useMemo(() => ({
         reprovados: lista.filter(p => p.status === "Reprovado").length,
@@ -36,14 +42,36 @@ const PagamentoAdmin = () => {
         total: lista.length
     }), [lista]);
 
-    const dadosExibidos = lista.filter((p) => {
-        if (filtro === "Todos") return true;
-        if (filtro === "Pendentes") return p.status === "Pendente";
-        if (filtro === "Aprovados") return p.status === "Aprovado";
-        if (filtro === "Reprovados") return p.status === "Reprovado";
+    // ✅ Variável corrigida
+    const dadosExibidos = lista;
 
-        return true;
-    });
+    const handleApprove = async (id: number) => {
+        try {
+            await pagamentoAdminService.aprovarPagamento(id);
+            setLista(prev =>
+                prev.map(item =>
+                    item.id === id ? { ...item, status: "Aprovado" } : item
+                )
+            );
+            setItemParaModal(null);
+        } catch (err) {
+            alert("Erro ao aprovar pagamento");
+        }
+    };
+
+    const handleReject = async (id: number) => {
+        try {
+            await pagamentoAdminService.reprovarPagamento(id);
+            setLista(prev =>
+                prev.map(item =>
+                    item.id === id ? { ...item, status: "Reprovado" } : item
+                )
+            );
+            setItemParaModal(null);
+        } catch (err) {
+            alert("Erro ao reprovar pagamento");
+        }
+    };
 
     return (
         <div className="bg-[#0F121D] min-h-screen flex flex-col pt-20 sm:pt-24 md:pt-28 overflow-hidden px-2 sm:px-4 md:px-0">
@@ -63,10 +91,13 @@ const PagamentoAdmin = () => {
                 <main className="flex-1 flex flex-col overflow-hidden px-2 sm:px-4 md:px-6 lg:pr-10 pt-4 sm:pt-6 md:pt-10">
                     <div className="mb-6 sm:mb-8 flex flex-col gap-4 flex-shrink-0 relative">
                         <div className="flex items-center justify-between gap-4">
-                            <button onClick={() => setShowDropdown(!showDropdown)} className="flex items-center gap-3 sm:gap-5 md:gap-8 relative z-40">
+                            <button 
+                                onClick={() => setShowDropdown(!showDropdown)} 
+                                className="flex items-center gap-3 sm:gap-5 md:gap-8 relative z-40"
+                            >
                                 <div className="relative flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10">
                                     <img
-                                        src="/src/assets/icons/icone_filtro.svg"
+                                        src={filtro}
                                         alt="filtro"
                                         className="w-full h-full scale-[1.8] sm:scale-[2] md:scale-[2.5] transform object-contain md:-mr-15 translate-y-1 sm:translate-y-2 md:translate-y-3"
                                     />
@@ -104,21 +135,27 @@ const PagamentoAdmin = () => {
                     </div>
 
                     <div className="flex-1 min-h-0 overflow-y-scroll scroll-modern pr-1 sm:pr-2 mb-4 sm:mb-6">
-                        <div className="flex flex-col gap-3 sm:gap-4 md:gap-5">
-                            {dadosExibidos.map((p) => (
-                                <CardPagamento
-                                    key={p.id}
-                                    data={p}
-                                    onOpenComprovante={() => setItemParaModal(p)}
-                                />
-                            ))}
+                        {loading ? (
+                            <div className="text-center py-20 text-white/60">Carregando pagamentos...</div>
+                        ) : error ? (
+                            <div className="text-center py-20 text-red-400">{error}</div>
+                        ) : (
+                            <div className="flex flex-col gap-3 sm:gap-4 md:gap-5">
+                                {dadosExibidos.map((p) => (
+                                    <CardPagamento
+                                        key={p.id}
+                                        data={p}
+                                        onOpenComprovante={() => setItemParaModal(p)}
+                                    />
+                                ))}
 
-                            {dadosExibidos.length === 0 && (
-                                <div className="text-center py-12 sm:py-16 md:py-20 text-white/40 font-bold uppercase text-[0.9rem] sm:text-[1rem] md:text-[1.1rem]">
-                                    Nenhum registro encontrado.
-                                </div>
-                            )}
-                        </div>
+                                {dadosExibidos.length === 0 && (
+                                    <div className="text-center py-12 sm:py-16 md:py-20 text-white/40 font-bold uppercase text-[0.9rem] sm:text-[1rem] md:text-[1.1rem]">
+                                        Nenhum registro encontrado.
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </main>
             </div>
@@ -127,27 +164,8 @@ const PagamentoAdmin = () => {
                 <CardComprovante
                     data={itemParaModal}
                     onClose={() => setItemParaModal(null)}
-                    onApprove={(id) => {
-                        setLista(prev =>
-                            prev.map(item =>
-                                item.id === id
-                                    ? { ...item, status: "Aprovado" }
-                                    : item
-                            )
-                        );
-                        setItemParaModal(null);
-                    }}
-
-                    onReject={(id) => {
-                        setLista((prev) =>
-                            prev.map((item) =>
-                                item.id === id
-                                    ? { ...item, status: "Reprovado" }
-                                    : item
-                            )
-                        );
-                        setItemParaModal(null);
-                    }}
+                    onApprove={handleApprove}
+                    onReject={handleReject}
                 />
             )}
         </div>
