@@ -1,5 +1,5 @@
 import React from "react";
-import type { IPagamento } from "../../Services/api"; 
+import type { IPagamento } from "../../Services/api";
 
 interface CardPagamentoProps {
     data: IPagamento;
@@ -13,7 +13,6 @@ const CardPagamento = ({ data, onOpenComprovante }: CardPagamentoProps) => {
                 <p className="font-bold text-[0.68rem] sm:text-[0.7rem] md:text-[0.72rem] text-black break-words">
                     Nome: {data.nome}
                 </p>
-
                 <p className="font-bold text-[0.68rem] sm:text-[0.7rem] md:text-[0.72rem] text-black mt-1 break-words">
                     Curso: {data.curso}
                 </p>
@@ -23,10 +22,7 @@ const CardPagamento = ({ data, onOpenComprovante }: CardPagamentoProps) => {
 
             <div className="w-full md:w-[180px] px-3 sm:px-4 py-2 md:py-0 flex flex-col justify-center text-[0.68rem] sm:text-[0.7rem] md:text-[0.72rem] font-bold text-black border-t md:border-t-0 border-[#BDBDBD]">
                 <p>Valor: {data.valor.toFixed(2).replace(".", ",")} R$</p>
-
-                <p className="mt-1 sm:mt-2">
-                    Data: {data.data}
-                </p>
+                <p className="mt-1 sm:mt-2">Data: {data.data}</p>
             </div>
 
             <div
