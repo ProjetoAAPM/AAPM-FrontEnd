@@ -149,38 +149,38 @@ export default function Sugestoes({
 
                 <div
                     className="
-                        absolute
-                        top-8
-                        right-0
+                            absolute
+                            top-8
+                            right-0
 
-                        bg-white
-                        text-[#101625]
+                            bg-white
+                            text-[#101625]
 
-                        text-[1.5rem]
-                        sm:text-[2rem]
-                        md:text-[3rem]
+                            text-[1.3rem]
+                            sm:text-[2rem]
+                            md:text-[3rem]
 
-                        font-black
+                            font-black
 
-                        px-20
-                        sm:px-32
-                        md:px-[280px]
-                        lg:px-[400px]
-                        xl:px-[600px]
+                            px-10
+                            sm:px-24
+                            md:px-[220px]
+                            lg:px-[350px]
+                            xl:px-[520px]
 
-                        py-1
+                            py-1
 
-                        rounded-l-[10px]
-                        shadow-md
+                            rounded-l-[10px]
+                            shadow-md
 
-                        z-10
+                            z-10
 
-                        flex
-                        items-center
-                        justify-center
+                            flex
+                            items-center
+                            justify-center
 
-                        max-w-[90%]
-                    "
+                            max-w-[90%]
+                        "
                 >
                     Sugestões
                 </div>
