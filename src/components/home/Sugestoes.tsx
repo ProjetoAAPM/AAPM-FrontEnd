@@ -9,19 +9,42 @@ export default function Sugestoes() {
   }
 
   return (
-    <div className="w-full max-w-[1890px] mx-auto px-4 sm:px-6 md:px-10 min-h-[80vh]">
-      <div className="bg-[#C83D3D] w-full min-h-[85vh] rounded-[15px] shadow-2xl px-4 sm:px-6 md:px-10 relative overflow-hidden">
+    <div className="w-full max-w-[1800px] mx-auto min-h-[85vh]">
+      <div className="bg-[#C83D3D] w-full min-h-[80vh] rounded-[15px] shadow-2xl px-4 sm:px-6 md:px-10 relative overflow-hidden">
 
 
         <div className="
-          absolute top-6 sm:top-10 right-0
-          bg-white text-[#101625]
-          text-[1.5rem] sm:text-[2.5rem] md:text-[3rem] lg:text-[4rem]
-          font-black
-          px-6 sm:px-20 md:px-[200px] lg:px-[400px] xl:px-[600px]
-          py-2 rounded-l-[10px] shadow-md
-          whitespace-nowrap
-        ">
+          absolute
+
+              top-6
+              sm:top-10
+
+              left-0
+
+              bg-white
+              text-[#101625]
+
+              text-[1.2rem]
+              min-[350px]:text-[1.4rem]
+              sm:text-[2rem]
+              md:text-[3rem]
+
+              font-black
+
+              px-8
+              min-[20px]:px-16
+              sm:px-[150px]
+              md:px-[200px]
+              lg:px-[250px]
+
+              py-1
+
+              rounded-r-[10px]
+              shadow-md
+
+              whitespace-nowrap
+            "
+        >
           Sugestões
         </div>
 
@@ -29,9 +52,9 @@ export default function Sugestoes() {
         <div className="
           absolute top-24 sm:top-40 md:top-52 lg:top-60 left-0
           bg-white text-[#101625]
-          text-[0.8rem] sm:text-[1rem]
+          text-[0.7rem] sm:text-[1rem] md:text-[1.2rem] lg:text-[1.3rem] xl:text-[1.4rem] 2xl:text-[1.5rem]
           font-black
-          px-6 sm:px-20 md:px-[200px] lg:px-[300px] xl:px-[400px]
+          px-2 sm:px-20 md:px-[100px] lg:px-[200px] xl:px-[300px] 2xl:px-[400px]
           py-2 rounded-r-[5px] shadow-md
         ">
           Você tem alguma sugestão? Compartilhe com a gente!
@@ -48,8 +71,8 @@ export default function Sugestoes() {
             onChange={(e) => setTexto(e.target.value)}
             placeholder="Digite sua sugestão aqui."
             className="
-              w-full max-w-[500px] sm:max-w-[800px] md:max-w-[1100px] lg:max-w-[1300px]
-              h-[120px] sm:h-[180px] md:h-[240px] lg:h-[300px]
+              w-full max-w-[500px] sm:max-w-[800px] md:max-w-[1100px] lg:max-w-[1250px]
+              h-[350px] sm:h-[280px] md:h-[240px] lg:h-[230px] xl:h-[250px] 2xl:h-[300px]
               px-4 sm:px-6 py-6 sm:py-10 md:py-14 lg:py-16
               rounded-[12px]
               bg-[#FFFFFF]

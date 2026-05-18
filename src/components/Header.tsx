@@ -1,16 +1,33 @@
 import { Link } from "react-router-dom";
 import MenuMobile from "./MenuMobile";
 import ModalPerfil from "./ModalPerfil";
+import perfil1 from "../assets/perfis/user1.png";
+import perfil2 from "../assets/perfis/user2.png";
+
 import { useState } from "react";
 
 function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const [perfilOpen, setPerfilOpen] = useState(false);
+const testeDocente = true;
 
-const [usuario, setUsuario] = useState({
-    nome: "Maysa",
-    foto: "https://i.pravatar.cc/150?img=32"
-});
+const [usuario, setUsuario] = useState(
+    testeDocente
+        ? {
+            nome: "Prof. Carlos",
+            foto: perfil2,
+            tipo_usuario: "docente",
+            especialidade: "TI",
+        }
+        : {
+            nome: "Maysa Soares",
+            foto: perfil1,
+            tipo_usuario: "aluno",
+            curso: "Tec Desenvolvimento de Sistemas",
+            dataInicio: "01/02/2025",
+            dataFinal: "12/12/2026",
+        }
+);
 
     return (
         <>
@@ -101,12 +118,13 @@ const [usuario, setUsuario] = useState({
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
                 usuario={usuario}
-                />
-            <ModalPerfil
-                perfilOpen={perfilOpen}
-                setPerfilOpen={setPerfilOpen}
-                usuario={usuario}
             />
+            <ModalPerfil
+                    perfilOpen={perfilOpen}
+                    setPerfilOpen={setPerfilOpen}
+                    usuario={usuario}
+                    setUsuario={setUsuario}
+                />
         </>
     );
 }
