@@ -2,6 +2,7 @@ import perfil1 from "../assets/perfis/user1.png";
 import perfil2 from "../assets/perfis/user2.png";
 import perfil3 from "../assets/perfis/user3.png";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function ModalPerfil({
     perfilOpen,
@@ -10,6 +11,8 @@ export default function ModalPerfil({
     setUsuario,
     cursos = []
 }) {
+
+    const navigate = useNavigate();
 
     const fotosPerfil = [
         perfil1,
@@ -37,16 +40,15 @@ export default function ModalPerfil({
     }
 
     function salvarEdicao() {
-        console.log("Dados editados:", dados);
-
-        // backend
-
         setEditando(false);
     }
 
     function sairConta() {
         setUsuario(null);
         setPerfilOpen(false);
+        localStorage.removeItem("usuario");
+        sessionStorage.removeItem("usuario");
+        navigate("/");
     }
 
     if (!usuario) return null;
@@ -93,12 +95,11 @@ export default function ModalPerfil({
 
                 <button
                     onClick={() => setPerfilOpen(false)}
-                    className="absolute top-2 right-4 text-white text-3xl sm:text-4xl hover:scale-110 hover:cursor-pointer transition-transform"
+                    className="absolute top-2 right-4 text-white text-3xl sm:text-4xl"
                 >
                     ×
                 </button>
 
-                {/* botão sair */}
                 <button
                     onClick={sairConta}
                     className="
@@ -155,12 +156,7 @@ export default function ModalPerfil({
                                         border-4
                                         transition
                                         hover:scale-105
-
-                                        ${
-                                            dados.foto === foto
-                                                ? "border-white"
-                                                : "border-transparent"
-                                        }
+                                        ${dados.foto === foto ? "border-white" : "border-transparent"}
                                     `}
                                 />
                             ))}
@@ -206,21 +202,7 @@ export default function ModalPerfil({
                                             onChange={(e) => alterarValor("curso", e.target.value)}
                                             className="w-full min-h-[50px] rounded-xl text-[#3A3A3A] text-sm sm:text-lg md:text-xl font-bold text-center outline-none bg-white"
                                         >
-                                            <option value="">
-                                                Selecione
-                                            </option>
-
-                                            <option>Tec Administração</option>
-                                            <option>Tec Desenvolvimento de Sistemas</option>
-                                            <option>Tec Eletroeletrônica</option>
-                                            <option>Tec Manutenção de Sistemas Metroferroviários</option>
-                                            <option>Tec Mecânica</option>
-                                            <option>Tec Mecatrônica</option>
-                                            <option>Tec Segurança do Trabalho</option>
-                                            <option>CAI Mecânico de Usinagem</option>
-                                            <option>CAI Eletricista de Manutenção Eletroeletrônica</option>
-                                            <option>CAI Ferramenteiro de Moldes para Plásticos</option>
-
+                                            <option value="">Selecione</option>
                                             {cursos.map((curso, index) => (
                                                 <option key={index} value={curso}>
                                                     {curso}
@@ -254,7 +236,7 @@ export default function ModalPerfil({
                                             </p>
                                         </div>
 
-                                        <div className="bg-white rounded-xl w-full max-w-full sm:w-[190px] min-h-[45px] flex items-center justify-center px-2">
+                                        <div className="bg-white rounded-xl w-full sm:w-[190px] min-h-[45px] flex items-center justify-center px-2">
                                             <p className="text-gray-400 text-base sm:text-xl md:text-2xl font-semibold text-center break-words">
                                                 {dados.dataInicio}
                                             </p>
@@ -270,7 +252,7 @@ export default function ModalPerfil({
                                             </p>
                                         </div>
 
-                                        <div className="bg-white rounded-xl w-full max-w-full sm:w-[190px] min-h-[45px] flex items-center justify-center px-2">
+                                        <div className="bg-white rounded-xl w-full sm:w-[190px] min-h-[45px] flex items-center justify-center px-2">
                                             <p className="text-gray-400 text-base sm:text-xl md:text-2xl font-semibold text-center break-words">
                                                 {dados.dataFinal}
                                             </p>
@@ -298,29 +280,12 @@ export default function ModalPerfil({
                                         onChange={(e) => alterarValor("especialidade", e.target.value)}
                                         className="w-full min-h-[50px] rounded-xl text-[#3A3A3A] text-base sm:text-xl md:text-2xl font-bold text-center outline-none bg-white"
                                     >
-                                        <option value="">
-                                            Selecione
-                                        </option>
-
-                                        <option value="Gestão">
-                                            Gestão
-                                        </option>
-
-                                        <option value="TI">
-                                            TI
-                                        </option>
-
-                                        <option value="Elétrica">
-                                            Elétrica
-                                        </option>
-
-                                        <option value="Mecânica">
-                                            Mecânica
-                                        </option>
-
-                                        <option value="Segurança">
-                                            Segurança
-                                        </option>
+                                        <option value="">Selecione</option>
+                                        <option value="Gestão">Gestão</option>
+                                        <option value="TI">TI</option>
+                                        <option value="Elétrica">Elétrica</option>
+                                        <option value="Mecânica">Mecânica</option>
+                                        <option value="Segurança">Segurança</option>
                                     </select>
                                 ) : (
                                     <p className="text-[#3A3A3A] text-base sm:text-xl md:text-2xl font-bold text-center break-words">
@@ -338,14 +303,14 @@ export default function ModalPerfil({
                         {editando ? (
                             <button
                                 onClick={salvarEdicao}
-                                className="w-[130px] sm:w-[170px] md:w-[180px] h-[50px] sm:h-[65px] md:h-[70px] bg-[#3D8D40] rounded-[20px] text-white text-xl sm:text-3xl md:text-4xl font-bold shadow-lg hover:scale-102 hover:cursor-pointer transition-transform"
+                                className="w-[130px] sm:w-[170px] md:w-[180px] h-[50px] sm:h-[65px] md:h-[70px] bg-[#3D8D40] rounded-[20px] text-white text-xl sm:text-3xl md:text-4xl font-bold shadow-lg"
                             >
                                 Salvar
                             </button>
                         ) : (
                             <button
                                 onClick={() => setEditando(true)}
-                                className="w-[130px] sm:w-[170px] md:w-[180px] h-[50px] sm:h-[65px] md:h-[70px] bg-[#4D4D4D] rounded-[20px] text-white text-xl sm:text-3xl md:text-4xl font-bold shadow-lg hover:scale-102 hover:cursor-pointer transition-transform"
+                                className="w-[130px] sm:w-[170px] md:w-[180px] h-[50px] sm:h-[65px] md:h-[70px] bg-[#4D4D4D] rounded-[20px] text-white text-xl sm:text-3xl md:text-4xl font-bold shadow-lg"
                             >
                                 Editar
                             </button>
