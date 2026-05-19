@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ModalSucesso from "../../alerts/ModalSucesso";
+import LayoutAviso from "../../alerts/LayoutAviso";
 
 export default function Sugestoes() {
   const [texto, setTexto] = useState("");
@@ -94,9 +94,20 @@ export default function Sugestoes() {
             Enviar
           </button>
         </div>
-        <ModalSucesso
+        <LayoutAviso
           aberto={modalAberto}
           fechar={() => setModalAberto(false)}
+
+          titulo="Sua sugestão foi enviada com sucesso!"
+          descricao="Agradecemos sua contribuição para melhorar a experiência com a AAPM."
+
+          textoBotao="Fechar"
+
+          largura="max-w-[95%] sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl"
+
+          corFundo="#73B36B"
+          corTitulo="#5E9F57"
+          corBotao="#24933C"
         />
       </div>
 
