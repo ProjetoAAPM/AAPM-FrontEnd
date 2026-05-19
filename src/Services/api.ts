@@ -29,7 +29,7 @@ export const pagamentoAdminService = {
         }
 
         const data = await res.json();
-        console.log("📋 Pagamentos recebidos do backend:", data); // Debug
+        console.log("Pagamentos recebidos do backend:", data);
 
         return data.map((p: any) => ({
             id: p.id_pagamento || p.id,
@@ -39,7 +39,7 @@ export const pagamentoAdminService = {
             data: p.data || (p.data_envio ? new Date(p.data_envio).toLocaleDateString('pt-BR') : ""),
             status: p.status === "PENDENTE" ? "Pendente" :
                     p.status === "APROVADO" ? "Aprovado" : "Reprovado",
-            comprovante_url: p.comprovante_url || p.comprovantes,
+            comprovante_url: p.comprovantes || p.comprovante_url,
             plano: p.plano || p.descricao_plano || "Não informado"
         }));
     },
@@ -53,7 +53,7 @@ export const pagamentoAdminService = {
 
         if (!res.ok) {
             const error = await res.json().catch(() => ({}));
-            throw new Error(error.erro || 'Erro ao aprovar pagamento');
+            throw new Error(error.erro || error.mensagem || 'Erro ao aprovar pagamento');
         }
         return res.json();
     },
@@ -67,7 +67,7 @@ export const pagamentoAdminService = {
 
         if (!res.ok) {
             const error = await res.json().catch(() => ({}));
-            throw new Error(error.erro || 'Erro ao reprovar pagamento');
+            throw new Error(error.erro || error.mensagem || 'Erro ao reprovar pagamento');
         }
         return res.json();
     }
