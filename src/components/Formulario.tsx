@@ -3,10 +3,19 @@ import { useNavigate } from "react-router-dom";
 import type { ChangeEvent, SyntheticEvent } from 'react';
 import { ChevronDown } from "lucide-react";
 
-
 function Formulario({ tipo } : any) {
 
-    const [dados, setDados] = useState({ nome: '', email: '', senha: '', confirmar_senha: '', curso: '', especialidade: '', data_inicio: '', data_final: '', tipo_usuario: 'aluno'});
+    const [dados, setDados] = useState({ 
+        nome: '', 
+        email: '', 
+        senha: '', 
+        confirmar_senha: '', 
+        curso: '', 
+        especialidade: '', 
+        inicio_curso: '', 
+        fim_curso: '', 
+        tipo_usuario: 'aluno'
+    });
 
     const navigate = useNavigate();
 
@@ -33,7 +42,7 @@ function Formulario({ tipo } : any) {
 
     const especialidades = ["Gestão", "TI", "Elétrica", "Mecânica", "Segurança"];
 
-    const enviar = (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
+    const enviar = async (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
         e.preventDefault();
 
         if (tipo !== 'login' && dados.senha !== dados.confirmar_senha) {
@@ -50,8 +59,34 @@ function Formulario({ tipo } : any) {
             alert("Informe sua especialidade!")
             return;
         }
-            
-        navigate(tipo === 'cadastro' ? '/escolhaplano' : '/home');
+
+        let rota = '/login';
+        if (tipo === 'cadastro') {
+            rota = dados.tipo_usuario === 'aluno' ? '/cadastro/aluno' : '/cadastro/docente';
+        }
+
+        try {
+            const resposta = await fetch(`http://localhost:5000${rota}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados),
+            });
+
+            const resultado = await resposta.json();
+
+            if (resposta.ok) {
+                alert(resultado.mensagem || "Opereação realizada com sucesso!");
+
+                navigate(tipo === 'cadastro' ? '/escolhaplano' : '/home');
+            }
+            else{
+                const mensagemErro = resultado.erro_validacao || resultado.erro_interno ||"Falha na operação.";
+                alert(`Erro: ${mensagemErro}`);
+            }
+        } catch (erro) {
+            console.error("Erro na requisição:", erro);
+            alert("Não foi possível conectar ao servidor. Certifique-se de que o Flask-CORS está ativo no seu app.py.");
+        }
     };
 
     const loginGoogle = () => {
@@ -152,13 +187,13 @@ function Formulario({ tipo } : any) {
                                                 <label className="text-white text-lg text-center font-semibold mb-2">Data Inicio</label>
                                                 <input 
                                                     type="date" 
-                                                    name="data_inicio"
-                                                    value={dados.data_inicio}
+                                                    name="inicio_curso"
+                                                    value={dados.inicio_curso}
                                                     onChange={guardar}
                                                     onClick={(e) => (e.target as HTMLInputElement).showPicker()}
                                                     onFocus={(e) => (e.target.style.color = 'black')}
                                                     onBlur={(e) => (e.target.style.color = e.target.value ? 'black' : 'transparent')}
-                                                    style={{ color: dados.data_inicio ? 'black' : 'transparent' }}
+                                                    style={{ color: dados.inicio_curso ? 'black' : 'transparent' }}
                                                     className={`${estiloInput} pl-3 pr-3 cursor-pointer`}
                                                     required
                                                 />
@@ -168,12 +203,12 @@ function Formulario({ tipo } : any) {
                                                 <label className="text-white text-lg text-center font-semibold mb-2">Data Final</label>
                                                 <input 
                                                     type="date" 
-                                                    name="data_final"
-                                                    value={dados.data_final} 
+                                                    name="fim_curso"
+                                                    value={dados.fim_curso} 
                                                     onChange={guardar}
                                                     onFocus={(e) => (e.target.style.color = 'black')}
                                                     onBlur={(e) => (e.target.style.color = e.target.value ? 'black' : 'transparent')}
-                                                    style={{ color: dados.data_final ? 'black' : 'transparent' }}
+                                                    style={{ color: dados.fim_curso ? 'black' : 'transparent' }}
                                                     className={`${estiloInput} pl-3 pr-3 cursor-pointer`}
                                                     required
                                                 />
