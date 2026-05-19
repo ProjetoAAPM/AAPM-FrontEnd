@@ -45,19 +45,21 @@ function Formulario({ tipo } : any) {
     const enviar = async (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
         e.preventDefault();
 
-        if (tipo !== 'login' && dados.senha !== dados.confirmar_senha) {
-            alert("Senhas diferentes!");
-            return;
-        }
+        if (tipo === 'cadastro') {
+            if (dados.senha !== dados.confirmar_senha) {
+                alert("Senhas diferentes!");
+                return;
+            }
 
-        if (dados.tipo_usuario === 'aluno' && !dados.curso) {
-            alert("Informe o seu curso!")
-            return;
-        }
+            if (dados.tipo_usuario === 'aluno' && !dados.curso) {
+                alert("Informe o seu curso!")
+                return;
+            }
 
-        if (dados.tipo_usuario === 'docente' && !dados.especialidade) {
-            alert("Informe sua especialidade!")
-            return;
+            if (dados.tipo_usuario === 'docente' && !dados.especialidade) {
+                alert("Informe sua especialidade!")
+                return;
+            }
         }
 
         let rota = '/login';
