@@ -103,7 +103,7 @@ const [usuario, setUsuario] = useState(
 
                             <button
                                 onClick={() => setIsOpen(!isOpen)}
-                                className="flex flex-col justify-center items-center w-10 h-10 gap-1.5 z-[60]"
+                                className="flex flex-col justify-center  items-center w-10 h-10 gap-1.5 z-[60]"
                             >
                                 <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2 bg-black' : 'bg-white'}`}></span>
                                 <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? 'opacity-0' : 'bg-white'}`}></span>

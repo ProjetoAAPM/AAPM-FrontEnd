@@ -237,7 +237,7 @@ export default function BarraPontos({ progresso }) {
                       <div
                         className="
                           absolute
-                          -top-10
+                          -top-14
                           left-1/2
                           -translate-x-1/2
 
@@ -245,7 +245,7 @@ export default function BarraPontos({ progresso }) {
                           group-hover:opacity-100
                           transition
 
-                          bg-black
+                          bg-[#414141]
                           text-white
 
                           text-xs
@@ -298,13 +298,13 @@ export default function BarraPontos({ progresso }) {
                       hidden sm:block
 
                       absolute
-                      -top-10
+                      -top-9
 
                       opacity-0
                       group-hover:opacity-100
                       transition
 
-                      bg-black
+                      bg-[#414141]
                       text-white
 
                       text-xs

@@ -44,7 +44,7 @@ export default function Pontuacao({
 
         {loading ? (
           <div className="flex items-center justify-center h-[500px]">
-            <span className="text-lg sm:text-2xl font-bold">
+            <span className="text-lg sm:text-2xl font-bold text-[#DECA79] mt-[160px]">
               Carregando...
             </span>
           </div>
