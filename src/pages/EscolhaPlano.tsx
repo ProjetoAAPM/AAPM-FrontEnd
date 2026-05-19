@@ -76,9 +76,9 @@ function EscolhaPlano() {
                     textoBtn="Upload"
                     corBtn="bg-[#86D5FE]"
                     onClick={() => {
-                        if (comprovanteComum) {
-                            alert("Enviando " + comprovanteComum.name);
-                            setComprovanteComum(null); 
+                        if (comprovantePremium) {
+                            alert("Enviando " + comprovantePremium.name);
+                            setComprovantePremium(null); 
                         } else {
                             alert("Coloque o comprovante primeiro!");
                         }
