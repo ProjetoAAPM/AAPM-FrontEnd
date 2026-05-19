@@ -1,124 +1,71 @@
 import React, { useState } from 'react';
 
-interface SugestaoProps {
+interface SugestaoCardProps {
+    id: number;
     texto: string;
+    usuario?: string;
     modoAdmin?: boolean;
-    onRecusar: () => void;
+    statusInicial: "PENDENTE" | "APROVADO" | "REPROVADO";
     onAprovar: () => void;
-    statusInicial: "Pendente" | "Aprovado";
+    onReprovar: () => void;
 }
 
 const SugestaoCard = ({
+    id,
     texto,
+    usuario,
     modoAdmin = false,
-    onRecusar,
+    statusInicial,
     onAprovar,
-    statusInicial
-}: SugestaoProps) => {
+    onReprovar
+}: SugestaoCardProps) => {
 
     const [isOpen, setIsOpen] = useState(false);
-
-    const [status, setStatus] = useState<"Pendente" | "Aprovado">(statusInicial);
+    const [status, setStatus] = useState(statusInicial);
 
     return (
-
-        <div className="w-fullflex justify-center">
-            
-            <div className="scale-[0.90] origin-top w-full">
-
+        <div className="w-full flex justify-center mb-4">
+            <div className="scale-[0.92] origin-top w-full max-w-[1100px]">
                 <div className="bg-white rounded-[10px] shadow-sm border border-gray-100 overflow-hidden">
-
                     <div
-                        className="flex items-center justify-between px-3 md:px-4 lg:px-6 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
+                        className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
                         onClick={() => setIsOpen(!isOpen)}
                     >
-
-                        <div className="flex flex-col gap-1 flex-1 pr-2">
-
-                            <div className="flex items-center gap-2">
-
-                                <span className="text-[#101625] font-black text-[0.75rem] md:text-[0.9rem] lg:text-[1.1rem]">
-                                    Sugestão:
-                                </span>
-
-                                {modoAdmin && (
-
-                                    <span
-                                        className={`${status === 'Aprovado'
-                                                ? 'bg-green-600'
-                                                : 'bg-yellow-500'
-                                            } text-white text-[7px] md:text-[9px] lg:text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider`}
-                                    >
-                                        {status}
-                                    </span>
-
-                                )}
-
-                            </div>
-
-                            <p
-                                className={`text-gray-500 font-medium text-[0.75rem] md:text-[0.85rem] lg:text-[1rem] leading-tight transition-all ${!isOpen ? 'line-clamp-1' : 'whitespace-pre-wrap'}`}
-                            >
+                        <div className="flex flex-col gap-1 flex-1">
+                            {usuario && (
+                                <p className="text-[#101625] font-bold text-sm">De: {usuario}</p>
+                            )}
+                            <p className={`text-gray-600 font-medium leading-tight ${!isOpen ? 'line-clamp-2' : ''}`}>
                                 {texto}
                             </p>
-
                         </div>
 
-                        <div className={`transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''} flex-shrink-0`}>
-
-                            <svg
-                                className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="3"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
+                        <div className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`}>
+                            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M6 9l6 6 6-6" />
                             </svg>
-
                         </div>
-
                     </div>
 
                     {isOpen && modoAdmin && (
-
-                        <div className="px-3 md:px-4 lg:px-6 pb-4 pt-2 border-t border-gray-50 bg-gray-50/30 flex flex-wrap sm:flex-nowrap gap-2 animate-in fade-in slide-in-from-top-1">
-
+                        <div className="px-4 pb-4 pt-2 border-t bg-gray-50 flex gap-3">
                             <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onRecusar();
-                                }}
-                                className="flex-1 min-w-[80px] py-2 md:py-2.5 rounded-lg font-black text-[8px] md:text-[10px] lg:text-[12px] uppercase border-2 bg-white border-red-600 text-red-600 hover:bg-red-50 transition-colors"
+                                onClick={(e) => { e.stopPropagation(); onReprovar(); }}
+                                className="flex-1 py-3 rounded-lg font-bold text-sm border-2 border-red-600 text-red-600 hover:bg-red-50"
                             >
-                                Recusado
+                                Recusar
                             </button>
-
                             <button
-                                onClick={(e) => {
-
-                                    e.stopPropagation();
-
-                                    setStatus("Aprovado");
-
-                                    onAprovar();
-
-                                }}
-                                className="flex-1 min-w-[80px] py-2 md:py-2.5 rounded-lg font-black text-[8px] md:text-[10px] lg:text-[12px] uppercase border-2 bg-green-600 text-white border-transparent"
+                                onClick={(e) => { e.stopPropagation(); setStatus("APROVADO"); onAprovar(); }}
+                                className="flex-1 py-3 rounded-lg font-bold text-sm bg-green-600 text-white"
                             >
-                                Aprovado
+                                Aprovar
                             </button>
-
                         </div>
-
                     )}
-
                 </div>
             </div>
         </div>
-
     );
 };
 

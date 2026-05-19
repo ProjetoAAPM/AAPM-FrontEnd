@@ -1,5 +1,5 @@
 import React from "react";
-import type { IPagamento } from "../../Services/api";
+import type { IPagamento } from "../../Services/admin/api";
 
 interface CardPagamentoProps {
     data: IPagamento;

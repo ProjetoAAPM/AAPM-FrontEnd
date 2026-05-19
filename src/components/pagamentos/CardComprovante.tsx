@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { IPagamento } from "../../Services/api";
+import type { IPagamento } from "../../Services/admin/api";
 import LogoBorda48 from "../../assets/icons/LogoBorda48.svg";
 import GaleryIcon from "../../assets/images/galery.svg";
 
