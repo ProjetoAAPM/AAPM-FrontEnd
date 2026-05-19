@@ -6,6 +6,7 @@ export default function Pontuacao({
   pontos,
   progresso,
   loading,
+  usuario,
 }) {
   return (
     <div className="w-full max-w-[1800px] mx-auto">
@@ -62,12 +63,18 @@ export default function Pontuacao({
                 lg:gap-10
               "
             >
-              <BarraPontos progresso={progresso} />
+              <BarraPontos
+                progresso={progresso}
+                premium={usuario?.premium}
+              />
 
               <PorcoPorcentagem progresso={progresso} />
             </div>
 
-            <Moeda total={pontos} />
+            <Moeda 
+              total={pontos} 
+              premium={usuario?.premium}
+              />
           </>
         )}
       </div>

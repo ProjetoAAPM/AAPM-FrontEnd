@@ -4,7 +4,8 @@ import Pontuacao from "../components/home/Pontuacao";
 import FormularioExtrato from "../components/home/FormularioExtrato";
 import Sugestoes from "../components/home/Sugestoes";
 
-function Home() {
+function Home({usuario}) {
+
   const [progresso, setProgresso] = useState({
     pontos: 0,
     porcentagem: 0,
@@ -63,6 +64,7 @@ function Home() {
           pontos={progresso.pontos}
           progresso={progresso.porcentagem}
           loading={loading}
+          usuario={usuario}
         />
       </section>
 

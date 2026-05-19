@@ -1,7 +1,8 @@
 import { useState } from "react";
 import moeda from "../../assets/images/moeda.png";
+import moedaPremium from "../../assets/images/moedaPremium.png";
 
-export default function Moeda({ total }) {
+export default function Moeda({ total, premium = false }) {
   const [animando, setAnimando] = useState(false);
   const [mostrarInfo, setMostrarInfo] = useState(false);
 
@@ -40,7 +41,7 @@ export default function Moeda({ total }) {
     >
       {mostrarInfo && (
         <div
-          className="
+          className={`
             px-8
             py-4
 
@@ -48,7 +49,6 @@ export default function Moeda({ total }) {
             sm:py-4
 
             rounded-full
-            bg-gradient-to-r from-gray-300 to-gray-400
 
             text-black
             font-black
@@ -60,14 +60,20 @@ export default function Moeda({ total }) {
             shadow-md
             mr-[-30px]
             z-0
-          "
+
+            ${
+              premium
+                ? "bg-gradient-to-r from-[#FFD700] to-[#E6BE00]"
+                : "bg-gradient-to-r from-gray-300 to-gray-400"
+            }
+          `}
         >
           {total} pts
         </div>
       )}
 
       <img
-        src={moeda}
+        src={premium ? moedaPremium : moeda}
         alt="Moeda"
         onClick={handleClick}
         className={`
@@ -83,6 +89,8 @@ export default function Moeda({ total }) {
           object-contain
           relative
           z-10
+
+          ${premium ? "drop-shadow-[0_0_10px_#FFD700]" : ""}
 
           ${animando ? "animate-[moedaAbrindo_0.8s_ease-out]" : ""}
         `}

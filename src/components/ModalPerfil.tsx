@@ -128,7 +128,19 @@ export default function ModalPerfil({
 
                     <div className="relative">
 
-                        <div className="p-[5px] sm:p-[6px] rounded-full bg-gradient-to-br from-[#666666] via-[#FFFAFA] to-[#666666]">
+                        <div
+                            className={`
+                                p-[5px]
+                                sm:p-[6px]
+                                rounded-full
+
+                                ${
+                                usuario?.premium
+                                    ? "bg-gradient-to-br from-[#FFD700] via-[#FFF4B0] to-[#C9A227]"
+                                    : "bg-gradient-to-br from-[#666666] via-[#FFFAFA] to-[#666666]"
+                                }
+                            `}
+                            >
                             <img
                                 src={dados.foto}
                                 alt=""
