@@ -71,7 +71,7 @@ function Formulario({ tipo } : any) {
             const resposta = await fetch(`http://localhost:5000${rota}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dados),
+                body: JSON.stringify(tipo === 'login' ? { email: dados.email, senha: dados.senha} : dados),
             });
 
             const resultado = await resposta.json();
@@ -82,7 +82,7 @@ function Formulario({ tipo } : any) {
                 navigate(tipo === 'cadastro' ? '/escolhaplano' : '/home');
             }
             else{
-                const mensagemErro = resultado.erro_validacao || resultado.erro_interno ||"Falha na operação.";
+                const mensagemErro = resultado.erro_validacao || resultado.erro_interno || resultado.erro_usuario || resultado.mensagem || "Falha na operação.";
                 alert(`Erro: ${mensagemErro}`);
             }
         } catch (erro) {
