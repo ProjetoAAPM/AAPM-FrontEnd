@@ -2,6 +2,7 @@ import { useState } from "react";
 import CardPlano from "../components/CardPlano";
 import Copiador from "../alerts/Copiador";
 import { Copy } from "lucide-react";
+import ConfirmarPagamento from "../alerts/ConfirmarPagamento";
 
 function EscolhaPlano() {
 
@@ -34,6 +35,15 @@ function EscolhaPlano() {
 
     return(
         <div className="min-h-[100vh] bg-[#101625] flex flex-col items-center py-5 ">
+
+            {modalAberto && planoSelecionado && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <ConfirmarPagamento
+                    
+                    />
+                </div>
+            )}
+
            <div className="w-full max-w-5xl mb-5">
                 <div className="flex justify-center mb-30">
                      <img src="src/assets/icons/Logo48.svg" alt="logo" className="absolute h-[100px] w-auto drop-shadow-md"/>
@@ -53,14 +63,7 @@ function EscolhaPlano() {
                     popular={false}
                     textoBtn="Upload"
                     corBtn="bg-[#373737] text-white"
-                    onClick={() => {
-                        if (comprovanteComum) {
-                            alert("Enviando " + comprovanteComum.name);
-                            setComprovanteComum(null); 
-                        } else {
-                            alert("Coloque o comprovante primeiro!");
-                        }
-                    }}
+                    onClick={() => handlPrepararEnvio("comum", comprovanteComum)}
                 > 
                     <img src="src/assets/images/qrcode.png" alt="qrcode" className="w-[120px] h-[120px] md:w-[187px] md:h-[187px] rounded-2xl " />
                     <Copiador textoParaCopiar="https://www.sp.senai.br/">
@@ -99,14 +102,7 @@ function EscolhaPlano() {
                     popular={true}
                     textoBtn="Upload"
                     corBtn="bg-[#86D5FE]"
-                    onClick={() => {
-                        if (comprovantePremium) {
-                            alert("Enviando " + comprovantePremium.name);
-                            setComprovantePremium(null); 
-                        } else {
-                            alert("Coloque o comprovante primeiro!");
-                        }
-                    }}
+                    onClick={() => handlPrepararEnvio("premium", comprovantePremium)}
                 > 
                     <img src="src/assets/images/qrcode.png" alt="qrcode" className="w-[120px] h-[120px] md:w-[187px] md:h-[187px]  rounded-2xl " />
                     <Copiador textoParaCopiar="https://www.sp.senai.br/">
