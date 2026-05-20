@@ -8,6 +8,18 @@ function EscolhaPlano() {
     const [comprovanteComum, setComprovanteComum] = useState<File | null>(null);
     const [comprovantePremium, setComprovantePremium] = useState<File | null>(null);
 
+    const [modalAberto, setModalAberto] = useState(false);
+    const [planoSelecionado, setPlanoSelecionado] = useState<"comum" | "premium" | null>(null);
+
+    const handlPrepararEnvio = (plano: "comum" | "premium", comprovante: File | null) => {
+        if (!comprovante) {
+            alert("Coloque o comprovante primeiro!");
+            return;
+        }
+        setPlanoSelecionado(plano);
+        setModalAberto(true);
+    }
+
     return(
         <div className="min-h-[100vh] bg-[#101625] flex flex-col items-center py-5 ">
            <div className="w-full max-w-5xl mb-5">
