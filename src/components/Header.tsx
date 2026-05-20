@@ -23,37 +23,69 @@ function Header({ usuario, setUsuario }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [perfilOpen, setPerfilOpen] = useState(false);
 
+  function logout() {
+    setUsuario({
+      nome: "",
+      foto: "",
+      tipo_usuario: "",
+      premium: false,
+    });
+
+    setIsOpen(false);
+  }
+
   return (
     <>
-      <div className="absolute w-full flex justify-center z-50">
-        <div className="w-full max-w-[1812px] h-[75px] flex items-center justify-between px-4 md:px-6 bg-[#211F1D]/80 backdrop-blur-lg">
+      <div
+        className={`absolute w-full flex justify-center z-50 transition-all duration-300 
+        ${isOpen ? "mt-0 px-0" : "mt-0 px-0 lg:mt-4 lg:px-10"}`}
+      >
+        <div
+          className={`w-full max-w-[1812px] h-[75px] flex items-center justify-between px-4 md:px-6 transition-all duration-300
+          ${
+            isOpen
+              ? "fixed bg-[#FFD44B] rounded-none"
+              : "bg-[#211F1D]/80 backdrop-blur-lg rounded-none lg:rounded-full shadow-[0_0_25px_rgba(255,255,255,0.35)]"
+          }`}
+        >
+          <div className="flex items-center gap-2 md:gap-3">
+            <img
+              src="src/assets/icons/Logo48.svg"
+              className="h-[40px] md:h-[45px]"
+            />
 
-          <div className="flex items-center gap-3">
-            <p className="text-white font-bold">AAPM Senai Leopoldina</p>
+            <p
+              className={`text-sm md:text-xl font-semibold transition-colors ${
+                isOpen ? "text-black" : "text-white"
+              }`}
+            >
+              AAPM Senai Leopoldina
+            </p>
           </div>
 
-          <div className="hidden lg:flex gap-10 text-white">
+          <div className="hidden lg:flex gap-10 xl:gap-28 text-white text-lg font-medium">
             <Link to="/home">Home</Link>
             <Link to="/novidades">Novidades</Link>
             <Link to="/pagamento">Pagamento</Link>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex gap-6 items-center">
 
-            {usuario && (
+            {usuario?.nome ? (
               <div
                 onClick={() => setPerfilOpen(true)}
-                className="hidden lg:flex items-center gap-3 cursor-pointer"
+                className="hidden lg:flex items-center gap-3 cursor-pointer select-none"
               >
-                <img
-                  src={usuario.foto}
-                  className="w-10 h-10 rounded-full"
-                />
+                <div className="rounded-full bg-gradient-to-r from-[#1D2235] via-[#4B4D57] to-[#1F2A33]">
+                  <img
+                    src={usuario.foto}
+                    className="w-11 h-11 rounded-full object-cover"
+                  />
+                </div>
 
-                {/* 🔥 NOME AUTOMÁTICO PREMIUM/NORMAL */}
                 <p
                   className={`
-                    px-4 py-1.5 rounded-full font-bold transition-all
+                    px-4 py-1.5 rounded-full font-bold transition-all duration-300
                     ${
                       usuario.premium
                         ? "bg-gradient-to-r from-[#FFD700] via-[#FEEB8D] to-[#C9A227] text-[#383636]"
@@ -63,9 +95,74 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                 >
                   {usuario.nome}
                 </p>
+
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    logout();
+                  }}
+                  className="text-white ml-3 text-sm opacity-70 hover:opacity-100"
+                >
+                  sair
+                </button>
+              </div>
+            ) : (
+              <div className="hidden lg:flex gap-4">
+                <Link
+                  to="/login"
+                  className="bg-[#C83D3D] px-6 py-2 rounded-full text-white"
+                >
+                  Login
+                </Link>
+
+                <Link
+                  to="/cadastro"
+                  className="bg-[#C83D3D] px-6 py-2 rounded-full text-white"
+                >
+                  Cadastrar
+                </Link>
               </div>
             )}
 
+            {/* MOBILE */}
+            <div className="flex items-center gap-3 lg:hidden">
+
+              {usuario?.nome && (
+                <button
+                  onClick={() => setPerfilOpen(true)}
+                  className="rounded-full overflow-hidden border-2 border-white"
+                >
+                  <img
+                    src={usuario.foto}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                </button>
+              )}
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex flex-col justify-center items-center w-10 h-10 gap-1.5 z-[120]"
+              >
+                <span
+                  className={`h-0.5 w-6 transition-all duration-300 ${
+                    isOpen ? "rotate-45 translate-y-2 bg-black" : "bg-white"
+                  }`}
+                ></span>
+
+                <span
+                  className={`h-0.5 w-6 transition-all duration-300 ${
+                    isOpen ? "opacity-0" : "bg-white"
+                  }`}
+                ></span>
+
+                <span
+                  className={`h-0.5 w-6 transition-all duration-300 ${
+                    isOpen
+                      ? "-rotate-45 -translate-y-2 bg-black"
+                      : "bg-white"
+                  }`}
+                ></span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -74,6 +171,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         usuario={usuario}
+        logout={logout}
       />
 
       <ModalPerfil

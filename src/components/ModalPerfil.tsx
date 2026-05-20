@@ -42,15 +42,7 @@ export default function ModalPerfil({
     function salvarEdicao() {
         setEditando(false);
     }
-
-    function sairConta() {
-        setUsuario(null);
-        setPerfilOpen(false);
-        localStorage.removeItem("usuario");
-        sessionStorage.removeItem("usuario");
-        navigate("/");
-    }
-
+    
     if (!usuario) return null;
     if (!perfilOpen) return null;
 
@@ -98,30 +90,6 @@ export default function ModalPerfil({
                     className="absolute top-2 right-4 text-white text-3xl sm:text-4xl"
                 >
                     ×
-                </button>
-
-                <button
-                    onClick={sairConta}
-                    className="
-                        absolute
-                        top-3
-                        left-3
-                        sm:left-4
-                        bg-[#C83D3D]
-                        hover:bg-[#a93232]
-                        transition-all
-                        text-white
-                        font-bold
-                        text-sm
-                        sm:text-base
-                        px-4
-                        py-2
-                        rounded-xl
-                        shadow-lg
-                        cursor-pointer
-                    "
-                >
-                    Sair
                 </button>
 
                 <div className="flex flex-col items-center pt-16 sm:pt-12">

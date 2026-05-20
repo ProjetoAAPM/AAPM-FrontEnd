@@ -16,7 +16,7 @@ export default function BarraPontos({ progresso, premium = false }) {
 
   const premios = premium
     ? [
-        "Pontos em Dobro",
+        "Brindes em Dobro",
         "Chaveiro",
         "Cordão",
         "Crachá",

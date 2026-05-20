@@ -23,7 +23,7 @@ function App() {
     location.pathname === "/login" ||
     location.pathname === "/escolhaplano";
 
-  const testeDocente = true;
+  const testeDocente = false;
 
   const [usuario, setUsuario] = useState(
     testeDocente
