@@ -1,10 +1,12 @@
-import { useState } from "react"; 
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CardPlano from "../components/CardPlano";
 import Copiador from "../alerts/Copiador";
 import { Copy } from "lucide-react";
 import ConfirmarPagamento from "../alerts/ConfirmarPagamento";
 
 function EscolhaPlano() {
+    const navigate = useNavigate();
 
     const [comprovanteComum, setComprovanteComum] = useState<File | null>(null);
     const [comprovantePremium, setComprovantePremium] = useState<File | null>(null);
@@ -22,15 +24,68 @@ function EscolhaPlano() {
         setModalAberto(true);
     }
 
-    const handleConfirmarEnvio = () => {
-        if (planoSelecionado === "comum" && comprovanteComum) {
-            alert("Enviando comprovante do Plano Comum: " + comprovanteComum.name);
-            setComprovanteComum(null);
-        } else if (planoSelecionado === "premium" && comprovantePremium) {
-            alert("Enviando comprovante do Plano Premium: " + comprovantePremium.name);
-            setComprovantePremium(null);
+    const handleConfirmarEnvio = async () => {
+        const comprovante = planoSelecionado === "premium" ? comprovantePremium : comprovanteComum;
+
+        if (!comprovante) {
+            alert("Por favor, selecione um arquivo de comprovante primeiro.");
+            return;
         }
-        fecharModal();
+
+        const dadosPagamento = {
+            plano: planoSelecionado,
+            valor: planoSelecionado === "premium" ? 100.00 : 50.00
+        };
+
+        try {
+            const respostaEtapa1 = await fetch("http://localhost:5000/pagamento/gerar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dadosPagamento),
+            });
+
+            const resultadoEtapa1 = await respostaEtapa1.json();
+
+            if (!respostaEtapa1.ok) {
+                const mensagemErro = resultadoEtapa1.erro || resultadoEtapa1.mensagem || "Falha na operação.";
+                alert(`Erro: ${mensagemErro}`);
+                fecharModal();
+                return;
+            }
+
+            const idPagamento = resultadoEtapa1.id_pagamento;
+
+            const urlImagem = URL.createObjectURL(comprovante);
+
+            const respostaEtapa2 = await fetch("http://localhost:5000/pagamento/enviar-comprovante", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id_pagamento: idPagamento,
+                    url_imagem: urlImagem
+                }),
+            });
+
+            const resultadoEtapa2 = await respostaEtapa2.json();
+
+            if (respostaEtapa2.ok) {
+                alert(resultadoEtapa2.mensagem || "Comprovante enviado com sucesso!");
+
+                if (planoSelecionado === "premium") setComprovantePremium(null);
+                else setComprovanteComum(null);
+
+                fecharModal();
+                navigate("/login");
+            } else {
+                const mensagemErro = resultadoEtapa2.erro || resultadoEtapa2.mensagem || "Falha na operação.";
+                alert(`Erro: ${mensagemErro}`);
+                fecharModal();
+            }
+        } catch (erro) {
+            console.error("Erro na requisição de pagamento:", erro);
+            alert("Não foi possível conectar ao servidor. Certifique-se de que o Flask está ativo.");
+            fecharModal();
+        }
     };
 
     return(
