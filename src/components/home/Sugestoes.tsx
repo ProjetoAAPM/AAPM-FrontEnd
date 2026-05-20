@@ -18,12 +18,14 @@ export default function Sugestoes({ modoAdmin = false }: SugestoesProps) {
 
     const carregarSugestoes = async () => {
         if (!modoAdmin) return;
-        
+
         setLoading(true);
         setError(null);
+
         try {
             const data = await sugestaoService.listarSugestoes();
             setListaSugestoes(data);
+
         } catch (err: any) {
             console.error(err);
             setError(err.message || "Erro ao carregar sugestões");
@@ -46,13 +48,18 @@ export default function Sugestoes({ modoAdmin = false }: SugestoesProps) {
 
         try {
             await sugestaoService.enviarSugestao(texto);
+
             alert("Sugestão enviada com sucesso!");
             setTexto("");
 
             const hoje = new Date().toISOString().split("T")[0];
-            localStorage.setItem("ultimaSugestao", hoje);
+            if (localStorage.getItem("ultimaSugestao") === hoje) {
+                alert("Você já enviou uma sugestão hoje! Tente novamente amanhã.");
+                return;
+            }
+
         } catch (err: any) {
-            alert(err.message || "Erro ao enviar sugestão");
+            alert(err.message || "Erro ao enviar");
         }
     };
 

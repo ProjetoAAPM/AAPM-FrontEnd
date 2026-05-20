@@ -1,4 +1,7 @@
-// Instalar: npm install @tiptap/react@latest @tiptap/starter-kit@latest @tiptap/extension-underline@latest @tiptap/extension-text-style@latest @tiptap/extension-color@latest @tiptap/extension-text-align@latest
+/* Instalar: npm install @tiptap/react@latest @tiptap/starter-kit@latest @tiptap/extension-underline@latest @tiptap/extension-text-style@latest @tiptap/extension-color@latest @tiptap/extension-text-align@latest
+caso de erro: desinstala node_modules e package-lock 
+e instale apenas o npm install novamente*/
+
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -7,6 +10,7 @@ import Color from "@tiptap/extension-color";
 import TextAlign from "@tiptap/extension-text-align";
 import { useEditMode } from "../../contexts/modo_editar";
 import { useEffect, useState } from "react";
+import { buscarConteudo, salvarConteudo, } from "../../Services/admin/conteudoService";
 
 type Props = {
   content: string;
@@ -41,23 +45,37 @@ export default function BlocoEditavel({ content, className = "", id}: Props) {
     content: content,
     editable: editMode && isActive,
 
-    onCreate: ({ editor }) => {
-      const saved = localStorage.getItem(id);
-      if (saved) editor.commands.setContent(saved);
+    onCreate: async ({ editor }) => {
+      const saved = await buscarConteudo(id);
+
+      if (saved) {
+        editor.commands.setContent(saved);
+      }
     },
 
-    onUpdate: ({ editor }) => {
+    onUpdate: async ({ editor }) => {
       let html = editor.getHTML();
+
       if (id === "sobre-texto") {
-        html = html.replace(/<li><p>/g, `<li>`).replace(/<\/p><\/li>/g, `</li>`);
+        html = html
+          .replace(/<li><p>/g, `<li>`)
+          .replace(/<\/p><\/li>/g, `</li>`);
       }
-      localStorage.setItem(id, html);
+
+      await salvarConteudo(id, html);
     },
   });
 
   useEffect(() => {
     if (!editor) return;
-    if (!editMode) localStorage.setItem(id, editor.getHTML());
+
+    async function salvarAoSair() {
+      if (!editMode) {
+        await salvarConteudo(id, editor.getHTML());
+      }
+    }
+
+    salvarAoSair();
   }, [editMode, editor, id]);
 
   useEffect(() => {
@@ -71,6 +89,7 @@ export default function BlocoEditavel({ content, className = "", id}: Props) {
       className={`relative ${editMode ? "border-2 border-dashed border-blue-400 p-3 rounded-lg" : ""}`}
       onClick={(e) => {
         e.stopPropagation();
+
         if (editMode) {
           setActiveEditorId(id);
           editor.commands.focus();
@@ -78,7 +97,7 @@ export default function BlocoEditavel({ content, className = "", id}: Props) {
       }}
     >
       {editMode && isActive && (
-        <div className="tiptap-toolbar absolute -top-16 left-1/2 
+        <div className="tiptap-toolbar absolute -top-16 left-1/2
                 -translate-x-1/2
                 bg-[#1F2937]/95 backdrop-blur-xl border border-gray-400
                 rounded-full px-3 py-2 shadow-2xl z-50
@@ -135,9 +154,9 @@ export default function BlocoEditavel({ content, className = "", id}: Props) {
           />
 
           <button
-            onClick={() => {
-              editor.chain().focus().unsetAllMarks().clearNodes().run();
-              localStorage.removeItem(id);
+            onClick={async () => {
+              editor.commands.setContent(content);
+              await salvarConteudo(id, content);
               window.location.reload();
             }}
             className="px-4 py-2 text-red-400 hover:bg-red-900/60 rounded-full text-sm transition ml-2"

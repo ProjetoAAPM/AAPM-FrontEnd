@@ -15,7 +15,7 @@ function Header() {
 
   const [perfilOpen, setPerfilOpen] = useState(false);
 
-  const testeDocente = true;
+  const testeDocente = false;
 
   const [usuario, setUsuario] = useState(
     testeDocente

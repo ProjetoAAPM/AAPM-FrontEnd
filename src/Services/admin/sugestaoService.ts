@@ -1,4 +1,6 @@
-const API_BASE = 'http://localhost:5000';
+import { BACKEND_ATIVO } from "../../config/admin/backend";
+
+const API_BASE = "http://localhost:5000";
 
 export interface ISugestao {
     id_sugestao: number;
@@ -9,62 +11,196 @@ export interface ISugestao {
     tipo_usuario: string;
 }
 
+const STORAGE_KEY = "sugestoes_local";
+
+function pegarSugestoesLocal(): ISugestao[] {
+    const dados = localStorage.getItem(STORAGE_KEY);
+
+    if (!dados) {
+        return [];
+    }
+
+    try {
+        return JSON.parse(dados);
+    } catch {
+        return [];
+    }
+}
+
+function salvarSugestoesLocal(lista: ISugestao[]) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
+}
+
 export const sugestaoService = {
+
     async enviarSugestao(texto: string) {
+
+        if (!BACKEND_ATIVO) {
+
+            const lista = pegarSugestoesLocal();
+
+            const novaSugestao: ISugestao = {
+                id_sugestao: Date.now(),
+                usuario: "Usuário",
+                id_usuario: 1,
+                texto,
+                status: "PENDENTE",
+                tipo_usuario: "usuario"
+            };
+
+            lista.unshift(novaSugestao);
+
+            salvarSugestoesLocal(lista);
+
+            return novaSugestao;
+        }
+
         const res = await fetch(`${API_BASE}/sugestao/enviar`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ sugestao: texto })
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                sugestao: texto
+            })
         });
 
         if (!res.ok) {
+
             const error = await res.json().catch(() => ({}));
-            throw new Error(error.erro_validacao || error.mensagem || 'Erro ao enviar sugestão');
+
+            throw new Error(
+                error.erro_validacao ||
+                error.mensagem ||
+                "Erro ao enviar sugestão"
+            );
         }
+
         return res.json();
     },
 
     async listarSugestoes(): Promise<ISugestao[]> {
+
+        if (!BACKEND_ATIVO) {
+
+            return pegarSugestoesLocal();
+        }
+
         const res = await fetch(`${API_BASE}/admin/sugestoes`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' }
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            }
         });
 
         if (!res.ok) {
+
             const error = await res.json().catch(() => ({}));
-            throw new Error(error.erro || 'Erro ao carregar sugestões');
+
+            throw new Error(
+                error.erro ||
+                "Erro ao carregar sugestões"
+            );
         }
 
         return res.json();
     },
 
     async aprovarSugestao(id: number) {
-        const res = await fetch(`${API_BASE}/sugestao/${id}/status-aprovado`, {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' }
-        });
+
+        if (!BACKEND_ATIVO) {
+
+            const lista = pegarSugestoesLocal();
+
+            const atualizada = lista.map((item) => {
+
+                if (item.id_sugestao === id) {
+
+                    return {
+                        ...item,
+                        status: "APROVADO" as const
+                    };
+                }
+
+                return item;
+            });
+
+            salvarSugestoesLocal(atualizada);
+
+            return true;
+        }
+
+        const res = await fetch(
+            `${API_BASE}/sugestao/${id}/status-aprovado`,
+            {
+                method: "PATCH",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+        );
 
         if (!res.ok) {
+
             const error = await res.json().catch(() => ({}));
-            throw new Error(error.erro_validacao || 'Erro ao aprovar');
+
+            throw new Error(
+                error.erro_validacao ||
+                "Erro ao aprovar"
+            );
         }
+
         return res.json();
     },
 
     async reprovarSugestao(id: number) {
-        const res = await fetch(`${API_BASE}/sugestao/${id}/status-reprovado`, {
-            method: 'PATCH',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' }
-        });
+
+        if (!BACKEND_ATIVO) {
+
+            const lista = pegarSugestoesLocal();
+
+            const atualizada = lista.map((item) => {
+
+                if (item.id_sugestao === id) {
+
+                    return {
+                        ...item,
+                        status: "REPROVADO" as const
+                    };
+                }
+
+                return item;
+            });
+
+            salvarSugestoesLocal(atualizada);
+
+            return true;
+        }
+
+        const res = await fetch(
+            `${API_BASE}/sugestao/${id}/status-reprovado`,
+            {
+                method: "PATCH",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+        );
 
         if (!res.ok) {
+
             const error = await res.json().catch(() => ({}));
-            throw new Error(error.erro_validacao || 'Erro ao reprovar');
+
+            throw new Error(
+                error.erro_validacao ||
+                "Erro ao reprovar"
+            );
         }
+
         return res.json();
     }
 };

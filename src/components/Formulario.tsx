@@ -41,7 +41,7 @@ function Formulario({ tipo }: any) {
         e.preventDefault();
 
         if (tipo === 'login') {
-            const sucesso = login(dados.email, dados.senha);
+            const sucesso = await login(dados.email, dados.senha);
             if (sucesso) {
                 navigate('/admin');
             } else {

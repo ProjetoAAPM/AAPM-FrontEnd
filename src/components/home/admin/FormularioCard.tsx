@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import PopupAviso from "../../../alerts/PopupFormulario";
+import { BACKEND_ATIVO } from "../../../config/admin/backend";
 
 interface FormularioCardProps {
     onSalvar?: (dados: any) => void;
     onExcluir?: () => void;
     somenteVisualizacao?: boolean;
     dadosIniciais?: {
+        id?: number;
         titulo?: string;
         local?: string;
         data?: string;
@@ -21,18 +23,26 @@ const FormularioCard = ({
     dadosIniciais = {},
 }: FormularioCardProps) => {
 
-    const [popupExcluirAberto, setPopupExcluirAberto] = useState(false);
+    const isNovo = !dadosIniciais?.id;
 
+    const [popupExcluirAberto, setPopupExcluirAberto] = useState(false);
     const [popupSalvarAberto, setPopupSalvarAberto] = useState(false);
 
-    const [isEditing, setIsEditing] = useState(
-        Object.keys(dadosIniciais).length === 0
-    );
+    const [isEditing, setIsEditing] = useState(isNovo);
+
+    const formatarDataVisual = (data: string) => {
+        if (!data) return "";
+        if (data.includes("-")) {
+            const [ano, mes, dia] = data.split("-");
+            return `${dia}/${mes}/${ano}`;
+        }
+        return data;
+    };
 
     const [dados, setDados] = useState({
         titulo: dadosIniciais.titulo || "",
         local: dadosIniciais.local || "",
-        data: dadosIniciais.data || "",
+        data: dadosIniciais.data ? formatarDataVisual(dadosIniciais.data) : "",
         hora: dadosIniciais.hora || "",
         link: dadosIniciais.link || "",
     });
@@ -41,7 +51,6 @@ const FormularioCard = ({
 
         if (campo === "data") {
             valor = valor.replace(/[^\d/]/g, "");
-
             if (valor.length > 10) return;
 
             valor = valor
@@ -51,29 +60,46 @@ const FormularioCard = ({
 
         if (campo === "hora") {
             valor = valor.replace(/[^\d:]/g, "");
-
             if (valor.length > 5) return;
-
             valor = valor.replace(/^(\d{2})(\d)/, "$1:$2");
         }
 
-        if (campo === "link") {
-            valor = valor.trim();
-        }
+        if (campo === "link") valor = valor.trim();
 
-        setDados((prev) => ({
-            ...prev,
-            [campo]: valor,
-        }));
+        setDados((prev) => ({ ...prev, [campo]: valor }));
     };
 
     const confirmarSalvar = () => {
-        onSalvar?.(dados);
+        
+        let dataFormatada = dados.data;
+
+        if (dados.data.includes("/")) {
+            const [dia, mes, ano] = dados.data.split("/");
+            dataFormatada = `${ano}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}`;
+        }
+
+        const horaFormatada =
+            dados.hora.length === 5 ? `${dados.hora}:00` : dados.hora;
+
+        const dadosFormatados = {
+            ...dados,
+            data: dataFormatada,
+            hora: horaFormatada,
+        };
+
+        onSalvar?.(dadosFormatados);
+
         setIsEditing(false);
         setPopupSalvarAberto(false);
     };
 
     const handleSalvar = () => {
+
+        if (isNovo) {
+            confirmarSalvar();
+            return;
+        }
+
         setPopupSalvarAberto(true);
     };
 
@@ -222,12 +248,9 @@ const FormularioCard = ({
                 isOpen={popupExcluirAberto}
                 onClose={() => setPopupExcluirAberto(false)}
                 onConfirm={handleExcluir}
-
                 titulo="Excluir"
                 mensagem="Deseja excluir esse formulário?"
-
                 textoConfirmar="Excluir"
-
                 corBotaoConfirmar="bg-[#C0392B]"
                 hoverBotaoConfirmar="hover:bg-[#A93226]"
             />
@@ -236,12 +259,9 @@ const FormularioCard = ({
                 isOpen={popupSalvarAberto}
                 onClose={() => setPopupSalvarAberto(false)}
                 onConfirm={confirmarSalvar}
-
                 titulo="Editar"
                 mensagem="Deseja confirmar essa alteração?"
-
                 textoConfirmar="Confirmar"
-
                 corBotaoConfirmar="bg-[#5DADE2]"
                 hoverBotaoConfirmar="hover:bg-[#3498DB]"
             />
