@@ -9,6 +9,7 @@ function EscolhaPlano() {
     const [comprovantePremium, setComprovantePremium] = useState<File | null>(null);
 
     const [modalAberto, setModalAberto] = useState(false);
+    const fecharModal = () => { setModalAberto(false); setPlanoSelecionado(null);};
     const [planoSelecionado, setPlanoSelecionado] = useState<"comum" | "premium" | null>(null);
 
     const handlPrepararEnvio = (plano: "comum" | "premium", comprovante: File | null) => {
@@ -19,6 +20,17 @@ function EscolhaPlano() {
         setPlanoSelecionado(plano);
         setModalAberto(true);
     }
+
+    const handleConfirmarEnvio = () => {
+        if (planoSelecionado === "comum" && comprovanteComum) {
+            alert("Enviando comprovante do Plano Comum: " + comprovanteComum.name);
+            setComprovanteComum(null);
+        } else if (planoSelecionado === "premium" && comprovantePremium) {
+            alert("Enviando comprovante do Plano Premium: " + comprovantePremium.name);
+            setComprovantePremium(null);
+        }
+        fecharModal();
+    };
 
     return(
         <div className="min-h-[100vh] bg-[#101625] flex flex-col items-center py-5 ">
