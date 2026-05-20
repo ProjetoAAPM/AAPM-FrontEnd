@@ -124,7 +124,6 @@ function Header({ usuario, setUsuario }: HeaderProps) {
               </div>
             )}
 
-            {/* MOBILE */}
             <div className="flex items-center gap-3 lg:hidden">
 
               {usuario?.nome && (

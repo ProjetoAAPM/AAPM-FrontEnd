@@ -42,7 +42,7 @@ export default function ModalPerfil({
     function salvarEdicao() {
         setEditando(false);
     }
-    
+
     if (!usuario) return null;
     if (!perfilOpen) return null;
 
@@ -87,7 +87,7 @@ export default function ModalPerfil({
 
                 <button
                     onClick={() => setPerfilOpen(false)}
-                    className="absolute top-2 right-4 text-white text-3xl sm:text-4xl"
+                    className="absolute top-2 right-4 text-white text-3xl sm:text-4xl cursor-pointer"
                 >
                     ×
                 </button>
@@ -180,14 +180,43 @@ export default function ModalPerfil({
                                         <select
                                             value={dados.curso}
                                             onChange={(e) => alterarValor("curso", e.target.value)}
-                                            className="w-full min-h-[50px] rounded-xl text-[#3A3A3A] text-sm sm:text-lg md:text-xl font-bold text-center outline-none bg-white"
+                                            className="w-full min-h-[50px] rounded-xl text-[#3A3A3A] text-base sm:text-xl md:text-2xl font-bold text-center outline-none cursor-pointer"
                                         >
                                             <option value="">Selecione</option>
-                                            {cursos.map((curso, index) => (
-                                                <option key={index} value={curso}>
-                                                    {curso}
-                                                </option>
-                                            ))}
+
+                                            <option value="Administração">
+                                            Administração
+                                            </option>
+                                            <option value="Automação Industrial">
+                                            Automação Industrial
+                                            </option>
+                                            <option value="CAI - Eletricista de Manutenção">
+                                            CAI - Eletricista de Manutenção
+                                            </option>
+                                            <option value="CAI - Mecânico de Usinagem">
+                                            CAI - Mecânico de Usinagem
+                                            </option>
+                                            <option value="Desenvolvimento de Sistemas">
+                                            Desenvolvimento de Sistemas
+                                            </option>
+                                            <option value="Eletroeletrônica">
+                                            Eletroeletrônica
+                                            </option>
+                                            <option value="Logística">
+                                            Logística
+                                            </option>
+                                            <option value="Mecânica">
+                                            Mecânica
+                                            </option>
+                                            <option value="Mecatrônica">
+                                            Mecatrônica
+                                            </option>
+                                            <option value="Segurança do Trabalho">
+                                            Segurança do Trabalho
+                                            </option>
+                                            <option value="TI">
+                                            TI
+                                            </option>
                                         </select>
                                     ) : (
                                         <p className="text-[#3A3A3A] text-sm sm:text-lg md:text-xl font-bold text-center break-words">
@@ -283,14 +312,14 @@ export default function ModalPerfil({
                         {editando ? (
                             <button
                                 onClick={salvarEdicao}
-                                className="w-[130px] sm:w-[170px] md:w-[180px] h-[50px] sm:h-[65px] md:h-[70px] bg-[#3D8D40] rounded-[20px] text-white text-xl sm:text-3xl md:text-4xl font-bold shadow-lg"
+                                className="w-[130px] sm:w-[170px] md:w-[180px] h-[50px] sm:h-[65px] md:h-[70px] bg-[#363636] rounded-[20px] text-white text-xl sm:text-3xl md:text-4xl font-bold shadow-lg cursor-pointer"
                             >
                                 Salvar
                             </button>
                         ) : (
                             <button
                                 onClick={() => setEditando(true)}
-                                className="w-[130px] sm:w-[170px] md:w-[180px] h-[50px] sm:h-[65px] md:h-[70px] bg-[#4D4D4D] rounded-[20px] text-white text-xl sm:text-3xl md:text-4xl font-bold shadow-lg"
+                                className="w-[130px] sm:w-[170px] md:w-[180px] h-[50px] sm:h-[65px] md:h-[70px] bg-[#363636] rounded-[20px] text-white text-xl sm:text-3xl md:text-4xl font-bold shadow-lg cursor-pointer"
                             >
                                 Editar
                             </button>

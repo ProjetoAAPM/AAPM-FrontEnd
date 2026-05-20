@@ -61,8 +61,29 @@ function MenuMobile({
             </Link>
           </div>
 
+          {usuario?.nome && (
+            <div
+              className={`
+                w-full h-[45px]
+                flex items-center justify-center
+                rounded-full
+                text-lg font-bold
+                shadow-lg
+                mt-12
+
+                ${
+                  usuario.premium
+                    ? "bg-gradient-to-r from-[#FFD700] via-[#FEEB8D] to-[#C9A227] text-[#383636] cursor-pointer"
+                    : "bg-[#211F1D]/80 backdrop-blur-lg text-white border border-white/10"
+                }
+              `}
+            >
+              {usuario.nome}
+            </div>
+          )}
+
           {usuario?.nome ? (
-            <div className="flex flex-col gap-4 mt-20">
+            <div className="flex flex-col gap-4 mt-5">
               <button
                 onClick={() => {
                   logout();
@@ -72,10 +93,11 @@ function MenuMobile({
                   w-full h-[45px]
                   flex items-center justify-center
                   rounded-full
-                  bg-[#C83D3D]
+                  bg-[#363636]
                   text-white
                   text-lg font-bold
                   shadow-lg
+                  cursor-pointer
                 "
               >
                 Sair
@@ -119,7 +141,7 @@ function MenuMobile({
           )}
         </nav>
       </div>
-      
+
     </>
   );
 }
