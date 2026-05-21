@@ -1,21 +1,39 @@
 import { Star } from "lucide-react";
+import {Lock}  from "lucide-react"
 
-export default function BarraPontos({ progresso }) {
-  const valores = [0, 2000, 3500, 5000, 7500, 10000];
+export default function BarraPontos({ progresso, premium = false }) {
+
+  const maxBarra = premium ? 14000 : 10000;
+
+  const valores = premium
+    ? [0, 2000, 4000, 6000, 8500, 11500, 14000]
+    : [0, 2000, 3500, 5000, 7500, 10000];
 
   const pontosConfig = valores.map((valor) => ({
     valor,
-    pos: (valor / 10000) * 100,
+    pos: (valor / maxBarra) * 100,
   }));
 
-  const premios = [
-    "Pontos normais",
-    "Chaveiro",
-    "Cordão",
-    "Crachá",
-    "Camiseta",
-    "Dia da Pizza",
-  ];
+  const premios = premium
+    ? [
+        "Brindes em Dobro",
+        "Chaveiro",
+        "Cordão",
+        "Crachá",
+        "Camiseta",
+        progresso >= 82
+          ? "Cinema"
+          : "Brinde Surpresa",
+          "Dia da Pizza",
+      ]
+    : [
+        "Pontos normais",
+        "Chaveiro",
+        "Cordão",
+        "Crachá",
+        "Camiseta",
+        "Dia da Pizza",
+      ];
 
   return (
     <div
@@ -58,13 +76,12 @@ export default function BarraPontos({ progresso }) {
       >
 
         <div
-          className="
+          className={`
             absolute
             left-0
             top-1/2
             -translate-y-1/2
 
-            bg-[#71CFFF]
             rounded-full
             transition-all
             duration-500
@@ -76,7 +93,9 @@ export default function BarraPontos({ progresso }) {
 
             sm:h-6
             md:h-7
-          "
+
+            ${premium ? "bg-[#DB4547]" : "bg-[#71CFFF]"}
+          `}
           style={{ width: `${progresso}%` }}
         />
 
@@ -107,7 +126,7 @@ export default function BarraPontos({ progresso }) {
                 <div
                   className={`
                     rounded-full
-                    bg-[#414141]
+                    ${premium ? "bg-[#FFD700]" : "bg-[#414141]"}
                     shadow-lg
 
                     flex
@@ -157,20 +176,32 @@ export default function BarraPontos({ progresso }) {
 
                   {isPrimeira && (
                     <span
-                      className="
+                      className={`
                         font-black
-                        text-[#CCCCCC]
                         leading-none
 
-                        text-[0.55rem]
+                        ${premium
+                          ? `
+                            text-[0.55rem]
 
-                        min-[350px]:text-[0.7rem]
+                            min-[350px]:text-[1rem]
 
-                        sm:text-sm
-                        md:text-lg
-                      "
+                            sm:text-xl
+                            md:text-2xl
+                          `
+                          : `
+                            text-[0.55rem]
+
+                            min-[350px]:text-[0.7rem]
+
+                            sm:text-sm
+                            md:text-lg
+                          `
+                        }
+                        ${premium ? "text-[#383636]" : "text-[#CCCCCC]"}
+                      `}
                     >
-                      1x
+                      {premium ? "2x" : "1x"}
                     </span>
                   )}
 
@@ -197,7 +228,7 @@ export default function BarraPontos({ progresso }) {
                       />
 
                       <Star
-                        className="
+                        className={`
                           w-[8px]
                           h-[8px]
 
@@ -210,9 +241,12 @@ export default function BarraPontos({ progresso }) {
                           md:w-[28px]
                           md:h-[28px]
 
-                          text-[#FFDE59]
-                          fill-[#FFDE59]
-                        "
+                          ${
+                            premium
+                              ? "text-[#383636] fill-[#383636]"
+                              : "text-[#FFDE59] fill-[#FFDE59]"
+                          }
+                        `}
                       />
 
                       <Star
@@ -237,7 +271,7 @@ export default function BarraPontos({ progresso }) {
                       <div
                         className="
                           absolute
-                          -top-10
+                          -top-14
                           left-1/2
                           -translate-x-1/2
 
@@ -245,7 +279,7 @@ export default function BarraPontos({ progresso }) {
                           group-hover:opacity-100
                           transition
 
-                          bg-black
+                          bg-[#414141]
                           text-white
 
                           text-xs
@@ -256,40 +290,73 @@ export default function BarraPontos({ progresso }) {
                           whitespace-nowrap
                         "
                       >
-                        Dia da Pizza
+                        {premios[index]}
                       </div>
                     </div>
                   )}
                 </div>
 
                 {!isPrimeira && !isUltima && (
-                  <Star
-                    className="
-                      absolute
-                      top-1/2
-                      left-1/2
-                      -translate-x-1/2
-                      -translate-y-1/2
+                  index === 5 && premium && progresso < 82 ? (
+                    <Lock
+                      strokeWidth={3}
+                      className="
+                        absolute
+                        top-1/2
+                        left-1/2
+                        -translate-x-1/2
+                        -translate-y-1/2
 
-                      w-[10px]
-                      h-[10px]
+                        w-[10px]
+                        h-[10px]
 
-                      min-[350px]:w-[12px]
-                      min-[350px]:h-[12px]
+                        min-[300px]:w-[10px]
+                        min-[300px]:h-[10px]
 
-                      sm:w-[20px]
-                      sm:h-[20px]
+                        sm:w-[20px]
+                        sm:h-[20px]
 
-                      md:w-[24px]
-                      md:h-[24px]
+                        md:w-[24px]
+                        md:h-[24px]
 
-                      lg:w-[32px]
-                      lg:h-[32px]
+                        lg:w-[25px]
+                        lg:h-[25px]
 
-                      text-[#FFDE59]
-                      fill-[#FFDE59]
-                    "
-                  />
+                        text-[#383636]
+                      "
+                    />
+                  ) : (
+                    <Star
+                      className={`
+                        absolute
+                        top-1/2
+                        left-1/2
+                        -translate-x-1/2
+                        -translate-y-1/2
+
+                        w-[10px]
+                        h-[10px]
+
+                        min-[350px]:w-[12px]
+                        min-[350px]:h-[12px]
+
+                        sm:w-[20px]
+                        sm:h-[20px]
+
+                        md:w-[24px]
+                        md:h-[24px]
+
+                        lg:w-[32px]
+                        lg:h-[32px]
+
+                        ${
+                          premium
+                            ? "text-[#383636] fill-[#383636]"
+                            : "text-[#FFDE59] fill-[#FFDE59]"
+                        }
+                      `}
+                    />
+                  )
                 )}
 
                 {!isUltima && (
@@ -298,13 +365,13 @@ export default function BarraPontos({ progresso }) {
                       hidden sm:block
 
                       absolute
-                      -top-10
+                      -top-9
 
                       opacity-0
                       group-hover:opacity-100
                       transition
 
-                      bg-black
+                      bg-[#414141]
                       text-white
 
                       text-xs
