@@ -79,6 +79,10 @@ function Formulario({ tipo } : any) {
             if (resposta.ok) {
                 alert(resultado.mensagem || "Opereação realizada com sucesso!");
 
+                if (tipo === 'cadastro' && resultado.id_usuario) {
+                    localStorage.setItem('usuario_id', resultado.id_usuario);
+                }
+
                 navigate(tipo === 'cadastro' ? '/escolhaplano' : '/home');
             }
             else{
