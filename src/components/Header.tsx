@@ -108,18 +108,16 @@ function Header({ usuario, setUsuario }: HeaderProps) {
               </div>
             ) : (
               <div className="hidden lg:flex gap-4">
-                <Link
-                  to="/login"
-                  className="bg-[#C83D3D] px-6 py-2 rounded-full text-white"
-                >
-                  Login
+                <Link to="/login" className="hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full w-[160px] h-[42px] 
+                    text-white shadow-lg text-lg font-semibold hover:bg-[#b03535] transition-all">
+                      Login
                 </Link>
 
-                <Link
-                  to="/cadastro"
-                  className="bg-[#C83D3D] px-6 py-2 rounded-full text-white"
-                >
-                  Cadastrar
+                <div className={`hidden lg:block w-[2px] h-10 ${isOpen ? 'bg-black/20' : 'bg-gray-500/50'}`}></div>
+
+                <Link to="/cadastro" className="hidden lg:flex items-center justify-center bg-[#C83D3D] rounded-full w-[160px] h-[42px] 
+                   text-white shadow-lg text-lg font-semibold hover:bg-[#b03535] transition-all">
+                      Cadastrar
                 </Link>
               </div>
             )}
