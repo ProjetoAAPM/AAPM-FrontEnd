@@ -32,7 +32,15 @@ function EscolhaPlano() {
             return;
         }
 
+        const idUsuarioSalvo = localStorage.getItem('usuario_id')
+
+        if (!idUsuarioSalvo) {
+            alert("Erro crítico: O ID do usuário não foi encontrado na memória do navegador! Refaça o cadastro.");
+            return;
+        }
+
         const dadosPagamento = {
+            usuario_id: idUsuarioSalvo ? Number(idUsuarioSalvo) : null,
             plano: planoSelecionado,
             valor: planoSelecionado === "premium" ? 100.00 : 50.00
         };
@@ -60,6 +68,7 @@ function EscolhaPlano() {
             const respostaEtapa2 = await fetch("http://localhost:5000/pagamento/enviar-comprovante", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                credentials: "include",
                 body: JSON.stringify({
                     id_pagamento: idPagamento,
                     url_imagem: urlImagem
