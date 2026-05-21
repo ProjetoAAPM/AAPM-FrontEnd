@@ -11,7 +11,7 @@ function Login() {
             <img src="src/assets/detalheEstilo.png" alt="bolinhas" className="absolute bottom-0 right-0 z-0 opacity-80 w-[300px] -scale-x-100 -scale-y-100" />
 
             <button
-                onClick={() => navigate('/cadastro')}
+                onClick={() => navigate('/')}
                 className="absolute top-10 left-15 flex items-center gap-2 cursor-pointer"
             >
                 <ArrowLeft size={30} color="#FFFFFF" strokeWidth={3}/>

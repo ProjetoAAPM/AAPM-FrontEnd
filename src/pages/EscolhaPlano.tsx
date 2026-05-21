@@ -110,14 +110,23 @@ function EscolhaPlano() {
                         Escolha o seu plano
                     </h1>
                 </div>
+                <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] bg-[#42B9F4] py-4 mb-3 h-[80px]">
+                    <h1 className="text-white text-center text-4xl font-bold italic">
+                        Escolha o seu plano
+                    </h1>
+                </div>
            </div>
 
+           <div className="flex flex-wrap justify-center gap-8 w-full mb-15 justify-between">
            <div className="flex flex-wrap justify-center gap-8 w-full mb-15 justify-between">
                 <CardPlano
                     titulo="Plano Comum"
                     className="bg-[#86D5FE]"
                     fundoTitulo="bg-white mr-10.5 mt-10 w-[90%] h-[40px] rounded-r-xs"
+                    className="bg-[#86D5FE]"
+                    fundoTitulo="bg-white mr-10.5 mt-10 w-[90%] h-[40px] rounded-r-xs"
                     popular={false}
+                    textoBtn="Upload"
                     textoBtn="Upload"
                     corBtn="bg-[#373737] text-white"
                     onClick={() => handlPrepararEnvio("comum", comprovanteComum)}
@@ -152,11 +161,16 @@ function EscolhaPlano() {
 
                 <div className="hidden lg:block w-[3px] h-30 mr-3 flex self-center rounded bg-[#969696]"></div>
 
+                <div className="hidden lg:block w-[3px] h-30 mr-3 flex self-center rounded bg-[#969696]"></div>
+
                 <CardPlano
                     titulo="Plano Premium"
                     className="bg-[#1D1D1D] border-4 border-[#F0C41B]"
                     fundoTitulo="bg-white ml-10.5 mt-10 w-[90%] h-[40px] rounded-l-xs"
+                    className="bg-[#1D1D1D] border-4 border-[#F0C41B]"
+                    fundoTitulo="bg-white ml-10.5 mt-10 w-[90%] h-[40px] rounded-l-xs"
                     popular={true}
+                    textoBtn="Upload"
                     textoBtn="Upload"
                     corBtn="bg-[#86D5FE]"
                     onClick={() => handlPrepararEnvio("premium", comprovantePremium)}
@@ -188,6 +202,7 @@ function EscolhaPlano() {
 
                         </label>
                 </CardPlano>
+
 
            </div>
 
