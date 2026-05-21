@@ -165,7 +165,7 @@ export default function ModalPerfil({
                 <div className="px-3 sm:px-6 md:px-10 mt-8 sm:mt-10 flex flex-col gap-8 sm:gap-10 pb-10">
 
                     {dados.tipo_usuario === "aluno" ? (
-                        <>
+                        <>     
                             <div>
 
                                 <div className="bg-[#4D4D4D] w-fit px-4 h-[32px] flex items-center justify-center shadow">
