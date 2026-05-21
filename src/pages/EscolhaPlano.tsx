@@ -12,15 +12,14 @@ function EscolhaPlano() {
     const [comprovantePremium, setComprovantePremium] = useState<File | null>(null);
 
     const [modalAberto, setModalAberto] = useState(false);
-    const [planoSelecionado, setPlanoSelecionado] =
-        useState<"comum" | "premium" | null>(null);
+    const [planoSelecionado, setPlanoSelecionado] = useState<"comum" | "premium" | null>(null);
 
-    function fecharModal() {
+    const fecharModal = () => {
         setModalAberto(false);
         setPlanoSelecionado(null);
-    }
+    };
 
-    function prepararEnvio(plano: "comum" | "premium", comprovante: File | null) {
+    const prepararEnvio = (plano: "comum" | "premium", comprovante: File | null) => {
         if (!comprovante) {
             alert("Coloque o comprovante primeiro!");
             return;
@@ -28,44 +27,49 @@ function EscolhaPlano() {
 
         setPlanoSelecionado(plano);
         setModalAberto(true);
-    }
+    };
 
-    async function handleConfirmarEnvio() {
+    const handleConfirmarEnvio = async () => {
         const comprovante =
             planoSelecionado === "premium"
                 ? comprovantePremium
                 : comprovanteComum;
 
         if (!comprovante) {
-            alert("Por favor, selecione o comprovante.");
+            alert("Por favor, selecione um arquivo de comprovante primeiro.");
             return;
         }
 
         const dadosPagamento = {
             plano: planoSelecionado,
-            valor: planoSelecionado === "premium" ? 50 : 25
+            valor: planoSelecionado === "premium" ? 100 : 50
         };
 
         try {
-            const etapa1 = await fetch("http://localhost:5000/pagamento/gerar", {
+            const respostaEtapa1 = await fetch("http://localhost:5000/pagamento/gerar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(dadosPagamento),
             });
 
-            const json1 = await etapa1.json();
+            const resultadoEtapa1 = await respostaEtapa1.json();
 
-            if (!etapa1.ok) {
-                alert(json1.erro || "Erro ao gerar pagamento");
+            if (!respostaEtapa1.ok) {
+                const mensagemErro =
+                    resultadoEtapa1.erro ||
+                    resultadoEtapa1.mensagem ||
+                    "Falha na operação.";
+
+                alert(`Erro: ${mensagemErro}`);
                 fecharModal();
                 return;
             }
 
-            const idPagamento = json1.id_pagamento;
+            const idPagamento = resultadoEtapa1.id_pagamento;
 
             const urlImagem = URL.createObjectURL(comprovante);
 
-            const etapa2 = await fetch(
+            const respostaEtapa2 = await fetch(
                 "http://localhost:5000/pagamento/enviar-comprovante",
                 {
                     method: "POST",
@@ -77,10 +81,10 @@ function EscolhaPlano() {
                 }
             );
 
-            const json2 = await etapa2.json();
+            const resultadoEtapa2 = await respostaEtapa2.json();
 
-            if (etapa2.ok) {
-                alert(json2.mensagem || "Pagamento enviado!");
+            if (respostaEtapa2.ok) {
+                alert(resultadoEtapa2.mensagem || "Comprovante enviado com sucesso!");
 
                 if (planoSelecionado === "premium") {
                     setComprovantePremium(null);
@@ -91,16 +95,21 @@ function EscolhaPlano() {
                 fecharModal();
                 navigate("/login");
             } else {
-                alert(json2.erro || "Erro no envio");
+                const mensagemErro =
+                    resultadoEtapa2.erro ||
+                    resultadoEtapa2.mensagem ||
+                    "Falha na operação.";
+
+                alert(`Erro: ${mensagemErro}`);
                 fecharModal();
             }
 
-        } catch (err) {
-            console.error(err);
-            alert("Erro de conexão com servidor");
+        } catch (erro) {
+            console.error("Erro na requisição de pagamento:", erro);
+            alert("Não foi possível conectar ao servidor. Certifique-se de que o Flask está ativo.");
             fecharModal();
         }
-    }
+    };
 
     return (
         <div className="min-h-[100vh] bg-[#101625] flex flex-col items-center py-5">
@@ -119,7 +128,8 @@ function EscolhaPlano() {
                 <div className="flex justify-center mb-30">
                     <img
                         src="src/assets/icons/Logo48.svg"
-                        className="absolute h-[100px]"
+                        alt="logo"
+                        className="absolute h-[100px] w-auto drop-shadow-md"
                     />
                 </div>
 
@@ -143,7 +153,8 @@ function EscolhaPlano() {
                 >
                     <img
                         src="src/assets/images/qrcode.png"
-                        className="w-[120px] md:w-[187px]"
+                        alt="qrcode"
+                        className="w-[120px] h-[120px] md:w-[187px] md:h-[187px] rounded-2xl"
                     />
 
                     <Copiador textoParaCopiar="https://www.sp.senai.br/">
@@ -167,9 +178,7 @@ function EscolhaPlano() {
                             }
                         />
                         <p className="text-gray-500 text-center">
-                            {comprovanteComum
-                                ? comprovanteComum.name
-                                : "Arraste o arquivo"}
+                            {comprovanteComum ? comprovanteComum.name : "Arraste o arquivo"}
                         </p>
                     </label>
                 </CardPlano>
@@ -185,7 +194,8 @@ function EscolhaPlano() {
                 >
                     <img
                         src="src/assets/images/qrcode.png"
-                        className="w-[120px] md:w-[187px]"
+                        alt="qrcode"
+                        className="w-[120px] h-[120px] md:w-[187px] md:h-[187px] rounded-2xl"
                     />
 
                     <Copiador textoParaCopiar="https://www.sp.senai.br/">
@@ -209,12 +219,11 @@ function EscolhaPlano() {
                             }
                         />
                         <p className="text-gray-500 text-center">
-                            {comprovantePremium
-                                ? comprovantePremium.name
-                                : "Arraste o arquivo"}
+                            {comprovantePremium ? comprovantePremium.name : "Arraste o arquivo"}
                         </p>
                     </label>
                 </CardPlano>
+
             </div>
         </div>
     );
