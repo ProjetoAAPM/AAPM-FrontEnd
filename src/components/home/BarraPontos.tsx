@@ -17,26 +17,29 @@ export default function BarraPontos({ progresso = 0, premium = false }) {
     pos: (valor / maxBarra) * 100,
   }));
 
-  const premios = premium
-    ? [
-        "Brindes em Dobro",
-        "Chaveiro",
-        "Cordão",
-        "Crachá",
-        "Camiseta",
-        "Cinema / Brinde Surpresa",
-        "Dia da Pizza",
-      ]
-    : [
-        "Pontos normais",
-        "Chaveiro",
-        "Cordão",
-        "Crachá",
-        "Camiseta",
-        "Dia da Pizza",
-      ];
-
   const desbloqueioCinema = progressoPercentual >= 82;
+
+
+  const premios = premium
+      ? [
+          "Brindes em Dobro",
+          "Chaveiro",
+          "Cordão",
+          "Crachá",
+          "Camiseta",
+          desbloqueioCinema
+            ? "Cinema"
+            : "Brinde Surpresa",
+          "Dia da Pizza",
+        ]
+      : [
+          "Pontos normais",
+          "Chaveiro",
+          "Cordão",
+          "Crachá",
+          "Camiseta",
+          "Dia da Pizza",
+        ];
 
   return (
     <div className="w-full max-w-[1610px] mx-auto bg-[#383636] rounded-full px-2 py-2 sm:p-4 md:p-5 mt-4">
