@@ -3,7 +3,13 @@ import CardPlano from "../components/CardPlano";
 import PopupPagamento from "../alerts/PopupPagamento";
 
 function Pagamento() {
+    const [planoSelecionado, setPlanoSelecionado] = useState<"comum" | "premium" | "turbinar">("comum");
     const [mostrarPopup, setMostrarPopup] = useState(false);
+
+    const handlPrepararEnvio = (plano: "comum" | "premium" | "turbinar") => {
+        setPlanoSelecionado(plano);
+        setMostrarPopup(true);
+    };
 
     return (
         <div className="min-h-[100vh] bg-[#101625] flex flex-col items-center py-5">
@@ -16,7 +22,7 @@ function Pagamento() {
                     popular={false}
                     textoBtn="Pagar"
                     corBtn="bg-[#86D5FE] italic -mt-10 mb-10"
-                    onClick={() => setMostrarPopup(true)} 
+                    onClick={() => handlPrepararEnvio("comum")} 
                 >
                     <p className="bg-[#86D5FE]/80 rounded-md p-6 mx-6 text-base md:text-xl lg:text-[22px] -mt-32"> 
                         Esse plano permite acompanhar as iniciativas da plataforma, participar das atividades disponíveis e acumular pontos que podem ser utilizados para conquistar brindes e recompensas ao longo do período.
@@ -30,7 +36,7 @@ function Pagamento() {
                     popular={true}
                     textoBtn="Pagar"
                     corBtn="bg-linear-to-r from-[#F1D052] via-[#F0C72B] to-[#EFBF04] italic mb-13"
-                    onClick={() => setMostrarPopup(true)}   
+                    onClick={() => handlPrepararEnvio("premium")}   
                 >
                     <p className="bg-[#EFC10E]/80 rounded-md p-4 mx-6 text-base md:text-xl lg:text-[22px] -mt-5"> 
                         O Plano Premium oferece vantagens exclusivas que permitem acumular pontos mais rapidamente e acessar recompensas diferenciadas. Além disso, usuários premium recebem maior destaque no sistema de gamificação e benefícios especiais em campanhas e eventos.
@@ -44,7 +50,7 @@ function Pagamento() {
                     popular={false}
                     textoBtn="Turbinar!"
                     corBtn="bg-[#C83D3D] italic mb-10"
-                    onClick={() => setMostrarPopup(true)}
+                    onClick={() => handlPrepararEnvio("turbinar")}
                 >
                     <div className="bg-[#C83D3D]/80 w-full lg:h-[40px] 
                             md:mt-3 md:mb-3 
@@ -62,6 +68,7 @@ function Pagamento() {
             <PopupPagamento
                 isOpen={mostrarPopup}
                 onClose={() => setMostrarPopup(false)}
+                planoSelecionado={planoSelecionado}
             />
         </div>
     );
