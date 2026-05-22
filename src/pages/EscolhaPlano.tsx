@@ -68,7 +68,6 @@ function EscolhaPlano() {
             const respostaEtapa2 = await fetch("http://localhost:5000/pagamento/enviar-comprovante", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                credentials: "include",
                 body: JSON.stringify({
                     id_pagamento: idPagamento,
                     url_imagem: urlImagem
