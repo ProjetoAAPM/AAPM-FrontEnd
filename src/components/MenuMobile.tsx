@@ -65,16 +65,24 @@ function MenuMobile({
             <div
               className={`
                 w-full h-[45px]
+                mx-auto
+
+                px-4 py-1.5
+
                 flex items-center justify-center
+
                 rounded-full
-                text-lg font-bold
-                shadow-lg
+                font-bold
+                text-lg
+
                 mt-12
+ 
+                transition-all duration-300
 
                 ${
                   usuario.premium
-                    ? "bg-gradient-to-r from-[#FFD700] via-[#FEEB8D] to-[#C9A227] text-[#383636] cursor-pointer"
-                    : "bg-[#211F1D]/80 backdrop-blur-lg text-white border border-white/10"
+                    ? "bg-gradient-to-r from-[#FFD700] via-[#FEEB8D] to-[#C9A227] text-[#383636]"
+                    : "bg-gradient-to-r from-[#8E8E8E] via-[#EDEDED] to-[#6E6E6E] text-[#1f1f1f]"
                 }
               `}
             >
