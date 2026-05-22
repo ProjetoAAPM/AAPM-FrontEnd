@@ -26,7 +26,7 @@ type Progresso = {
 
 function Home({ usuario }: HomeProps) {
   const [progresso, setProgresso] = useState<Progresso>({
-    pontos: 12000,
+    pontos: 0,
     porcentagem: 0,
   });
 
