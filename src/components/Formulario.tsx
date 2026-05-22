@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { ChangeEvent, SyntheticEvent } from 'react';
 import { ChevronDown } from "lucide-react";
 
-function Formulario({ tipo } : any) {
+function Formulario({ tipo, setUsuario } : any) {
 
     const [dados, setDados] = useState({ 
         nome: '', 
@@ -71,6 +71,7 @@ function Formulario({ tipo } : any) {
             const resposta = await fetch(`http://localhost:5000${rota}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: "include",
                 body: JSON.stringify(tipo === 'login' ? { email: dados.email, senha: dados.senha} : dados),
             });
 
@@ -86,6 +87,13 @@ function Formulario({ tipo } : any) {
                 navigate(tipo === 'cadastro' ? '/escolhaplano' : '/home');
             }
             else{
+                
+                if (resposta.status === 403){
+                    alert("Seu acesso está inativo porque o pagamento está pendente ou em analíse. Redirecionando para regularização...");
+                    navigate('/escolhaplano');
+                    return;
+                }
+
                 const mensagemErro = resultado.erro_validacao || resultado.erro_interno || resultado.erro_usuario || resultado.mensagem || "Falha na operação.";
                 alert(`Erro: ${mensagemErro}`);
             }
