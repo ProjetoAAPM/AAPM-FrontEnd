@@ -6,21 +6,82 @@ import { X } from "lucide-react";
 interface PopupProps {
     isOpen: boolean;
     onClose: () => void;
+    planoSelecionado: "comum" |"premium" | "turbinar";
 }
 
-function PopupPagamento({ isOpen, onClose }: PopupProps) {
+function PopupPagamento({ isOpen, onClose, planoSelecionado }: PopupProps) {
     const [comprovante, setComprovante] = useState<File | null>(null);
+
     if (!isOpen) return null;
 
-    const handleConfirmar = () => {
-        if (comprovante) {
-            alert("Comprovante enviado!")
-            setComprovante(null);
-            onClose();
-        } else {
+    const handleConfirmar = async () => {
+        if (!comprovante) {
             alert("Anexe o comprovante primeiro!");
+            return;
         }
-    }
+
+        const idUsuarioSalvo = localStorage.getItem('usuario_id');
+
+        if (!idUsuarioSalvo) {
+            alert("Erro crítico: O ID do usuário não foi encontrado na memória do navegador! Refaça o cadastro.");
+            return;
+        }
+
+        const dadosPagamento = {
+            usuario_id: Number(idUsuarioSalvo),
+            plano: planoSelecionado,
+            valor: planoSelecionado === "premium" ? 100.00 : planoSelecionado === "turbinar" ? 80.00 : 50.00
+        };
+
+        try {
+            const respostaEtapa1 = await fetch("http://localhost:5000/usuario/pagamento/gerar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(dadosPagamento),
+            });
+
+            const resultadoEtapa1 = await respostaEtapa1.json();
+
+            if (!respostaEtapa1.ok) {
+                const mensagemErro = resultadoEtapa1.erro || resultadoEtapa1.mensagem || "Falha na operação.";
+                alert(`Erro: ${mensagemErro}`);
+                onClose();
+                return;
+            }
+
+            const idPagamento = resultadoEtapa1.id_pagamento;
+
+            const urlImagem = URL.createObjectURL(comprovante);
+
+            const respostaEtapa2 = await fetch("http://localhost:5000/pagamento/enviar-comprovante", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({
+                    id_pagamento: idPagamento,
+                    url_imagem: urlImagem
+                }),
+            });
+
+            const resultadoEtapa2 = await respostaEtapa2.json();
+
+            if (respostaEtapa2.ok) {
+                alert(resultadoEtapa2.mensagem || "Comprovante enviado com sucesso!");
+                
+                setComprovante(null);
+                onClose();
+            } else {
+                const mensagemErro = resultadoEtapa2.erro || resultadoEtapa2.mensagem || "Falha na operação.";
+                alert(`Erro: ${mensagemErro}`);
+                onClose();
+            }
+        } catch (erro) {
+            console.error("Erro na requisição de pagamento:", erro);
+            alert("Não foi possível conectar ao servidor. Certifique-se de que o Flask está ativo.");
+            onClose();
+        }
+    };
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
