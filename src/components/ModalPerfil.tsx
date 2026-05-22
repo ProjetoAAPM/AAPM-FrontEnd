@@ -217,18 +217,74 @@ export default function ModalPerfil({
 
               <div className="mt-3 bg-white rounded-xl p-3">
                 {editando ? (
-                  <input
+                  <select
                     value={dados.curso}
                     onChange={(e) => alterarValor("curso", e.target.value)}
                     className="
                       w-full
-                      text-center
-                      text-base
+                      h-[20px]
+
+                      rounded-lg
+
+                      text-[#3A3A3A]
+                      text-sm
+                      sm:text-base
+                      md:text-md
+
+                      font-semibold
+
                       outline-none
+                      cursor-pointer
+
+                      bg-white
+
+                      px-3
                     "
-                  />
+                  >
+                    <option value="">Selecione</option>
+
+                    <option value="Tec Administração">
+                      Tec Administração
+                    </option>
+
+                    <option value="Tec Desenvolvimento de Sistemas">
+                      Tec Desenvolvimento de Sistemas
+                    </option>
+
+                    <option value="Tec Eletroeletrônica">
+                      Tec Eletroeletrônica
+                    </option>
+
+                    <option value="Tec Manutenção de Sistemas Metroferroviários">
+                      Tec Manutenção de Sistemas Metroferroviários
+                    </option>
+
+                    <option value="Tec Mecânica">
+                      Tec Mecânica
+                    </option>
+
+                    <option value="Tec Mecatrônica">
+                      Tec Mecatrônica
+                    </option>
+
+                    <option value="Tec Segurança do Trabalho">
+                      Tec Segurança do Trabalho
+                    </option>
+
+                    <option value="CAI Mecânico de Usinagem">
+                      CAI Mecânico de Usinagem
+                    </option>
+
+                    <option value="CAI Eletricista de Manutenção Eletroeletrônica">
+                      CAI Eletricista de Manutenção Eletroeletrônica
+                    </option>
+
+                    <option value="CAI Ferramenteiro de Moldes para Plásticos">
+                      CAI Ferramenteiro de Moldes para Plásticos
+                    </option>
+                  </select>
                 ) : (
-                  <p className="text-center font-bold text-[#3A3A3A] text-base">
+                  <p className="text-center font-bold text-[#3A3A3A] text-base sm:text-md md:text-lg break-words">
                     {dados.curso}
                   </p>
                 )}
@@ -256,20 +312,56 @@ export default function ModalPerfil({
 
               <div className="mt-3 bg-white rounded-xl p-3">
                 {editando ? (
-                  <input
+                  <select
                     value={dados.especialidade}
                     onChange={(e) =>
                       alterarValor("especialidade", e.target.value)
                     }
                     className="
                       w-full
-                      text-center
-                      text-base
+                      h-[20px]
+
+                      rounded-lg
+
+                      text-[#3A3A3A]
+                      text-sm
+                      sm:text-base
+                      md:text-lg
+
+                      font-semibold
+
                       outline-none
+                      cursor-pointer
+
+                      bg-white
+
+                      px-3
                     "
-                  />
+                  >
+                    <option value="">Selecione</option>
+
+                    <option value="Gestão">
+                      Gestão
+                    </option>
+
+                    <option value="TI">
+                      TI
+                    </option>
+
+                    <option value="Elétrica">
+                      Elétrica
+                    </option>
+
+                    <option value="Mecânica">
+                      Mecânica
+                    </option>
+
+                    <option value="Segurança">
+                      Segurança
+                    </option>
+                  </select>
                 ) : (
-                  <p className="text-center font-bold text-[#3A3A3A] text-base">
+                  <p className="text-center font-bold text-[#3A3A3A] text-base sm:text-xl md:text-2xl break-words">
                     {dados.especialidade}
                   </p>
                 )}
@@ -295,6 +387,8 @@ export default function ModalPerfil({
 
                   hover:scale-105
                   transition-all
+
+                  cursor-pointer
                 "
               >
                 Salvar
@@ -316,6 +410,8 @@ export default function ModalPerfil({
 
                   hover:scale-105
                   transition-all
+
+                  cursor-pointer
                 "
               >
                 Editar

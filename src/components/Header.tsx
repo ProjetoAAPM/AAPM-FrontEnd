@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MenuMobile from "./MenuMobile";
 import ModalPerfil from "./ModalPerfil";
 import type { Usuario } from "../types/Usuario";
@@ -13,6 +13,8 @@ function Header({ usuario, setUsuario }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [perfilOpen, setPerfilOpen] = useState(false);
 
+  const navigate = useNavigate();
+
   function logout() {
     setUsuario({
       nome: "",
@@ -22,6 +24,8 @@ function Header({ usuario, setUsuario }: HeaderProps) {
     });
 
     setIsOpen(false);
+
+    navigate("/");
   }
 
   return (

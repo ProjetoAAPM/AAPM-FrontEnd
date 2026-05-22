@@ -34,7 +34,7 @@ export default function Pontuacao({
           <>
             <div className="flex flex-col items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
               <BarraPontos
-                progresso={progresso}
+                progresso={pontos}
                 premium={usuario?.premium}
               />
 

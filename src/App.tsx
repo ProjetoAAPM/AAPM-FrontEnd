@@ -30,7 +30,7 @@ function App() {
     curso: "Tec Desenvolvimento de Sistemas",
     dataInicio: "01/02/2025",
     dataFinal: "12/12/2026",
-    premium: true,
+    premium: false,
   });
 
   return (
