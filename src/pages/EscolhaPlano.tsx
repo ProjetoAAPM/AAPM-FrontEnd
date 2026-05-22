@@ -32,7 +32,15 @@ function EscolhaPlano() {
             return;
         }
 
+        const idUsuarioSalvo = localStorage.getItem('usuario_id')
+
+        if (!idUsuarioSalvo) {
+            alert("Erro crítico: O ID do usuário não foi encontrado na memória do navegador! Refaça o cadastro.");
+            return;
+        }
+
         const dadosPagamento = {
+            usuario_id: idUsuarioSalvo ? Number(idUsuarioSalvo) : null,
             plano: planoSelecionado,
             valor: planoSelecionado === "premium" ? 100.00 : 50.00
         };
