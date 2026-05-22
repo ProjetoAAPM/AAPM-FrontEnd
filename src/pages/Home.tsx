@@ -4,44 +4,55 @@ import Pontuacao from "../components/home/Pontuacao";
 import FormularioExtrato from "../components/home/FormularioExtrato";
 import Sugestoes from "../components/home/Sugestoes";
 
-function Home({usuario}) {
+import type { Usuario } from "../types/Usuario";
 
-  const [progresso, setProgresso] = useState({
+type ExtratoItem = {
+  tipo: "premio" | "pontos" | "resgate";
+  premio?: string;
+  pontos?: number;
+  valor?: number;
+  descricao?: string;
+  mensagem?: string;
+};
+
+type HomeProps = {
+  usuario: Usuario;
+};
+
+type Progresso = {
+  pontos: number;
+  porcentagem: number;
+};
+
+function Home({ usuario }: HomeProps) {
+  const [progresso, setProgresso] = useState<Progresso>({
     pontos: 0,
     porcentagem: 0,
   });
 
-  const [extrato, setExtrato] = useState([]);
-
+  const [extrato, setExtrato] = useState<ExtratoItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   async function carregarDados() {
     try {
       setLoading(true);
 
-      // progresso
-      const responseProgresso = await fetch(
-        "http://localhost:5000/usuario/meu-progresso",
-        {
+      const [resProgresso, resExtrato] = await Promise.all([
+        fetch("http://localhost:5000/usuario/meu-progresso", {
           credentials: "include",
-        }
-      );
+        }),
 
-      const dataProgresso = await responseProgresso.json();
-
-      // extrato
-      const responseExtrato = await fetch(
-        "http://localhost:5000/usuario/extrato",
-        {
+        fetch("http://localhost:5000/usuario/extrato", {
           credentials: "include",
-        }
-      );
+        }),
+      ]);
 
-      const dataExtrato = await responseExtrato.json();
+      const dataProgresso = await resProgresso.json();
+      const dataExtrato = await resExtrato.json();
 
       setProgresso({
-        pontos: dataProgresso.pontos_totais || 0,
-        porcentagem: dataProgresso.porcentagem_cofre || 0,
+        pontos: dataProgresso?.pontos_totais || 0,
+        porcentagem: dataProgresso?.porcentagem_cofre || 0,
       });
 
       setExtrato(dataExtrato || []);
@@ -53,8 +64,10 @@ function Home({usuario}) {
   }
 
   useEffect(() => {
-    carregarDados();
-  }, []);
+    if (usuario) {
+      carregarDados();
+    }
+  }, [usuario]);
 
   return (
     <div className="w-full overflow-x-hidden bg-[#101625]">
@@ -69,9 +82,7 @@ function Home({usuario}) {
       </section>
 
       <section className="w-full px-3 sm:px-5 lg:px-8 py-6 flex items-center justify-center">
-        <FormularioExtrato
-          extrato={extrato}
-        />
+        <FormularioExtrato extrato={extrato} />
       </section>
 
       <section className="w-full px-3 sm:px-5 lg:px-8 py-6 flex items-center justify-center">

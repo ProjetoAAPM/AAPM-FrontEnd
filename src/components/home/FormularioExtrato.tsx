@@ -1,6 +1,21 @@
 import "../Scrollbar/scrollbar.css";
 
-export default function FormularioExtrato({ extrato = [] }) {
+type ExtratoItem = {
+  tipo: "premio" | "pontos" | "resgate";
+  premio?: string;
+  pontos?: number;
+  valor?: number;
+  descricao?: string;
+  mensagem?: string;
+};
+
+type FormularioExtratoProps = {
+  extrato?: ExtratoItem[];
+};
+
+export default function FormularioExtrato({
+  extrato = [],
+}: FormularioExtratoProps) {
   return (
     <div className="w-full max-w-[1800px] mx-auto overflow-x-hidden">
 

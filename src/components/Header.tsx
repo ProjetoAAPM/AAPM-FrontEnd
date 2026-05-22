@@ -1,18 +1,8 @@
 import { Link } from "react-router-dom";
 import MenuMobile from "./MenuMobile";
 import ModalPerfil from "./ModalPerfil";
+import type { Usuario } from "../types/Usuario";
 import { useState } from "react";
-
-type Usuario = {
-  nome: string;
-  foto: string;
-  tipo_usuario: string;
-  especialidade?: string;
-  curso?: string;
-  dataInicio?: string;
-  dataFinal?: string;
-  premium: boolean;
-};
 
 type HeaderProps = {
   usuario: Usuario;
@@ -27,7 +17,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
     setUsuario({
       nome: "",
       foto: "",
-      tipo_usuario: "",
+      tipo_usuario: "aluno",
       premium: false,
     });
 

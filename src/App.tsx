@@ -13,37 +13,25 @@ import Home from "./pages/Home";
 import EscolhaPlano from "./pages/EscolhaPlano";
 
 import perfil1 from "./assets/perfis/user1.png";
-import perfil2 from "./assets/perfis/user2.png";
+
+import type { Usuario } from "./types/Usuario";
 
 function App() {
   const location = useLocation();
 
-  const esconderHeader =
-    location.pathname === "/cadastro" ||
-    location.pathname === "/login" ||
-    location.pathname === "/escolhaplano";
-
-  const testeDocente = false;
-
-  const [usuario, setUsuario] = useState(
-    testeDocente
-      ? {
-          nome: "Prof. Carlos",
-          foto: perfil2,
-          tipo_usuario: "docente",
-          especialidade: "TI",
-          premium: false,
-        }
-      : {
-          nome: "Maysa Soares",
-          foto: perfil1,
-          tipo_usuario: "aluno",
-          curso: "Tec Desenvolvimento de Sistemas",
-          dataInicio: "01/02/2025",
-          dataFinal: "12/12/2026",
-          premium: true,
-        }
+  const esconderHeader = ["/cadastro", "/login", "/escolhaplano"].includes(
+    location.pathname
   );
+
+  const [usuario, setUsuario] = useState<Usuario>({
+    nome: "Maysa Soares",
+    foto: perfil1,
+    tipo_usuario: "aluno",
+    curso: "Tec Desenvolvimento de Sistemas",
+    dataInicio: "01/02/2025",
+    dataFinal: "12/12/2026",
+    premium: true,
+  });
 
   return (
     <>
@@ -53,12 +41,18 @@ function App() {
 
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/home" element={<Home usuario={usuario} />} />
+
+        <Route
+          path="/home"
+          element={<Home usuario={usuario} />}
+        />
+
         <Route path="/novidades" element={<Novidades />} />
         <Route path="/pagamento" element={<Pagamento />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/escolhaplano" element={<EscolhaPlano />} />
+
         <Route path="*" element={<p>Página não encontrada</p>} />
       </Routes>
 
