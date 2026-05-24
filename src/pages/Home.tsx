@@ -42,7 +42,7 @@ function Home({ usuario }: HomeProps) {
           credentials: "include",
         }),
 
-        fetch("http://localhost:5000/usuario/extrato", {
+        fetch("http://localhost:5000/usuario/extrato-pontos", {
           credentials: "include",
         }),
       ]);

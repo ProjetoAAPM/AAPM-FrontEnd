@@ -61,8 +61,8 @@ export default function ModalPerfil({
     setEditando(false);
   }
 
-  if (!usuario || !perfilOpen) return null;
-
+  if (!usuario.nome || !perfilOpen) return null;
+  
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[100] flex items-start justify-end overflow-y-auto">
 

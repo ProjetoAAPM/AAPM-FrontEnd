@@ -2,7 +2,7 @@ import Formulario from "../components/Formulario";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
-function Cadastro() {
+function Cadastro({ setUsuario }: any) {
     const navigate = useNavigate();
 
     return (
@@ -17,7 +17,7 @@ function Cadastro() {
                 <ArrowLeft size={30} color="#FFFFFF" strokeWidth={3}/>
             </button>
 
-            <Formulario tipo="cadastro" className="-mt-20" />
+            <Formulario tipo="cadastro" setUsuario={setUsuario} className="-mt-20" />
 
             <div className="z-10 -mt-14 mb-10">
                 <Link to="/login" className="text-white text-lg font-semibold underline underline-offset-4">

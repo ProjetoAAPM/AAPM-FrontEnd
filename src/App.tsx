@@ -24,13 +24,13 @@ function App() {
   );
 
   const [usuario, setUsuario] = useState<Usuario>({
-    nome: "Maysa Soares",
+    nome: "",
     foto: perfil1,
     tipo_usuario: "aluno",
-    curso: "Tec Desenvolvimento de Sistemas",
-    dataInicio: "01/02/2025",
-    dataFinal: "12/12/2026",
-    premium: true,
+    curso: "",
+    dataInicio: "",
+    dataFinal: "",
+    premium: false,
   });
 
   return (
@@ -49,8 +49,8 @@ function App() {
 
         <Route path="/novidades" element={<Novidades />} />
         <Route path="/pagamento" element={<Pagamento />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/cadastro" element={<Cadastro />} />
+        <Route path="/login" element={<Login setUsuario={setUsuario} /> } />
+        <Route path="/cadastro" element={<Cadastro setUsuario={setUsuario} /> }  />
         <Route path="/escolhaplano" element={<EscolhaPlano />} />
 
         <Route path="*" element={<p>Página não encontrada</p>} />
