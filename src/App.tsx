@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -33,6 +33,36 @@ function App() {
     premium: false,
   });
 
+  async function carregarUsuario() {
+    try {
+      const resposta = await fetch("http://localhost:5000/usuario/home-logada", {
+        credentials: "include",
+      });
+
+      if (!resposta.ok) return;
+
+      const data = await resposta.json();
+      console.log(data);
+
+      setUsuario({
+        nome: data.nome,
+        foto: data.foto || perfil1,
+        tipo_usuario: data.tipo,
+        curso: data.curso || "",
+        especialidade: data.especialidade || "",
+        dataInicio: data.inicio_curso || "",
+        dataFinal: data.fim_curso || "",
+        premium: data.premium || false,
+      });
+    } catch (error) {
+      console.error("Erro ao carregar usuário:", error);
+    }
+  }
+
+  useEffect(() => {
+    carregarUsuario();
+  }, []);
+
   return (
     <>
       {!esconderHeader && (
@@ -49,8 +79,8 @@ function App() {
 
         <Route path="/novidades" element={<Novidades />} />
         <Route path="/pagamento" element={<Pagamento />} />
-        <Route path="/login" element={<Login setUsuario={setUsuario} /> } />
-        <Route path="/cadastro" element={<Cadastro setUsuario={setUsuario} /> }  />
+        <Route path="/login" element={<Login setUsuario={setUsuario} />} />
+        <Route path="/cadastro" element={<Cadastro setUsuario={setUsuario} />} />
         <Route path="/escolhaplano" element={<EscolhaPlano />} />
 
         <Route path="*" element={<p>Página não encontrada</p>} />
