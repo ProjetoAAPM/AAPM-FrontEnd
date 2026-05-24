@@ -1,6 +1,7 @@
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useState } from "react";
 import Header from "./components/Header";
+import type { Usuario } from "./components/Header"; 
 import Footer from "./components/Footer";
 import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
@@ -31,7 +32,8 @@ function App() {
 
   const esconderHeader = rotasSemHeader.includes(location.pathname);
   const testeDocente = false;
-  const [usuario, setUsuario] = useState(
+
+  const [usuario, setUsuario] = useState<Usuario>(
     testeDocente
       ? {
           nome: "Prof. Carlos",
@@ -103,13 +105,14 @@ function App() {
 
             <Route
               path="novidades"
-              element={<Novidades />}
+              element={<Novidades modoAdmin={true} />}
             />
 
             <Route
               path="pagamento"
               element={<Pagamento isAdmin />}
             />
+
           </Route>
 
           <Route

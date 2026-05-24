@@ -1,60 +1,55 @@
 import { Link, useLocation } from "react-router-dom";
 import MenuMobile from "./MenuMobile";
 import ModalPerfil from "./ModalPerfil";
-
-import perfil1 from "../assets/perfis/user1.png";
-import perfil2 from "../assets/perfis/user2.png";
-
 import { useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { useEditMode } from "../contexts/modo_editar";
-
 import logoImg from "/src/assets/icons/Logo48.svg";
 
-type Usuario = {
-  nome: string;
-  foto: string;
-  tipo_usuario: string;
-  especialidade?: string;
-  curso?: string;
-  dataInicio?: string;
-  dataFinal?: string;
-  premium?: boolean;
-};
+export type Usuario = 
 
-function Header() {
+  | {
+      nome: string;
+      foto: string;
+      tipo_usuario: "docente";
+      especialidade: string;
+      premium: boolean;
+      curso?: undefined;
+      dataInicio?: undefined;
+      dataFinal?: undefined;
+    }
+  | {
+      nome: string;
+      foto: string;
+      tipo_usuario: "aluno";
+      curso: string;
+      dataInicio: string;
+      dataFinal: string;
+      premium: boolean;
+      especialidade?: undefined;
+    };
+
+interface HeaderProps {
+  usuario: Usuario;
+  setUsuario: Dispatch<SetStateAction<Usuario>>;
+}
+
+function Header({ usuario, setUsuario }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [perfilOpen, setPerfilOpen] = useState(false);
   const { editMode, setEditMode } = useEditMode();
   const location = useLocation();
 
   const isAdmin = location.pathname.startsWith("/admin");
-  const testeDocente = false;
-
-  const [usuario, setUsuario] = useState<Usuario>(
-    testeDocente
-      ? {
-          nome: "Prof. Carlos",
-          foto: perfil2,
-          tipo_usuario: "docente",
-          especialidade: "TI",
-          premium: false,
-        }
-      : {
-          nome: "Maysa Soares",
-          foto: perfil1,
-          tipo_usuario: "aluno",
-          curso: "Tec Desenvolvimento de Sistemas",
-          dataInicio: "01/02/2025",
-          dataFinal: "12/12/2026",
-          premium: true,
-        }
-  );
 
   function logout() {
     setUsuario({
       nome: "",
       foto: "",
-      tipo_usuario: "",
+      tipo_usuario: "aluno", 
+      curso: "",
+      dataInicio: "",
+      dataFinal: "",
       premium: false,
     });
     setIsOpen(false);
@@ -86,7 +81,6 @@ function Header() {
       <div className={`absolute w-full flex justify-center z-50 transition-all duration-300 ${isOpen ? "mt-0 px-0" : "mt-0 px-0 lg:mt-4 lg:px-10"}`}>
         <div className={`w-full max-w-[1812px] h-[75px] flex items-center justify-between px-4 md:px-6 transition-all duration-300 ${isOpen ? "fixed bg-[#FFD44B] rounded-none" : "bg-[#211F1D]/80 backdrop-blur-lg rounded-none lg:rounded-full shadow-[0_0_25px_rgba(255,255,255,0.35)]"}`}>
 
-          {/* LOGO */}
           <div className="flex items-center gap-2 md:gap-3">
             <img src={logoImg} alt="Logo" className="h-[40px] md:h-[45px] w-auto object-contain" />
             <p className={`text-sm md:text-xl font-semibold whitespace-nowrap leading-tight transition-colors ${isOpen ? "text-black" : "text-white"}`}>

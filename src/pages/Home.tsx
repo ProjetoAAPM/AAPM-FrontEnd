@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Pontuacao from "../components/home/Pontuacao";
 import FormularioExtrato from "../components/home/FormularioExtrato";
 import Sugestoes from "../components/home/Sugestoes";
