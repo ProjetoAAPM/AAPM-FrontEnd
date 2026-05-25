@@ -83,6 +83,13 @@ function Formulario({ tipo, setUsuario }: any) {
       const resultado = await resposta.json();
 
       if (resposta.ok) {
+        if (resultado.status_usuario === "INATIVO") {
+          localStorage.setItem("usuario_id", resultado.usuario_id);
+          alert(resultado.mensagem);
+          navigate("/escolhaplano"); 
+          return;
+        }
+
         if (tipo === "login") {
           setUsuario({
             nome: resultado.usuario.usuario_nome,
@@ -90,10 +97,6 @@ function Formulario({ tipo, setUsuario }: any) {
             foto: perfil1,
             premium: resultado.usuario.premium,
           });
-        }
-
-        if (tipo === "cadastro") {
-          localStorage.setItem("usuario_id", resultado.id_usuario);
         }
 
         alert(resultado.mensagem || "Operação realizada com sucesso!");
@@ -175,8 +178,8 @@ function Formulario({ tipo, setUsuario }: any) {
       <form
         onSubmit={enviar}
         className={`${tema.bg} ${tipo === "login"
-            ? "min-h-[500px] w-[500px] mt-35"
-            : "max-w-[848px] w-full mt-20"
+          ? "min-h-[500px] w-[500px] mt-35"
+          : "max-w-[848px] w-full mt-20"
           } py-10 rounded-xl flex flex-col items-center gap-6 relative`}
       >
         <img
@@ -397,8 +400,8 @@ function Formulario({ tipo, setUsuario }: any) {
             <button
               type="submit"
               className={`${tema.btn} ${tipo === "login"
-                  ? "w-[170px] h-[50px] rounded-full text-[#373737]"
-                  : "w-[170px] h-[50px] rounded-2xl text-[#FFFFFF]"
+                ? "w-[170px] h-[50px] rounded-full text-[#373737]"
+                : "w-[170px] h-[50px] rounded-2xl text-[#FFFFFF]"
                 } text-xl font-bold shadow-md cursor-pointer`}
             >
               {tipo === "login" ? "Entrar" : "Cadastrar-se"}
