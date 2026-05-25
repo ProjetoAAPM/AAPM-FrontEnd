@@ -11,9 +11,9 @@ import { buscarConteudo, salvarConteudo } from "../../Services/admin/conteudoSer
 type Props = {
   content: string;
   className?: string;
-  id: string;
+  id: number; 
   smallText?: boolean;
-  onFocusEditor?: (editor: any) => void; // 🔥 ADICIONADO
+  onFocusEditor?: (editor: any) => void;
 };
 
 export default function BlocoEditavel({
@@ -23,7 +23,8 @@ export default function BlocoEditavel({
   onFocusEditor,
 }: Props) {
   const { editMode, activeEditorId, setActiveEditorId } = useEditMode();
-  const isActive = activeEditorId === id;
+  
+  const isActive = String(activeEditorId) === String(id);
 
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 900);
 
@@ -55,7 +56,7 @@ export default function BlocoEditavel({
     onUpdate: async ({ editor }) => {
       let html = editor.getHTML();
 
-      if (id === "sobre-texto") {
+      if (id === 1 || id === 2) {
         html = html
           .replace(/<li><p>/g, `<li>`)
           .replace(/<\/p><\/li>/g, `</li>`);
@@ -73,14 +74,14 @@ export default function BlocoEditavel({
 
   return (
     <div
-      className={`relative ${
+      className={`relative ${isSmallScreen ? "small-screen-editor" : ""} ${
         editMode ? "border-2 border-dashed border-blue-400 p-3 rounded-lg" : ""
       }`}
       onClick={(e) => {
         e.stopPropagation();
 
         if (editMode) {
-          setActiveEditorId(id);
+          setActiveEditorId(String(id));
           editor.commands.focus();
 
           onFocusEditor?.(editor);

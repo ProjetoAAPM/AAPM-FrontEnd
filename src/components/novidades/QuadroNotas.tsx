@@ -1,7 +1,7 @@
 import fundo from "../../assets/images/FundoNotas.png";
 import { useEffect, useState } from "react";
-import { supabase } from "../../Services/admin/supabaseClient";
 import { BACKEND_ATIVO } from "../../config/admin/backend";
+import { buscarConteudo, salvarConteudo } from "../../Services/admin/conteudoService";
 
 interface PostIt {
   cor: string;
@@ -64,51 +64,39 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
         return;
       }
 
-      const { data, error } = await supabase
-        .from("conteudo_site")
-        .select("*")
-        .eq("id", 1)
-        .single();
+      const stringDados = await buscarConteudo(20);
 
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      if (data?.texto) {
-        setPosts(JSON.parse(data.texto));
+      if (stringDados) {
+        setPosts(JSON.parse(stringDados));
       }
     } catch (err) {
-      console.error(err);
+      console.error("Erro ao carregar notas do quadro:", err);
     }
   }
 
   async function salvarPosts() {
     try {
+      const jsonString = JSON.stringify(posts);
+
       if (!BACKEND_ATIVO) {
-        localStorage.setItem("quadro_notas", JSON.stringify(posts));
+        localStorage.setItem("quadro_notas", jsonString);
         alert("Salvo com sucesso!");
         setEditMode(false);
         setPostSelecionado(null);
         return;
       }
 
-      const { error } = await supabase
-        .from("conteudo_site")
-        .update({ texto: JSON.stringify(posts) })
-        .eq("id", 1);
+      const sucesso = await salvarConteudo(20, jsonString);
 
-      if (error) {
-        console.error(error);
-        alert("Erro ao salvar!");
-        return;
+      if (sucesso) {
+        alert("Salvo com sucesso!");
+        setEditMode(false);
+        setPostSelecionado(null);
+      } else {
+        alert("Erro ao salvar no banco de dados!");
       }
-
-      alert("Salvo com sucesso!");
-      setEditMode(false);
-      setPostSelecionado(null);
     } catch (err) {
-      console.error(err);
+      console.error("Erro ao salvar notas do quadro:", err);
       alert("Erro ao salvar!");
     }
   }

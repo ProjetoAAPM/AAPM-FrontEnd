@@ -24,11 +24,7 @@ function PrivateRoute({ children }: { children: React.ReactElement }) {
 
 function App() {
   const location = useLocation();
-  const rotasSemHeader = [
-    "/cadastro",
-    "/login",
-    "/escolhaplano",
-  ];
+  const rotasSemHeader = ["/cadastro", "/login", "/escolhaplano"];
 
   const esconderHeader = rotasSemHeader.includes(location.pathname);
   const testeDocente = false;
@@ -65,10 +61,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
 
-          <Route
-            path="/home"
-            element={<Home usuario={usuario} />}
-          />
+          <Route path="/home" element={<Home usuario={usuario} />} />
 
           <Route path="/novidades" element={<Novidades />} />
 
@@ -78,10 +71,7 @@ function App() {
 
           <Route path="/cadastro" element={<Cadastro />} />
 
-          <Route
-            path="/escolhaplano"
-            element={<EscolhaPlano />}
-          />
+          <Route path="/escolhaplano" element={<EscolhaPlano />} />
 
           <Route
             path="/admin"
@@ -92,33 +82,13 @@ function App() {
             }
           >
             <Route index element={<LandingPage />} />
-
-            <Route
-              path="home"
-              element={<Home usuario={usuario} />}
-            />
-
-            <Route
-              path="usuario"
-              element={<Home usuario={usuario} modoAdmin />}
-            />
-
-            <Route
-              path="novidades"
-              element={<Novidades modoAdmin={true} />}
-            />
-
-            <Route
-              path="pagamento"
-              element={<Pagamento isAdmin />}
-            />
-
+            <Route path="home" element={<Home usuario={usuario} />} />
+            <Route path="usuario" element={<Home usuario={usuario} modoAdmin />} />
+            <Route path="novidades" element={<Novidades modoAdmin={true} />} />
+            <Route path="pagamento" element={<Pagamento isAdmin />} />
           </Route>
 
-          <Route
-            path="*"
-            element={<p>Página não encontrada</p>}
-          />
+          <Route path="*" element={<p>Página não encontrada</p>} />
         </Routes>
 
         <Footer />

@@ -42,7 +42,7 @@ function Inicio() {
 
   useEffect(() => {
     async function carregarConteudo() {
-      const salvo = await buscarConteudo("inicio-texto");
+      const salvo = await buscarConteudo(1);
 
       setConteudoSalvo(salvo);
     }
@@ -71,7 +71,7 @@ function Inicio() {
             <div className="w-full border-dashed border-white/30 relative">
 
               <BlocoEditavel
-                id="inicio-texto"
+                id={1} 
                 className="text-white"
                 content={conteudoSalvo || conteudoPadrao}
               />

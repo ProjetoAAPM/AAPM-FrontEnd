@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Copiador from "../alerts/Copiador";
 import { Copy, X } from "lucide-react";
-import { supabase } from "../Services/admin/supabaseClient";
 import { pagamentoUserService } from "../Services/payments/pagamentoUserService";
 
 interface PopupProps {
@@ -24,39 +23,35 @@ function PopupPagamento({ isOpen, onClose }: PopupProps) {
         try {
             setLoading(true);
             const usuario_id = localStorage.getItem("usuario_id");
-
-            const resultadoPagamento = await pagamentoUserService.gerarPagamento({
-                usuario_id: usuario_id ? Number(usuario_id) : null,
-                plano: "premium",
-                valor: 80
+            
+            const resultadoPagamento = await pagamentoUserService.gerarPagamento({ 
+                usuario_id: usuario_id ? Number(usuario_id) : null, 
+                plano: "premium", 
+                valor: 80 
             });
 
-            const nomeArquivo = `${Date.now()}-${comprovante.name}`;
+            console.log("Resposta do gerarPagamento:", resultadoPagamento);
 
-            const { error } = await supabase.storage
-                .from("fotos_tcc")
-                .upload(nomeArquivo, comprovante);
+            const idPagamentoRaw = resultadoPagamento?.id_pagamento || resultadoPagamento?.id;
 
-            if (error) {
-                throw new Error("Erro ao enviar imagem.");
+            if (!idPagamentoRaw) {
+                const mensagemErro = resultadoPagamento?.mensagem || "O servidor não retornou um ID de pagamento válido.";
+                alert(`Erro: ${mensagemErro}`);
+                return;
             }
 
-            const { data } = supabase.storage
-                .from("fotos_tcc")
-                .getPublicUrl(nomeArquivo);
+            const urlImagemLocal = URL.createObjectURL(comprovante);
 
-            const urlImagem = data.publicUrl;
-
-            await pagamentoUserService.enviarComprovante({
-                id_pagamento: resultadoPagamento.id_pagamento,
-                url_imagem: urlImagem
-            });
+            await pagamentoUserService.enviarComprovante(
+                Number(idPagamentoRaw), 
+                urlImagemLocal
+            );
 
             alert("Comprovante enviado!");
             setComprovante(null);
             onClose();
         } catch (erro: any) {
-            console.error(erro);
+            console.error("Erro capturado no clique:", erro);
             alert(erro.message || "Erro ao enviar comprovante.");
         } finally {
             setLoading(false);

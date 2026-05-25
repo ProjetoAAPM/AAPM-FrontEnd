@@ -12,52 +12,23 @@ import {
 const PagamentoAdmin = () => {
 
     const [lista, setLista] = useState<IPagamento[]>([]);
-
-    const [filtro, setFiltro] = useState<
-        "Todos" |
-        "Pendentes" |
-        "Aprovados" |
-        "Reprovados"
-    >("Todos");
-
+    const [filtro, setFiltro] = useState<"Todos" | "Pendentes" | "Aprovados" | "Reprovados">("Todos");
     const [showDropdown, setShowDropdown] = useState(false);
-
-    const [itemParaModal, setItemParaModal] =
-        useState<IPagamento | null>(null);
-
+    const [itemParaModal, setItemParaModal] = useState<IPagamento | null>(null);
     const [loading, setLoading] = useState(true);
-
     const [error, setError] = useState<string | null>(null);
 
     const carregarPagamentos = async () => {
-
         setLoading(true);
-
         setError(null);
-
         try {
-
-            const pagamentos =
-                await pagamentoAdminService.listarPagamentos(filtro);
-
+            const pagamentos = await pagamentoAdminService.listarPagamentos(filtro);
             setLista(pagamentos);
-
         } catch (err: any) {
-
-            console.error(
-                "Erro ao carregar pagamentos:",
-                err
-            );
-
-            setError(
-                err.message ||
-                "Erro ao carregar pagamentos"
-            );
-
+            console.error("Erro ao carregar pagamentos:", err);
+            setError(err.message || "Erro ao carregar pagamentos");
             setLista([]);
-
         } finally {
-
             setLoading(false);
         }
     };
@@ -73,71 +44,39 @@ const PagamentoAdmin = () => {
             }
         }
         iniciarPagina();
-}, [filtro]);
+    }, [filtro]);
 
     const handleAtualizar = () => {
         carregarPagamentos();
     };
 
     const stats = useMemo(() => ({
-
-        reprovados:
-            lista.filter(
-                (p) => p.status === "Reprovado"
-            ).length,
-
-        aprovados:
-            lista.filter(
-                (p) => p.status === "Aprovado"
-            ).length,
-
-        pendentes:
-            lista.filter(
-                (p) => p.status === "Pendente"
-            ).length,
-
+        reprovados: lista.filter((p) => p.status === "Reprovado").length,
+        aprovados: lista.filter((p) => p.status === "Aprovado").length,
+        pendentes: lista.filter((p) => p.status === "Pendente").length,
         total: lista.length
-
     }), [lista]);
 
     const handleApprove = async (id: number) => {
-
         try {
-
             await pagamentoAdminService.aprovarPagamento(id);
-
             await carregarPagamentos();
-
             setItemParaModal(null);
-
         } catch (err: any) {
-
-            alert(
-                err.message ||
-                "Erro ao aprovar pagamento"
-            );
+            alert(err.message || "Erro ao aprovar pagamento");
         }
     };
 
     const handleReject = async (id: number) => {
-
         try {
-
             await pagamentoAdminService.reprovarPagamento(id);
-
             await carregarPagamentos();
-
             setItemParaModal(null);
-
         } catch (err: any) {
-
-            alert(
-                err.message ||
-                "Erro ao reprovar pagamento"
-            );
+            alert(err.message || "Erro ao reprovar pagamento");
         }
     };
-
+    
     return (
 
         <div className="bg-[#0F121D] min-h-screen flex flex-col pt-20 sm:pt-24 md:pt-28 overflow-hidden px-2 sm:px-4 md:px-0">

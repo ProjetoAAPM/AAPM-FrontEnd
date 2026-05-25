@@ -5,9 +5,9 @@ import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { useEditMode } from "../contexts/modo_editar";
 import logoImg from "/src/assets/icons/Logo48.svg";
+import { limparTodoConteudo } from "../Services/admin/conteudoService";
 
 export type Usuario = 
-
   | {
       nome: string;
       foto: string;
@@ -55,8 +55,11 @@ function Header({ usuario, setUsuario }: HeaderProps) {
     setIsOpen(false);
   }
 
-  const resetarPadrao = () => {
+  const resetarPadrao = async () => {
     if (window.confirm("Deseja voltar ao texto e imagens padrão originais?")) {
+      
+      await limparTodoConteudo();
+
       localStorage.removeItem("inicio-texto");
       localStorage.removeItem("sobre-texto");
       localStorage.removeItem("img-futsal");
@@ -105,7 +108,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
               <>
                 <button
                   onClick={resetarPadrao}
-                  className="bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-semibold rounded-full px-8 py-2 text-base min-w-[130px] text-center"
+                  className="bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-semibold rounded-full px-8 py-2 text-base min-w-[130px] text-center cursor-pointer"
                 >
                   Padrão
                 </button>
@@ -117,7 +120,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                     if (editMode) alert("Salvo com sucesso!");
                     setEditMode(!editMode);
                   }}
-                  className="bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-semibold rounded-full px-8 py-2 text-base min-w-[130px] text-center"
+                  className="bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-semibold rounded-full px-8 py-2 text-base min-w-[130px] text-center cursor-pointer"
                 >
                   {editMode ? "Salvar" : "Editar"}
                 </button>
@@ -170,7 +173,6 @@ function Header({ usuario, setUsuario }: HeaderProps) {
               </>
             )}
 
-            {/* MOBILE */}
             <div className={`flex items-center gap-3 ${isAdmin ? "xl:hidden" : "lg:hidden"}`}>
               {usuario?.nome && (
                 <button onClick={() => setPerfilOpen(true)}>

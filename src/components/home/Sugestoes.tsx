@@ -141,7 +141,16 @@ export default function Sugestoes({ modoAdmin = false }: SugestoesProps) {
                   </div>
                 ) : dadosExibidos.length > 0 ? (
                   dadosExibidos.map((sugestao) => (
-                    <SugestaoCard key={sugestao.id_sugestao} id={sugestao.id_sugestao} texto={sugestao.texto} statusInicial={sugestao.status} usuario={sugestao.usuario} modoAdmin={true} onAprovar={() => handleAprovar(sugestao.id_sugestao)} onReprovar={() => handleReprovar(sugestao.id_sugestao)} />
+                    <SugestaoCard 
+                      key={sugestao.id_sugestao} 
+                      id={sugestao.id_sugestao} 
+                      texto={sugestao.texto} 
+                      statusInicial={sugestao.status} 
+                      usuario={sugestao.usuario} 
+                      modoAdmin={true} 
+                      onAprovar={() => handleAprovar(sugestao.id_sugestao)} 
+                      onReprovar={() => handleReprovar(sugestao.id_sugestao)} 
+                    />
                   ))
                 ) : (
                   <div className="flex items-center justify-center h-full py-24">
@@ -152,7 +161,12 @@ export default function Sugestoes({ modoAdmin = false }: SugestoesProps) {
                 )}
               </div>
             ) : (
-              <textarea value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Digite sua sugestão aqui." className="w-full h-full px-6 py-12 md:py-16 resize-none outline-none text-center text-[#A8A8A8] font-semibold text-base md:text-lg scroll-modern overflow-y-overlay md:overflow-y-auto" />
+              <textarea 
+                value={texto} 
+                onChange={(e) => setTexto(e.target.value)} 
+                placeholder="Digite sua sugestão aqui." 
+                className="w-full h-full px-6 py-12 md:py-16 resize-none outline-none text-center text-[#A8A8A8] font-semibold text-base md:text-lg scroll-modern overflow-y-overlay md:overflow-y-auto" 
+              />
             )}
           </div>
 
@@ -164,7 +178,17 @@ export default function Sugestoes({ modoAdmin = false }: SugestoesProps) {
         </div>
 
         {!modoAdmin && (
-          <LayoutAviso aberto={modalAberto} fechar={() => setModalAberto(false)} titulo="Sua sugestão foi enviada com sucesso!" descricao="Agradecemos sua contribuição para melhorar a experiência com a AAPM." textoBotao="Fechar" largura="max-w-[95%] sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl" corFundo="#73B36B" corTitulo="#5E9F57" corBotao="#24933C" />
+          <LayoutAviso 
+            aberto={modalAberto} 
+            fechar={() => setModalAberto(false)} 
+            titulo="Sua sugestão foi enviada com sucesso!" 
+            descricao="Agradecemos sua contribuição para melhorar a experiência com a AAPM." 
+            textoBotao="Fechar" 
+            largura="max-w-[95%] sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl" 
+            corFundo="#73B36B" 
+            corTitulo="#5E9F57" 
+            corBotao="#24933C" 
+          />
         )}
       </div>
     </div>
