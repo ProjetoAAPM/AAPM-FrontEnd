@@ -34,35 +34,35 @@ function ConfirmarPagamento({ plano, onConfirmar, onCancelar }: ConfirmarPagamen
     const info = dadosPlano[plano];
 
     return (
-        <div className="w-full max-w-[450px] rounded-2xl bg-white p-8 text-center shadow-md">
+        <div className="w-full max-w-[400px] lg:max-w-[450px] rounded-2xl bg-white p-8 text-center shadow-md">
             <div className="mb-4 flex justify-center">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full border-1">
+                <div className="flex h-6 w-6 lg:h-8 lg:w-8 lg:h-10 lg:w-10 items-center justify-center rounded-full border-1">
                     <Check size={20} className="text-black stroke-1"/>
                 </div>
             </div>
 
-            <h2 className="text-2xl font-bold text-black">Confirmar Pagamento</h2>
-            <p className="mb-4 text-base">
+            <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-black">Confirmar Pagamento</h2>
+            <p className="mb-4 text-xs md:text-sm lg:text-base">
                 Revise os detalhes do seu plano antes de continuar
             </p>
 
             <div className="mb-4 rounded-lg bg-[#DFF4FF] p-4 text-left">
-                <h3 className="mb-3 text-xl font-bold">{info.titulo}</h3>
+                <h3 className="mb-3 text-base md:text-lg lg:text-xl font-bold">{info.titulo}</h3>
                 <div className="mb-2 flex justify-between text-base font-semibold text-black">
-                    <p>Valor:</p>
-                    <p className="text-[#43BFFF] font-bold">{info.valor}</p>
+                    <p className="text-xs md:text-sm lg:text-base text-black">Valor:</p>
+                    <p className="text-xs md:text-sm lg:text-base text-[#43BFFF] font-bold">{info.valor}</p>
                 </div>
                 <div className="flex justify-between text-base font-semibold text-black">
-                    <p>Pontuação:</p>
-                    <p className="text-[#43BFFF] font-bold">{info.pontos}</p>
+                    <p className="text-xs md:text-sm lg:text-base text-black">Pontuação:</p>
+                    <p className="text-xs md:text-sm lg:text-base text-[#43BFFF] font-bold">{info.pontos}</p>
                 </div>
             </div>
 
             <div className="mb-6 rounded-lg bg-[#DFF4FF] p-4 text-left">
-                <h3 className="mb-3 text-xl font-bold">Benefícios</h3>
+                <h3 className="mb-3 text-base md:text-lg lg:text-xl font-bold">Benefícios</h3>
                 <ul>
                     {info.beneficios.map((beneficio, index) =>
-                        <li key={index} className="flex items-center text-base font-medium text-black">
+                        <li key={index} className="flex items-center text-xs md:text-sm lg:text-base font-medium text-black">
                             <Check size={15} className="mr-2 text-[#2C903B] stroke-3"/>
                             {beneficio}
                         </li>
@@ -73,13 +73,13 @@ function ConfirmarPagamento({ plano, onConfirmar, onCancelar }: ConfirmarPagamen
             <div className="flex gap-4">
                 <button
                     onClick={onConfirmar}
-                    className="flex-1 rounded-lg bg-[#86D5FE] py-2 text-2xl font-bold text-[#373737] cursor-pointer"
+                    className="flex-1 rounded-lg bg-[#86D5FE] py-2 text-lg md:text-xl lg:text-2xl font-bold text-[#373737] cursor-pointer"
                 >
                     Continuar
                 </button>
                 <button
                     onClick={onCancelar}
-                    className="flex-1 rounded-lg bg-[#373737] py-2 text-2xl font-bold text-white cursor-pointer"
+                    className="flex-1 rounded-lg bg-[#373737] py-2 text-lg md:text-xl lg:text-2xl font-bold text-white cursor-pointer"
                 >
                     Cancelar
                 </button>
