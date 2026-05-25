@@ -88,13 +88,22 @@ function Formulario({ tipo, setUsuario }: any) {
             nome: resultado.usuario.usuario_nome,
             tipo_usuario: resultado.usuario.tipo_usuario,
             foto: perfil1,
-            premium: true,
+            premium: resultado.usuario.premium,
           });
+        }
+
+        if (tipo === "cadastro") {
+          localStorage.setItem("usuario_id", resultado.id_usuario);
         }
 
         alert(resultado.mensagem || "Operação realizada com sucesso!");
 
         navigate(tipo === "cadastro" ? "/escolhaplano" : "/home");
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 0);
+
       } else {
         if (resposta.status === 403) {
           alert(
@@ -149,37 +158,32 @@ function Formulario({ tipo, setUsuario }: any) {
     tipo === "login"
       ? cores.login
       : dados.tipo_usuario === "aluno"
-      ? cores.aluno
-      : cores.docente;
+        ? cores.aluno
+        : cores.docente;
 
-  const estiloLabel = `${
-    tema.bg_label
-  } w-fit py-2 px-14 rounded-r-full mb-2 text-lg inset-shadow-sm inset-shadow-indigo-700/10 ${
-    tipo === "login"
+  const estiloLabel = `${tema.bg_label
+    } w-fit py-2 px-14 rounded-r-full mb-2 text-lg inset-shadow-sm inset-shadow-indigo-700/10 ${tipo === "login"
       ? " text-[#373737] font-bold"
       : "pl-20  -ml-18.5 text-[#FFFFFF] font-semibold"
-  }`;
+    }`;
 
-  const estiloInput = `h-[40px] p-3 bg-white rounded-md ${
-    tipo === "login" ? "w-[380px] mx-15 shadow-md" : "mx-2 shadow-md"
-  }`;
+  const estiloInput = `h-[40px] p-3 bg-white rounded-md ${tipo === "login" ? "w-[380px] mx-15 shadow-md" : "mx-2 shadow-md"
+    }`;
 
   return (
     <div className="w-full flex justify-center py-20">
       <form
         onSubmit={enviar}
-        className={`${tema.bg} ${
-          tipo === "login"
+        className={`${tema.bg} ${tipo === "login"
             ? "min-h-[500px] w-[500px] mt-35"
             : "max-w-[848px] w-full mt-20"
-        } py-10 rounded-xl flex flex-col items-center gap-6 relative`}
+          } py-10 rounded-xl flex flex-col items-center gap-6 relative`}
       >
         <img
           src="src/assets/icons/Logo48.svg"
           alt="logo"
-          className={`${
-            tipo === "login" ? "-top-[50px]" : "-top-[50px]"
-          } absolute h-[100px] w-auto drop-shadow-md`}
+          className={`${tipo === "login" ? "-top-[50px]" : "-top-[50px]"
+            } absolute h-[100px] w-auto drop-shadow-md`}
         />
         <h2 className={`text-4xl font-bold italic mt-4 ${tema.titulo}`}>
           {tipo === "login" ? "Faça seu Login" : "Faça seu Cadastro"}
@@ -222,11 +226,10 @@ function Formulario({ tipo, setUsuario }: any) {
                     onClick={() => alternarUsuario("aluno")}
                     className={`
                                             w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer
-                                            ${
-                                              dados.tipo_usuario === "aluno"
-                                                ? "bg-[#383636] text-white "
-                                                : "bg-[#DDDDDD] text-black"
-                                            }`}
+                                            ${dados.tipo_usuario === "aluno"
+                        ? "bg-[#383636] text-white "
+                        : "bg-[#DDDDDD] text-black"
+                      }`}
                   >
                     Aluno
                   </button>
@@ -236,11 +239,10 @@ function Formulario({ tipo, setUsuario }: any) {
                     onClick={() => alternarUsuario("docente")}
                     className={`
                                             w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer 
-                                            ${
-                                              dados.tipo_usuario === "docente"
-                                                ? "bg-[#383636] text-white "
-                                                : "bg-[#DDDDDD] text-black"
-                                            }`}
+                                            ${dados.tipo_usuario === "docente"
+                        ? "bg-[#383636] text-white "
+                        : "bg-[#DDDDDD] text-black"
+                      }`}
                   >
                     Docente
                   </button>
@@ -289,9 +291,9 @@ function Formulario({ tipo, setUsuario }: any) {
                           }
                           onFocus={(e) => (e.target.style.color = "black")}
                           onBlur={(e) =>
-                            (e.target.style.color = e.target.value
-                              ? "black"
-                              : "transparent")
+                          (e.target.style.color = e.target.value
+                            ? "black"
+                            : "transparent")
                           }
                           style={{
                             color: dados.inicio_curso ? "black" : "transparent",
@@ -312,9 +314,9 @@ function Formulario({ tipo, setUsuario }: any) {
                           onChange={guardar}
                           onFocus={(e) => (e.target.style.color = "black")}
                           onBlur={(e) =>
-                            (e.target.style.color = e.target.value
-                              ? "black"
-                              : "transparent")
+                          (e.target.style.color = e.target.value
+                            ? "black"
+                            : "transparent")
                           }
                           style={{
                             color: dados.fim_curso ? "black" : "transparent",
@@ -394,11 +396,10 @@ function Formulario({ tipo, setUsuario }: any) {
           <div className="flex justify-center mt-4 gap-6">
             <button
               type="submit"
-              className={`${tema.btn} ${
-                tipo === "login"
+              className={`${tema.btn} ${tipo === "login"
                   ? "w-[170px] h-[50px] rounded-full text-[#373737]"
                   : "w-[170px] h-[50px] rounded-2xl text-[#FFFFFF]"
-              } text-xl font-bold shadow-md cursor-pointer`}
+                } text-xl font-bold shadow-md cursor-pointer`}
             >
               {tipo === "login" ? "Entrar" : "Cadastrar-se"}
             </button>

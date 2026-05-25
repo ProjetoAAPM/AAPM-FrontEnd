@@ -56,13 +56,42 @@ export default function ModalPerfil({
     }));
   }
 
-  function salvarEdicao() {
-    setUsuario(dados);
-    setEditando(false);
+  async function salvarEdicao() {
+    try {
+      const resposta = await fetch("http://localhost:5000/usuario/editar-perfil", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          curso: dados.curso,
+          especialidade: dados.especialidade,
+          foto: dados.foto,
+          nome: dados.nome,
+        }),
+      });
+
+      const resultado = await resposta.json();
+
+      if (!resposta.ok) {
+        alert(resultado.erro || "Erro ao atualizar usuário");
+        return;
+      }
+
+      // atualiza frontend só depois que salvou no banco
+      setUsuario(dados);
+      setEditando(false);
+
+      alert("Dados atualizados com sucesso!");
+    } catch (err) {
+      console.error(err);
+      alert("Erro de conexão com o servidor");
+    }
   }
 
   if (!usuario.nome || !perfilOpen) return null;
-  
+
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[100] flex items-start justify-end overflow-y-auto">
 
@@ -143,10 +172,9 @@ export default function ModalPerfil({
                     border-4
                     transition-all
 
-                    ${
-                      dados.foto === foto
-                        ? "border-white scale-105"
-                        : "border-transparent"
+                    ${dados.foto === foto
+                      ? "border-white scale-105"
+                      : "border-transparent"
                     }
                   `}
                 />
