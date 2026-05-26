@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "../Scrollbar/scrollbar.css";
 import FormularioCard from "./admin/FormularioCard";
-import { formularioService, type FormularioData } from "../../Services/admin/formularioService";
+import { formularioService, type FormularioData } from "../../Services/formularioService";
 import { BACKEND_ATIVO } from "../../config/admin/backend";
 
 interface ItemExtrato {

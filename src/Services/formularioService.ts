@@ -1,4 +1,4 @@
-import { BACKEND_ATIVO, FORMULARIOS_ID } from "../../config/admin/backend";
+/* import { BACKEND_ATIVO, FORMULARIOS_ID } from "../../config/admin/backend";
 import { supabase } from "./supabaseClient";
 
 export interface FormularioData {
@@ -91,4 +91,4 @@ export const formularioService = {
             throw error;
         }
     }
-};
+}; */

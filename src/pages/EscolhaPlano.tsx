@@ -4,7 +4,7 @@ import CardPlano from "../components/CardPlano";
 import Copiador from "../alerts/Copiador";
 import { Copy } from "lucide-react";
 import ConfirmarPagamento from "../alerts/ConfirmarPagamento";
-import { pagamentoUserService } from "../Services/payments/pagamentoUserService"; // Seu serviço correto
+import { pagamentoUserService } from "../Services/pagamentoUserService"; // Seu serviço correto
 
 function EscolhaPlano() {
     const navigate = useNavigate();

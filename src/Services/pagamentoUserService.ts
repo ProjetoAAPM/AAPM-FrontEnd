@@ -1,4 +1,4 @@
-import { API_BASE } from "../../config/admin/backend";
+/* import { API_BASE } from "../../config/admin/backend";
 
 interface IDadosPagamento {
     usuario_id?: number | null;
@@ -58,4 +58,4 @@ export const pagamentoUserService = {
 
         return resultado;
     }
-};
+}; */

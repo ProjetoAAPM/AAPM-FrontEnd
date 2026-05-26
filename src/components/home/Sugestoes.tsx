@@ -3,7 +3,7 @@ import SugestaoCard from "./admin/SugestaoCard";
 import LayoutAviso from "../../alerts/LayoutAviso";
 import "../Scrollbar/scrollbar.css";
 import filtroIcon from "../../assets/icons/icone_filtro.svg";
-import { sugestaoService, type ISugestao } from "../../Services/admin/sugestaoService";
+import { sugestaoService, type ISugestao } from "../../Services/sugestaoService";
 
 interface SugestoesProps {
   modoAdmin?: boolean;

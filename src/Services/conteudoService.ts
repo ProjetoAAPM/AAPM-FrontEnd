@@ -1,4 +1,4 @@
-import { BACKEND_ATIVO } from "../../config/admin/backend";
+import { BACKEND_ATIVO } from "../config/admin/backend";
 import { supabase } from "./supabaseClient";
 
 export async function buscarConteudo(id: number): Promise<string | null> {
