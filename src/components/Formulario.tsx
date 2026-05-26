@@ -99,6 +99,10 @@ function Formulario({ tipo, setUsuario }: any) {
           });
         }
 
+        if (tipo === "cadastro") {
+          localStorage.setItem("usuario_id", resultado.usuario_id);
+        }
+
         alert(resultado.mensagem || "Operação realizada com sucesso!");
 
         navigate(tipo === "cadastro" ? "/escolhaplano" : "/home");
