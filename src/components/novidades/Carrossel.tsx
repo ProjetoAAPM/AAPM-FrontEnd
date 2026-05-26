@@ -8,7 +8,7 @@ import img5 from "../../assets/images/DesafioIdeias.jpg";
 import img6 from "../../assets/images/auditorio.jpg";
 import img7 from "../../assets/images/carros.jpg";
 import { useEditMode } from "../../contexts/modo_editar";
-import { buscarImagem, salvarImagem } from "../../Services/admin/conteudoService";
+import { buscarImagem, salvarImagem } from "../../Services/conteudoService";
 
 const initialSlides = [img1, img2, img3, img4, img5, img6, img7];
 

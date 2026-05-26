@@ -5,7 +5,7 @@ import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { useEditMode } from "../contexts/modo_editar";
 import logoImg from "/src/assets/icons/Logo48.svg";
-import { limparTodoConteudo } from "../Services/admin/conteudoService";
+import { limparTodoConteudo } from "../Services/conteudoService";
 
 export type Usuario = 
   | {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useEditMode } from "../../contexts/modo_editar";
 import BlocoEditavel from "../admin/BlocoEditavel";
-import { buscarConteudo, salvarImagem, buscarImagem } from "../../Services/admin/conteudoService";
+import { buscarConteudo, salvarImagem, buscarImagem } from "../../Services/conteudoService";
 
 import img1 from "../../assets/images/formatura2.png";
 import img2 from "../../assets/images/carros.jpg";
