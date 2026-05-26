@@ -6,7 +6,7 @@ import Color from "@tiptap/extension-color";
 import TextAlign from "@tiptap/extension-text-align";
 import { useEditMode } from "../../contexts/modo_editar";
 import { useEffect, useState } from "react";
-import { buscarConteudo, salvarConteudo } from "../../Services/conteudoService";
+import { buscarConteudo, salvarConteudo } from "../../Services/admin/conteudoService";
 
 type Props = {
   content: string;

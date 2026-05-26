@@ -1,7 +1,7 @@
 import fundo from "../../assets/images/FundoNotas.png";
 import { useEffect, useState } from "react";
 import { BACKEND_ATIVO } from "../../config/admin/backend";
-import { buscarConteudo, salvarConteudo } from "../../Services/conteudoService";
+import { buscarConteudo, salvarConteudo } from "../../Services/admin/conteudoService";
 
 interface PostIt {
   cor: string;
