@@ -3,7 +3,7 @@ import Comentarios from "../landingPage/Comentarios";
 import BlocoEditavel from "../admin/BlocoEditavel";
 import { useEditMode } from "../../contexts/modo_editar";
 import iconeEditar from "../../assets/icons/icone_editar.png";
-import { buscarConteudo } from "../../Services/admin/conteudoService";
+import { buscarConteudo } from "../../Services/conteudoService";
 import { verificarAdminHome } from "../../Services/api";
 
 function Inicio() {

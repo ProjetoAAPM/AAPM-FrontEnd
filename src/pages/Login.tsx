@@ -2,7 +2,7 @@ import Formulario from "../components/Formulario";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
-function Login() {
+function Login({ setUsuario }: any) {
     const navigate = useNavigate();
 
     return (
@@ -17,7 +17,7 @@ function Login() {
                 <ArrowLeft size={30} color="#FFFFFF" strokeWidth={3}/>
             </button>
 
-            <Formulario tipo="login" />
+            <Formulario tipo="login" setUsuario={setUsuario} />
 
             <div className="z-10 -mt-14 mb-10">
                 <Link to="/cadastro" className="text-white text-lg font-semibold underline underline-offset-4">

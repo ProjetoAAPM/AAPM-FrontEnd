@@ -1,4 +1,4 @@
-import { 
+import {
     createContext,
     useContext,
     useState,
@@ -6,7 +6,6 @@ import {
 } from "react";
 
 import type { ReactNode } from "react";
-
 import { BACKEND_ATIVO, API_BASE } from "../../config/admin/backend";
 
 interface AuthContextType {
@@ -22,9 +21,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         async function verificarSessao() {
+            const adminMarcado = localStorage.getItem("isAdmin") === "true";
+            if (!adminMarcado) {
+                setIsAdmin(false);
+                return;
+            }
+
             if (!BACKEND_ATIVO) {
-                const adminLogado = localStorage.getItem("isAdmin") === "true";
-                setIsAdmin(adminLogado);
+                setIsAdmin(adminMarcado);
                 return;
             }
 
@@ -33,11 +37,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     method: "GET",
                     credentials: "include"
                 });
-                setIsAdmin(res.ok);
+
+                if (res.ok) {
+                    setIsAdmin(true);
+                } else {
+                    setIsAdmin(false);
+                    localStorage.removeItem("isAdmin"); 
+                }
+
             } catch {
                 setIsAdmin(false);
             }
         }
+
         verificarSessao();
     }, []);
 
@@ -52,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         try {
-            const res = await fetch(`${API_BASE}/login`, {
+            const res = await fetch(`${API_BASE}/admin/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -63,6 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 setIsAdmin(true);
                 return true;
             }
+
             return false;
         } catch {
             return false;
@@ -72,8 +85,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const logout = () => {
         localStorage.removeItem("isAdmin");
         setIsAdmin(false);
+
         if (BACKEND_ATIVO) {
-            fetch(`${API_BASE}/logout`, { method: "POST", credentials: "include" });
+            fetch(`${API_BASE}/logout`, {
+                method: "POST",
+                credentials: "include"
+            });
         }
     };
 

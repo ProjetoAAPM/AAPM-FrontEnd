@@ -51,7 +51,7 @@ export default function FormularioExtrato({ modoAdmin = false, extrato = [] }: F
   const salvarFormulario = async (dados: FormularioData) => {
     try {
       await formularioService.criarFormulario(dados);
-      alert("Formulário saved com sucesso!");
+      alert("Formulário salvo com sucesso!");
       setMostrarFormulario(false);
       carregarFormularios();
     } catch (err) {
@@ -69,7 +69,9 @@ export default function FormularioExtrato({ modoAdmin = false, extrato = [] }: F
   };
 
   const excluirFormulario = async (id: number) => {
-    if (!window.confirm("Deseja realmente excluir este formulário?")) return;
+    if (!window.confirm("Deseja realmente excluir este formulário?")) {
+      return;
+    }
     try {
       await formularioService.deletarFormulario(id);
       carregarFormularios();
@@ -85,7 +87,6 @@ export default function FormularioExtrato({ modoAdmin = false, extrato = [] }: F
           <div className="absolute top-3 sm:top-10 left-0 bg-white text-[#101625] text-[1.2rem] min-[350px]:text-[1.4rem] sm:text-[2rem] md:text-[3rem] font-black px-8 sm:px-[150px] md:px-[200px] lg:px-[250px] py-1 rounded-r-[10px] shadow-md whitespace-nowrap">
             Formulários
           </div>
-
           <div className="mt-[90px] sm:mt-[130px] md:mt-[180px] lg:mt-[160px] w-full flex flex-col flex-1 min-h-0">
             {modoAdmin && (
               <div className="w-full flex justify-end mb-4">
@@ -94,23 +95,26 @@ export default function FormularioExtrato({ modoAdmin = false, extrato = [] }: F
                 </button>
               </div>
             )}
-
             <div className="bg-white rounded-[12px] shadow-md w-full flex-1 flex flex-col overflow-hidden">
               <div className="flex-1 overflow-y-auto scroll-modern px-4 py-4 space-y-4">
                 {loading ? (
-                  <div className="text-center py-20 text-gray-500">
-                    Carregando formulários...
-                  </div>
+                  <div className="text-center py-20 text-gray-500">Carregando formulários...</div>
+                ) : error ? (
+                  <div className="text-center py-20 text-red-500 font-semibold">{error}</div>
                 ) : (
                   <>
                     {modoAdmin && mostrarFormulario && (
                       <FormularioCard onSalvar={salvarFormulario} somenteVisualizacao={false} />
                     )}
-
                     {(modoAdmin ? formularios : formulariosFuturos).map((formulario) => (
-                      <FormularioCard key={formulario.id} dadosIniciais={formulario} somenteVisualizacao={!modoAdmin} onSalvar={(dados) => atualizarFormulario(formulario.id!, dados)} onExcluir={() => excluirFormulario(formulario.id!)} />
+                      <FormularioCard
+                        key={formulario.id}
+                        dadosIniciais={formulario}
+                        somenteVisualizacao={!modoAdmin}
+                        onSalvar={(dados) => atualizarFormulario(formulario.id!, dados)}
+                        onExcluir={() => excluirFormulario(formulario.id!)}
+                      />
                     ))}
-
                     {formularios.length === 0 && !mostrarFormulario && (
                       <div className="py-32 flex items-center justify-center text-gray-500 font-semibold">
                         Nenhum formulário cadastrado ainda.
@@ -122,13 +126,11 @@ export default function FormularioExtrato({ modoAdmin = false, extrato = [] }: F
             </div>
           </div>
         </div>
-
         {!modoAdmin && (
           <div className="bg-[#BBE1FE] w-full lg:w-1/4 min-h-[400px] sm:min-h-[500px] lg:h-full rounded-[15px] shadow-2xl p-3 sm:p-4 relative flex flex-col overflow-hidden">
             <div className="absolute top-6 sm:top-10 right-0 bg-white text-[#101625] text-[1.2rem] sm:text-[2rem] md:text-[1.5rem] font-black px-6 sm:px-[100px] md:px-[200px] lg:px-[90px] py-1 rounded-l-[10px] shadow-md whitespace-nowrap">
               Extrato
             </div>
-
             <div className="mt-[80px] sm:mt-[110px] md:mt-[130px] flex-1 rounded-[10px] bg-[#BBE1FE] overflow-hidden min-h-0">
               <div className="h-full overflow-y-auto scroll-modern pr-2 sm:pr-3">
                 <div className="p-2 sm:p-4 space-y-3">
@@ -136,12 +138,28 @@ export default function FormularioExtrato({ modoAdmin = false, extrato = [] }: F
                     <div key={i} className="bg-[#FFFFFF] rounded-[8px] p-3 shadow-sm flex justify-between items-center gap-3">
                       {item.tipo === "premio" && (
                         <div>
-                          <p className="text-[12px] sm:text-[14px] font-semibold text-yellow-700">
-                            Prêmio desbloqueado
-                          </p>
-                          <p className="text-[13px] sm:text-[15px] font-bold text-black">
-                            {item.premio}
-                          </p>
+                          <p className="text-[12px] sm:text-[14px] font-semibold text-yellow-700">Prêmio desbloqueado</p>
+                          <p className="text-[13px] sm:text-[15px] font-bold text-black">{item.premio}</p>
+                        </div>
+                      )}
+                      {item.tipo === "pontos" && (
+                        <div>
+                          <p className="text-[12px] sm:text-[14px] font-semibold text-blue-700">Pontos recebidos</p>
+                          <p className="text-[13px] sm:text-[15px] font-bold text-black">+{item.pontos} pontos</p>
+                          {item.descricao && <p className="text-xs text-gray-500">{item.descricao}</p>}
+                        </div>
+                      )}
+                      {item.tipo === "resgate" && (
+                        <div>
+                          <p className="text-[12px] sm:text-[14px] font-semibold text-red-700">Resgate realizado</p>
+                          <p className="text-[13px] sm:text-[15px] font-bold text-black">-{item.valor} pontos</p>
+                          {item.descricao && <p className="text-xs text-gray-500">{item.descricao}</p>}
+                        </div>
+                      )}
+                      {item.tipo === "ganho" && (
+                        <div>
+                          <p className="text-[12px] sm:text-[14px] font-semibold text-green-700">Ganho registrado</p>
+                          <p className="text-[13px] sm:text-[15px] font-bold text-black">{item.mensagem}</p>
                         </div>
                       )}
                     </div>

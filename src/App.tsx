@@ -1,7 +1,6 @@
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./components/Header";
-import type { Usuario } from "./components/Header"; 
 import Footer from "./components/Footer";
 import LandingPage from "./pages/LandingPage";
 import Home from "./pages/Home";
@@ -15,86 +14,104 @@ import { EditModeProvider } from "./contexts/modo_editar";
 import GlobalClickHandler from "./components/admin/GlobalClickHandler";
 import { AuthProvider, useAuth } from "./contexts/admin/AuthContext";
 import perfil1 from "./assets/perfis/user1.png";
-import perfil2 from "./assets/perfis/user2.png";
+import type { Usuario } from "./types/Usuario";
 
 function PrivateRoute({ children }: { children: React.ReactElement }) {
-  const { isAdmin } = useAuth();
-  return isAdmin ? children : <Navigate to="/login" replace />;
+    const { isAdmin } = useAuth();
+
+    return isAdmin ? children : <Navigate to="/login" replace />;
 }
 
 function App() {
-  const location = useLocation();
-  const rotasSemHeader = ["/cadastro", "/login", "/escolhaplano"];
+    const location = useLocation();
 
-  const esconderHeader = rotasSemHeader.includes(location.pathname);
-  const testeDocente = false;
+    const esconderHeader = [
+        "/cadastro",
+        "/login",
+        "/escolhaplano"
+    ].includes(location.pathname);
 
-  const [usuario, setUsuario] = useState<Usuario>(
-    testeDocente
-      ? {
-          nome: "Prof. Carlos",
-          foto: perfil2,
-          tipo_usuario: "docente",
-          especialidade: "TI",
-          premium: false,
+    const [usuario, setUsuario] = useState<Usuario>({
+        nome: "",
+        foto: perfil1,
+        tipo_usuario: "aluno",
+        curso: "",
+        dataInicio: "",
+        dataFinal: "",
+        premium: false
+    });
+
+    async function carregarUsuario() {
+        try {
+            const resposta = await fetch(
+                "http://localhost:5000/usuario/home-logada",
+                { credentials: "include" }
+            );
+
+            if (!resposta.ok) return;
+
+            const data = await resposta.json();
+
+            setUsuario({
+                nome: data.nome,
+                foto: data.foto || perfil1,
+                tipo_usuario: data.tipo,
+                curso: data.curso || "",
+                especialidade: data.especialidade || "",
+                dataInicio: data.inicio_curso || "",
+                dataFinal: data.fim_curso || "",
+                premium: data.premium || false
+            });
+        } catch (error) {
+            console.error("Erro ao carregar usuário:", error);
         }
-      : {
-          nome: "Maysa Soares",
-          foto: perfil1,
-          tipo_usuario: "aluno",
-          curso: "Tec Desenvolvimento de Sistemas",
-          dataInicio: "01/02/2025",
-          dataFinal: "12/12/2026",
-          premium: true,
+    }
+
+    useEffect(() => {
+        if (esconderHeader) {
+            return;
         }
-  );
+        
+        carregarUsuario();
+    }, [location.pathname]); 
 
-  return (
-    <AuthProvider>
-      <EditModeProvider>
-        <GlobalClickHandler />
+    return (
+        <AuthProvider>
+            <EditModeProvider>
+                <GlobalClickHandler />
 
-        {!esconderHeader && (
-          <Header usuario={usuario} setUsuario={setUsuario} />
-        )}
+                {!esconderHeader && (
+                    <Header usuario={usuario} setUsuario={setUsuario} />
+                )}
 
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
+                <Routes>
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/home" element={<Home usuario={usuario} />} />
+                    <Route path="/novidades" element={<Novidades />} />
+                    <Route path="/pagamento" element={<Pagamento />} />
+                    <Route path="/login" element={<Login setUsuario={setUsuario} />} />
+                    <Route path="/cadastro" element={<Cadastro setUsuario={setUsuario} />} />
+                    <Route path="/escolhaplano" element={<EscolhaPlano />} />
 
-          <Route path="/home" element={<Home usuario={usuario} />} />
+                    <Route path="/admin" element={
+                        <PrivateRoute>
+                            <Admin />
+                        </PrivateRoute>
+                    }>
+                        <Route index element={<LandingPage />} />
+                        <Route path="home" element={<Home usuario={usuario} />} />
+                        <Route path="usuario" element={<Home usuario={usuario} modoAdmin />} />
+                        <Route path="novidades" element={<Novidades modoAdmin={true} />} />
+                        <Route path="pagamento" element={<Pagamento isAdmin />} />
+                    </Route>
 
-          <Route path="/novidades" element={<Novidades />} />
+                    <Route path="*" element={<p>Página não encontrada</p>} />
+                </Routes>
 
-          <Route path="/pagamento" element={<Pagamento />} />
-
-          <Route path="/login" element={<Login />} />
-
-          <Route path="/cadastro" element={<Cadastro />} />
-
-          <Route path="/escolhaplano" element={<EscolhaPlano />} />
-
-          <Route
-            path="/admin"
-            element={
-              <PrivateRoute>
-                <Admin />
-              </PrivateRoute>
-            }
-          >
-            <Route index element={<LandingPage />} />
-            <Route path="home" element={<Home usuario={usuario} />} />
-            <Route path="usuario" element={<Home usuario={usuario} modoAdmin />} />
-            <Route path="novidades" element={<Novidades modoAdmin={true} />} />
-            <Route path="pagamento" element={<Pagamento isAdmin />} />
-          </Route>
-
-          <Route path="*" element={<p>Página não encontrada</p>} />
-        </Routes>
-
-        <Footer />
-      </EditModeProvider>
-    </AuthProvider>
-  );
+                <Footer />
+            </EditModeProvider>
+        </AuthProvider>
+    );
 }
 
 export default App;

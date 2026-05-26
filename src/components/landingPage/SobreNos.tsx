@@ -6,7 +6,7 @@ import {
   buscarConteudo,
   buscarImagem,
   salvarImagem,
-} from "../../Services/admin/conteudoService";
+} from "../../Services/conteudoService";
 
 function SobreNos() {
   const { editMode } = useEditMode();

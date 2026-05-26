@@ -1,4 +1,4 @@
-/* import { BACKEND_ATIVO, API_BASE } from "../../config/admin/backend";
+import { BACKEND_ATIVO, API_BASE } from "../config/admin/backend";
 
 export interface ISugestao {
     id_sugestao: number;
@@ -122,4 +122,4 @@ export const sugestaoService = {
         }
         return res.json();
     }
-}; */
+}; 
