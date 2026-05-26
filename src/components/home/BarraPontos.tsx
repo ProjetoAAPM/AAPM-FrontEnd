@@ -1,12 +1,29 @@
 import { Star, Lock } from "lucide-react";
+import { useEffect } from "react";
 
-export default function BarraPontos({ progresso = 0, premium = false }) {
+type ExtratoItem = {
+  tipo: "premio" | "pontos" | "resgate";
+  premio?: string;
+  pontos?: number;
+  valor?: number;
+  descricao?: string;
+  mensagem?: string;
+};
+
+type BarraPontosProps = {
+  progresso?: number;
+  premium?: boolean;
+  onPremiosCalculados?: (premios: ExtratoItem[]) => void;
+};
+
+export default function BarraPontos({ 
+  progresso = 0, 
+  premium = false, 
+  onPremiosCalculados 
+}: BarraPontosProps) {
   const maxBarra = premium ? 14000 : 10000;
 
-  const progressoPercentual = Math.min(
-    (progresso / maxBarra) * 100,
-    100
-  );
+  const progressoPercentual = Math.min((progresso / maxBarra) * 100, 100);
 
   const valores = premium
     ? [0, 2000, 4000, 6000, 8500, 11500, 14000]
@@ -19,27 +36,46 @@ export default function BarraPontos({ progresso = 0, premium = false }) {
 
   const desbloqueioCinema = progressoPercentual >= 82;
 
-
   const premios = premium
-      ? [
-          "Brindes em Dobro",
-          "Chaveiro",
-          "Cordão",
-          "Crachá",
-          "Camiseta",
-          desbloqueioCinema
-            ? "Cinema"
-            : "Brinde Surpresa",
-          "Dia da Pizza",
-        ]
-      : [
-          "Pontos normais",
-          "Chaveiro",
-          "Cordão",
-          "Crachá",
-          "Camiseta",
-          "Dia da Pizza",
-        ];
+    ? [
+        "Brindes em Dobro",
+        "Chaveiro",
+        "Cordão",
+        "Crachá",
+        "Camiseta",
+        desbloqueioCinema ? "Cinema" : "Brinde Surpresa",
+        "Dia da Pizza",
+      ]
+    : [
+        "Pontos normais",
+        "Chaveiro",
+        "Cordão",
+        "Crachá",
+        "Camiseta",
+        "Dia da Pizza",
+      ];
+
+  useEffect(() => {
+    if (onPremiosCalculados) {
+      const historicoAutomatico: ExtratoItem[] = [];
+
+      historicoAutomatico.push({
+        tipo: "pontos",
+        pontos: progresso,
+      });
+
+      valores.forEach((valorMeta, index) => {
+        if (progresso >= valorMeta && index > 0) {
+          historicoAutomatico.push({
+            tipo: "premio",
+            premio: premios[index],
+          });
+        }
+      });
+
+      onPremiosCalculados(historicoAutomatico);
+    }
+  }, [progresso, premium]);
 
   return (
     <div className="w-full max-w-[1610px] mx-auto bg-[#383636] rounded-full px-2 py-2 sm:p-4 md:p-5 mt-4">

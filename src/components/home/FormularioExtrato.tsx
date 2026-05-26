@@ -11,10 +11,12 @@ type ExtratoItem = {
 
 type FormularioExtratoProps = {
   extrato?: ExtratoItem[];
+  premium?: boolean;
 };
 
 export default function FormularioExtrato({
   extrato = [],
+  premium = false,
 }: FormularioExtratoProps) {
   return (
     <div className="w-full max-w-[1800px] mx-auto overflow-x-hidden">
@@ -236,54 +238,36 @@ export default function FormularioExtrato({
                     "
                   >
 
-                    {item.tipo === "premio" && (
-                      <div>
-                        <p className="text-[12px] sm:text-[14px] font-semibold text-yellow-700">
-                          Prêmio desbloqueado
-                        </p>
-
-                        <p className="text-[13px] sm:text-[15px] font-bold text-black">
-                          {item.premio}
-                        </p>
-                      </div>
-                    )}
-
                     <div className="flex-1">
 
+                      {item.tipo === "premio" && (
+                        <div>
+                          <p className={`text-[12px] sm:text-[14px] font-semibold ${premium ? "text-yellow-600" : "text-slate-500"}`}>
+                            Prêmio desbloqueado
+                          </p>
+
+                          <p className="text-[13px] sm:text-[15px] font-bold text-black">
+                            {item.premio}
+                          </p>
+                        </div>
+                      )}
+
                       {item.tipo === "pontos" && (
-                        <div className="flex flex-col">
-
-                          <p className="text-[12px] sm:text-[14px] font-semibold text-gray-700">
-                            Ganho de pontos
-                          </p>
-
-                          <p
-                            className="
-                              text-[13px]
-                              sm:text-[15px]
-
-                              font-bold
-                              text-black
-
-                              break-words
-                            "
-                          >
-                            {item.mensagem || item.descricao}
-                          </p>
-
-                          <span
-                            className="
-                              text-green-600
-                              font-bold
-
-                              text-[13px]
-                              sm:text-[15px]
-
-                              mt-1
-                            "
-                          >
-                            +{item.valor || item.pontos} pts
+                        <div className="flex justify-between items-end w-full">
+                          <div>
+                            <p className="text-[14px] sm:text-[16px] font-black text-black">
+                              Ganho de pontos
+                            </p>
+                            <p className={`text-[13px] sm:text-[15px] font-bold mt-0.5 ${premium ? "text-yellow-600" : "text-slate-500"}`}>
+                              {premium ? "Plano Premium" : "Pagamento do plano Comum"}
+                            </p>
+                          </div>
+                          
+                         {(item.valor || item.pontos) ? (
+                          <span className="text-green-600 font-black text-[15px] sm:text-[18px] shrink-0 pb-0.5">
+                            +{item.valor || item.pontos}p
                           </span>
+                        ) : null}
 
                         </div>
                       )}
@@ -303,11 +287,24 @@ export default function FormularioExtrato({
                     </div>
 
                     <div className="shrink-0">
-
-                      {item.tipo === "resgate" && (
-                        <span className="text-gray-400 text-lg sm:text-xl">
-                          ⭐
-                        </span>
+                      {(item.tipo === "resgate" || item.tipo === "premio") && (
+                        <>
+                          {premium ? (
+                            <span 
+                              className="text-lg sm:text-xl filter drop-shadow-[0_1px_3px_rgba(234,179,8,0.5)]" 
+                              style={{ color: "#EAB308" }}
+                            >
+                              ⭐
+                            </span>
+                          ) : (
+                            <span 
+                              className="text-lg sm:text-xl filter grayscale opacity-40"
+                              style={{ color: "#94A3B8" }}
+                            >
+                              ⭐
+                            </span>
+                          )}
+                        </>
                       )}
 
                     </div>
