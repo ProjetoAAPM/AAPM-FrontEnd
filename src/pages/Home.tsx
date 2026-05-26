@@ -60,7 +60,21 @@ function Home({ usuario }: HomeProps) {
         porcentagem: dataProgresso?.porcentagem_cofre || 0,
       });
 
-      setExtrato(dataExtrato || []);
+      const extratoFormatado: ExtratoItem[] = (dataExtrato || []).map((item: any) => {
+        const ehGanho = item.tipo === "ganho";
+        
+        const pontosNumericos = parseInt(item.pontos.replace(/[^\d-]/g, '')) * (ehGanho ? 1 : -1);
+
+        return {
+          tipo: ehGanho ? "pontos" : "resgate",
+          mensagem: item.titulo,       
+          descricao: item.subtitulo,  
+          pontos: pontosNumericos,     
+          premio: item.data,         
+        };
+      });
+
+      setExtrato(extratoFormatado);
     } catch (error) {
       console.error("Erro ao carregar dados:", error);
     } finally {
