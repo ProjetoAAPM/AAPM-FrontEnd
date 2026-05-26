@@ -2,8 +2,12 @@ import { Star, Lock } from "lucide-react";
 import { useEffect } from "react";
 
 type ExtratoItem = {
-  tipo: "premio";
-  premio: string;
+  tipo: "premio" | "pontos" | "resgate";
+  premio?: string;
+  pontos?: number;
+  valor?: number;
+  descricao?: string;
+  mensagem?: string;
 };
 
 type BarraPontosProps = {
@@ -31,7 +35,7 @@ export default function BarraPontos({
   }));
 
   const desbloqueioCinema = progressoPercentual >= 82;
-  
+
   const premios = premium
     ? [
         "Brindes em Dobro",
@@ -53,18 +57,23 @@ export default function BarraPontos({
 
   useEffect(() => {
     if (onPremiosCalculados) {
-      const premiosConquistados: ExtratoItem[] = [];
+      const historicoAutomatico: ExtratoItem[] = [];
+
+      historicoAutomatico.push({
+        tipo: "pontos",
+        pontos: progresso,
+      });
 
       valores.forEach((valorMeta, index) => {
         if (progresso >= valorMeta && index > 0) {
-          premiosConquistados.push({
+          historicoAutomatico.push({
             tipo: "premio",
             premio: premios[index],
           });
         }
       });
 
-      onPremiosCalculados(premiosConquistados);
+      onPremiosCalculados(historicoAutomatico);
     }
   }, [progresso, premium]);
 

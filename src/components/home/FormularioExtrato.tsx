@@ -259,13 +259,15 @@ export default function FormularioExtrato({
                               Ganho de pontos
                             </p>
                             <p className={`text-[13px] sm:text-[15px] font-bold mt-0.5 ${premium ? "text-yellow-600" : "text-slate-500"}`}>
-                              {premium ? "Plano Premium" : "Plano Comum"}
+                              {premium ? "Plano Premium" : "Pagamento do plano Comum"}
                             </p>
                           </div>
                           
+                         {(item.valor || item.pontos) ? (
                           <span className="text-green-600 font-black text-[15px] sm:text-[18px] shrink-0 pb-0.5">
-                            +{item.valor || item.pontos || 2500}p
+                            +{item.valor || item.pontos}p
                           </span>
+                        ) : null}
 
                         </div>
                       )}
