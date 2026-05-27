@@ -142,7 +142,18 @@ export default function ModalPerfil({
 
         <div className="flex flex-col items-center pt-14 sm:pt-12">
 
-          <div className="p-[5px] rounded-full bg-gradient-to-br from-[#FFD700] via-[#FFF4B0] to-[#C9A227]">
+          <div
+            className={`
+              p-[5px]
+              rounded-full
+
+              ${
+                dados.premium
+                  ? "bg-gradient-to-br from-[#FFD700] via-[#FFF4B0] to-[#C9A227]"
+                  : "bg-gradient-to-br from-[#94A3B8] via-[#E2E8F0] to-[#64748B]"
+              }
+            `}
+          >
             <img
               src={dados.foto}
               className="
