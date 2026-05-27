@@ -259,7 +259,7 @@ export default function FormularioExtrato({
                               Ganho de pontos
                             </p>
                             <p className={`text-[13px] sm:text-[15px] font-bold mt-0.5 ${premium ? "text-yellow-600" : "text-slate-500"}`}>
-                              {premium ? "Plano Premium" : "Pagamento do plano Comum"}
+                              {item.descricao}
                             </p>
                           </div>
                           
