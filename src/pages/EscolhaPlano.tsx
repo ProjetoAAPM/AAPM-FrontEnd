@@ -63,16 +63,20 @@ function EscolhaPlano() {
 
             const idPagamento = resultadoEtapa1.id_pagamento;
 
-            const urlImagem = URL.createObjectURL(comprovante);
+            const formData = new FormData();
 
-            const respostaEtapa2 = await fetch("http://localhost:5000/pagamento/enviar-comprovante", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    id_pagamento: idPagamento,
-                    url_imagem: urlImagem
-                }),
-            });
+
+            formData.append("id_pagamento", String(idPagamento));
+            formData.append("comprovante", comprovante);
+
+                const respostaEtapa2 = await fetch(
+                    "http://localhost:5000/pagamento/enviar-comprovante",
+                    {
+                        method: "POST",
+                        credentials: "include",
+                        body: formData,
+                    }
+                );
 
             const resultadoEtapa2 = await respostaEtapa2.json();
 
