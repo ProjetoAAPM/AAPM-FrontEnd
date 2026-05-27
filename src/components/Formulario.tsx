@@ -48,7 +48,7 @@ function Formulario({ tipo, setUsuario }: any) {
         "CAI Ferramenteiro de Moldes para Plásticos"
     ];
 
-    const especialidades = [
+    const poolEspecialidades = [
         "Gestão",
         "TI",
         "Elétrica",
@@ -96,101 +96,65 @@ function Formulario({ tipo, setUsuario }: any) {
             : "mx-2 shadow-md"
     }`;
 
-    const enviar = async (
-        e: SyntheticEvent<HTMLFormElement, SubmitEvent>
-    ) => {
+    const enviar = async (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
         e.preventDefault();
-
         if (tipo === "login") {
-            if (
-                dados.email === "admin@gmail.com" ||
-                dados.email.includes("admin")
-            ) {
-                const isAdmin = await loginAdmin(
-                    dados.email,
-                    dados.senha
-                );
-
-                if (isAdmin) {
-                    navigate("/admin");
-                    return;
-                }
-            }
-
             try {
-                const resposta = await fetch(
-                    "http://localhost:5000/login",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        credentials: "include",
-                        body: JSON.stringify({
-                            email: dados.email,
-                            senha: dados.senha
-                        })
-                    }
-                );
+                const resposta = await fetch("http://localhost:5000/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        email: dados.email,
+                        senha: dados.senha
+                    })
+                });
 
                 const resultado = await resposta.json();
 
                 if (resposta.ok) {
+                    const tipoUsuario = resultado.tipo_usuario || resultado.usuario?.tipo_usuario;
+
+                    if (tipoUsuario === "administrador") {
+                        console.log("Login de ADMINISTRADOR confirmado pelo backend");
+                        
+                        loginAdmin(dados.email, dados.senha); 
+                        
+                        navigate("/admin");
+                        return;
+                    }
+
                     if (resultado.status_usuario === "INATIVO") {
-                        localStorage.setItem(
-                            "usuario_id",
-                            resultado.usuario_id
-                        );
-
+                        localStorage.setItem("usuario_id", resultado.usuario_id);
                         alert(resultado.mensagem);
-
                         navigate("/escolhaplano");
                         return;
                     }
 
                     setUsuario?.({
-                        nome: resultado.usuario.usuario_nome,
-                        tipo_usuario:
-                            resultado.usuario.tipo_usuario,
+                        nome: resultado.usuario?.usuario_nome,
+                        tipo_usuario: resultado.usuario?.tipo_usuario,
                         foto: perfil1,
-                        premium: resultado.usuario.premium
+                        premium: resultado.usuario?.premium
                     });
 
-                    alert(
-                        resultado.mensagem ||
-                            "Login realizado com sucesso!"
-                    );
-
+                    alert(resultado.mensagem || "Login realizado com sucesso!");
                     navigate("/home");
-
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 0);
-
+                    setTimeout(() => window.location.reload(), 100);
                     return;
                 }
 
                 if (resposta.status === 403) {
-                    alert(
-                        "Seu acesso está inativo porque o pagamento está pendente ou em análise. Redirecionando para regularização..."
-                    );
-
+                    alert("Seu acesso está inativo. Redirecionando para regularização...");
                     navigate("/escolhaplano");
                     return;
                 }
 
-                alert(
-                    resultado.mensagem ||
-                        "Email ou senha incorretos!"
-                );
+                alert(resultado.mensagem || "Email ou senha incorretos!");
             } catch (erro) {
                 console.error("Erro na requisição:", erro);
-
-                alert(
-                    "Não foi possível conectar ao servidor."
-                );
+                alert("Não foi possível conectar ao servidor.");
             }
-
             return;
         }
 
@@ -199,18 +163,12 @@ function Formulario({ tipo, setUsuario }: any) {
             return;
         }
 
-        if (
-            dados.tipo_usuario === "aluno" &&
-            !dados.curso
-        ) {
+        if (dados.tipo_usuario === "aluno" && !dados.curso) {
             alert("Informe o seu curso!");
             return;
         }
 
-        if (
-            dados.tipo_usuario === "docente" &&
-            !dados.especialidade
-        ) {
+        if (dados.tipo_usuario === "docente" && !dados.especialidade) {
             alert("Informe sua especialidade!");
             return;
         }
@@ -243,35 +201,28 @@ function Formulario({ tipo, setUsuario }: any) {
 
                 if (resultado.status_usuario === "INATIVO") {
                     alert(resultado.mensagem);
-
                     navigate("/escolhaplano");
                     return;
                 }
 
-                alert(
-                    resultado.mensagem ||
-                        "Cadastro realizado com sucesso!"
-                );
-
+                alert(resultado.mensagem || "Cadastro realizado com sucesso!");
                 navigate("/escolhaplano");
+                
+                setTimeout(() => {
+                    window.location.reload();
+                }, 0);
                 return;
             }
 
-            alert(
-                resultado.mensagem || "Erro no cadastro"
-            );
+            alert(resultado.mensagem || "Erro no cadastro");
         } catch (erro) {
             console.error("Erro na requisição:", erro);
-
-            alert(
-                "Não foi possível conectar ao servidor."
-            );
+            alert("Não foi possível conectar ao servidor.");
         }
     };
 
     const loginGoogle = () => {
-        window.location.href =
-            "http://localhost:5000/login/google";
+        window.location.href = "http://localhost:5000/login/google";
     };
 
     return (
@@ -290,21 +241,14 @@ function Formulario({ tipo, setUsuario }: any) {
                     className="absolute -top-[50px] h-[100px] w-auto drop-shadow-md"
                 />
 
-                <h2
-                    className={`text-4xl font-bold italic mt-4 ${tema.titulo}`}
-                >
-                    {tipo === "login"
-                        ? "Faça seu Login"
-                        : "Faça seu Cadastro"}
+                <h2 className={`text-4xl font-bold italic mt-4 ${tema.titulo}`}>
+                    {tipo === "login" ? "Faça seu Login" : "Faça seu Cadastro"}
                 </h2>
 
                 <div className="w-full max-w-[700px] flex flex-col gap-8">
                     {tipo !== "login" && (
                         <div className="flex flex-col w-full">
-                            <label className={estiloLabel}>
-                                Nome:
-                            </label>
-
+                            <label className={estiloLabel}>Nome:</label>
                             <input
                                 type="text"
                                 name="nome"
@@ -317,10 +261,7 @@ function Formulario({ tipo, setUsuario }: any) {
                     )}
 
                     <div className="flex flex-col">
-                        <label className={estiloLabel}>
-                            E-mail:
-                        </label>
-
+                        <label className={estiloLabel}>E-mail:</label>
                         <input
                             type="email"
                             name="email"
@@ -334,21 +275,13 @@ function Formulario({ tipo, setUsuario }: any) {
                     {tipo !== "login" && (
                         <>
                             <div className="flex flex-col">
-                                <label className={estiloLabel}>
-                                    Você é?
-                                </label>
-
+                                <label className={estiloLabel}>Você é?</label>
                                 <div className="flex gap-6">
                                     <button
                                         type="button"
-                                        onClick={() =>
-                                            alternarUsuario(
-                                                "aluno"
-                                            )
-                                        }
+                                        onClick={() => alternarUsuario("aluno")}
                                         className={`w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer ${
-                                            dados.tipo_usuario ===
-                                            "aluno"
+                                            dados.tipo_usuario === "aluno"
                                                 ? "bg-[#383636] text-white"
                                                 : "bg-[#DDDDDD] text-black"
                                         }`}
@@ -358,14 +291,9 @@ function Formulario({ tipo, setUsuario }: any) {
 
                                     <button
                                         type="button"
-                                        onClick={() =>
-                                            alternarUsuario(
-                                                "docente"
-                                            )
-                                        }
+                                        onClick={() => alternarUsuario("docente")}
                                         className={`w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer ${
-                                            dados.tipo_usuario ===
-                                            "docente"
+                                            dados.tipo_usuario === "docente"
                                                 ? "bg-[#383636] text-white"
                                                 : "bg-[#DDDDDD] text-black"
                                         }`}
@@ -378,14 +306,7 @@ function Formulario({ tipo, setUsuario }: any) {
                             {dados.tipo_usuario === "aluno" ? (
                                 <>
                                     <div className="relative flex flex-col">
-                                        <label
-                                            className={
-                                                estiloLabel
-                                            }
-                                        >
-                                            Curso:
-                                        </label>
-
+                                        <label className={estiloLabel}>Curso:</label>
                                         <select
                                             name="curso"
                                             value={dados.curso}
@@ -393,91 +314,34 @@ function Formulario({ tipo, setUsuario }: any) {
                                             className="h-[40px] p-2 m-1.5 bg-white rounded-md shadow-md appearance-none"
                                             required
                                         >
-                                            <option value="">
-                                                Selecione seu curso
-                                            </option>
-
-                                            {cursos.map(
-                                                (item) => (
-                                                    <option
-                                                        key={
-                                                            item
-                                                        }
-                                                        value={
-                                                            item
-                                                        }
-                                                    >
-                                                        {
-                                                            item
-                                                        }
-                                                    </option>
-                                                )
-                                            )}
+                                            <option value="">Selecione seu curso</option>
+                                            {cursos.map((item) => (
+                                                <option key={item} value={item}>
+                                                    {item}
+                                                </option>
+                                            ))}
                                         </select>
-
                                         <div className="absolute right-3 top-20 -translate-y-1/2 pointer-events-none">
-                                            <ChevronDown
-                                                size={20}
-                                                className="text-gray-500"
-                                            />
+                                            <ChevronDown size={20} className="text-gray-500" />
                                         </div>
                                     </div>
 
                                     <div className="flex flex-col">
-                                        <label
-                                            className={
-                                                estiloLabel
-                                            }
-                                        >
-                                            Duração do
-                                            Curso:
-                                        </label>
-
+                                        <label className={estiloLabel}>Duração do Curso:</label>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="flex flex-col">
                                                 <label className="text-white text-lg text-center font-semibold mb-2">
-                                                    Data
-                                                    Início
+                                                    Data Início
                                                 </label>
-
                                                 <input
                                                     type="date"
                                                     name="inicio_curso"
-                                                    value={
-                                                        dados.inicio_curso
-                                                    }
-                                                    onChange={
-                                                        guardar
-                                                    }
-                                                    onClick={(
-                                                        e
-                                                    ) =>
-                                                        (
-                                                            e.target as HTMLInputElement
-                                                        ).showPicker()
-                                                    }
-                                                    onFocus={(
-                                                        e
-                                                    ) =>
-                                                        (e.target.style.color =
-                                                            "black")
-                                                    }
-                                                    onBlur={(
-                                                        e
-                                                    ) =>
-                                                        (e.target.style.color =
-                                                            e
-                                                                .target
-                                                                .value
-                                                                ? "black"
-                                                                : "transparent")
-                                                    }
-                                                    style={{
-                                                        color:
-                                                            dados.inicio_curso
-                                                                ? "black"
-                                                                : "transparent"
-                                                    }}
+                                                    value={dados.inicio_curso}
+                                                    onChange={guardar}
+                                                    onClick={(e) => (e.target as HTMLInputElement).showPicker()}
+                                                    onFocus={(e) => (e.target.style.color = "black")}
+                                                    onBlur={(e) => (e.target.style.color = e.target.value ? "black" : "transparent")}
+                                                    style={{ color: dados.inicio_curso ? "black" : "transparent" }}
                                                     className={`${estiloInput} pl-3 pr-3 cursor-pointer`}
                                                     required
                                                 />
@@ -485,48 +349,17 @@ function Formulario({ tipo, setUsuario }: any) {
 
                                             <div className="flex flex-col">
                                                 <label className="text-white text-lg text-center font-semibold mb-2">
-                                                    Data
-                                                    Final
+                                                    Data Final
                                                 </label>
-
                                                 <input
                                                     type="date"
                                                     name="fim_curso"
-                                                    value={
-                                                        dados.fim_curso
-                                                    }
-                                                    onChange={
-                                                        guardar
-                                                    }
-                                                    onClick={(
-                                                        e
-                                                    ) =>
-                                                        (
-                                                            e.target as HTMLInputElement
-                                                        ).showPicker()
-                                                    }
-                                                    onFocus={(
-                                                        e
-                                                    ) =>
-                                                        (e.target.style.color =
-                                                            "black")
-                                                    }
-                                                    onBlur={(
-                                                        e
-                                                    ) =>
-                                                        (e.target.style.color =
-                                                            e
-                                                                .target
-                                                                .value
-                                                                ? "black"
-                                                                : "transparent")
-                                                    }
-                                                    style={{
-                                                        color:
-                                                            dados.fim_curso
-                                                                ? "black"
-                                                                : "transparent"
-                                                    }}
+                                                    value={dados.fim_curso}
+                                                    onChange={guardar}
+                                                    onClick={(e) => (e.target as HTMLInputElement).showPicker()}
+                                                    onFocus={(e) => (e.target.style.color = "black")}
+                                                    onBlur={(e) => (e.target.style.color = e.target.value ? "black" : "transparent")}
+                                                    style={{ color: dados.fim_curso ? "black" : "transparent" }}
                                                     className={`${estiloInput} pl-3 pr-3 cursor-pointer`}
                                                     required
                                                 />
@@ -536,49 +369,23 @@ function Formulario({ tipo, setUsuario }: any) {
                                 </>
                             ) : (
                                 <div className="relative flex flex-col">
-                                    <label
-                                        className={estiloLabel}
-                                    >
-                                        Especialidade:
-                                    </label>
-
+                                    <label className={estiloLabel}>Especialidade:</label>
                                     <select
                                         name="especialidade"
-                                        value={
-                                            dados.especialidade
-                                        }
+                                        value={dados.especialidade}
                                         onChange={guardar}
                                         className="h-[40px] p-2 m-1.5 bg-white rounded-md shadow-md appearance-none"
                                         required
                                     >
-                                        <option value="">
-                                            Selecione seu
-                                            nicho
-                                        </option>
-
-                                        {especialidades.map(
-                                            (nicho) => (
-                                                <option
-                                                    key={
-                                                        nicho
-                                                    }
-                                                    value={
-                                                        nicho
-                                                    }
-                                                >
-                                                    {
-                                                        nicho
-                                                    }
-                                                </option>
-                                            )
-                                        )}
+                                        <option value="">Selecione seu nicho</option>
+                                        {poolEspecialidades.map((nicho) => (
+                                            <option key={nicho} value={nicho}>
+                                                {nicho}
+                                            </option>
+                                        ))}
                                     </select>
-
                                     <div className="absolute right-3 top-20 -translate-y-1/2 pointer-events-none">
-                                        <ChevronDown
-                                            size={20}
-                                            className="text-gray-500"
-                                        />
+                                        <ChevronDown size={20} className="text-gray-500" />
                                     </div>
                                 </div>
                             )}
@@ -586,10 +393,7 @@ function Formulario({ tipo, setUsuario }: any) {
                     )}
 
                     <div className="flex flex-col">
-                        <label className={estiloLabel}>
-                            Senha:
-                        </label>
-
+                        <label className={estiloLabel}>Senha:</label>
                         <input
                             type="password"
                             name="senha"
@@ -615,16 +419,11 @@ function Formulario({ tipo, setUsuario }: any) {
 
                     {tipo !== "login" && (
                         <div className="flex flex-col">
-                            <label className={estiloLabel}>
-                                Confirmar Senha:
-                            </label>
-
+                            <label className={estiloLabel}>Confirmar Senha:</label>
                             <input
                                 type="password"
                                 name="confirmar_senha"
-                                value={
-                                    dados.confirmar_senha
-                                }
+                                value={dados.confirmar_senha}
                                 onChange={guardar}
                                 className={estiloInput}
                                 required
@@ -641,9 +440,7 @@ function Formulario({ tipo, setUsuario }: any) {
                                     : "w-[170px] h-[50px] rounded-2xl text-[#FFFFFF]"
                             } text-xl font-bold shadow-md cursor-pointer`}
                         >
-                            {tipo === "login"
-                                ? "Entrar"
-                                : "Cadastrar-se"}
+                            {tipo === "login" ? "Entrar" : "Cadastrar-se"}
                         </button>
 
                         {tipo === "login" && (

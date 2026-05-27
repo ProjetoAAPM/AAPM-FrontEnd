@@ -65,6 +65,7 @@ function EscolhaPlano() {
                     body: formData,
                 }
             );
+
             const resultadoEtapa2 = await respostaEtapa2.json();
             if (respostaEtapa2.ok) {
                 alert(resultadoEtapa2.mensagem || "Comprovante enviado com sucesso!");
