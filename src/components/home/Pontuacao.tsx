@@ -7,8 +7,12 @@ type Usuario = {
 };
 
 type ExtratoItem = {
-  tipo: "premio";
-  premio: string;
+  tipo: "premio" | "pontos" | "resgate" | "ganho";
+  premio?: string;
+  pontos?: number;
+  valor?: number;
+  descricao?: string;
+  mensagem?: string;
 };
 
 type PontuacaoProps = {

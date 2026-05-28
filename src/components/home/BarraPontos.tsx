@@ -1,5 +1,5 @@
 import { Star, Lock } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 type ExtratoItem = {
   tipo: "premio" | "pontos" | "resgate";
@@ -11,7 +11,7 @@ type ExtratoItem = {
 };
 
 type BarraPontosProps = {
-  progresso?: number;
+  progresso?: number; 
   premium?: boolean;
   onPremiosCalculados?: (premios: ExtratoItem[]) => void;
 };
@@ -55,6 +55,8 @@ export default function BarraPontos({
         "Dia da Pizza",
       ];
 
+  const ultimaStringPremios = useRef("");
+
   useEffect(() => {
     if (onPremiosCalculados) {
       const historicoAutomatico: ExtratoItem[] = [];
@@ -73,9 +75,16 @@ export default function BarraPontos({
         }
       });
 
-      onPremiosCalculados(historicoAutomatico);
+      const stringAtual = JSON.stringify(historicoAutomatico);
+      if (ultimaStringPremios.current !== stringAtual) {
+        ultimaStringPremios.current = stringAtual;
+        
+        setTimeout(() => {
+          onPremiosCalculados(historicoAutomatico);
+        }, 0);
+      }
     }
-  }, [progresso, premium]);
+  }, [progresso, premium, onPremiosCalculados]);
 
   return (
     <div className="w-full max-w-[1610px] mx-auto bg-[#383636] rounded-full px-2 py-2 sm:p-4 md:p-5 mt-4">
@@ -84,7 +93,7 @@ export default function BarraPontos({
           className={`absolute left-0 top-1/2 -translate-y-1/2 rounded-full transition-all duration-500 shadow-md z-0 h-4 sm:h-6 md:h-7 ${
             premium ? "bg-[#DB4547]" : "bg-[#71CFFF]"
           }`}
-          style={{ width: `${progressoPercentual}%` }}
+          style={{ width: `${progressoPercentual}%` }} 
         />
 
         {pontosConfig.map((ponto, index) => {

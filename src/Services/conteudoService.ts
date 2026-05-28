@@ -1,15 +1,11 @@
-import { BACKEND_ATIVO } from "../config/admin/backend";
 import { supabase } from "./supabaseClient";
 
 export async function buscarConteudo(id: number): Promise<string | null> {
-    if (!BACKEND_ATIVO) {
-        return localStorage.getItem(`conteudo-${id}`);
-    }
-
     try {
         const { data, error } = await supabase
             .from("conteudo_site")
             .select("texto")
+            .gt("id", 0) 
             .order("id", { ascending: true });
 
         if (error || !data || data.length === 0) {
@@ -31,15 +27,11 @@ export async function buscarConteudo(id: number): Promise<string | null> {
 }
 
 export async function salvarConteudo(id: number, texto: string): Promise<boolean> {
-    if (!BACKEND_ATIVO) {
-        localStorage.setItem(`conteudo-${id}`, texto);
-        return true;
-    }
-
     try {
         const { data: registros } = await supabase
             .from("conteudo_site")
             .select("id")
+            .gt("id", 0) 
             .order("id", { ascending: true });
 
         const index = id - 1;
@@ -57,10 +49,10 @@ export async function salvarConteudo(id: number, texto: string): Promise<boolean
             const lacunasNecessarias = index - totalAtual;
 
             if (lacunasNecessarias > 0) {
-                const linhasPreenchimento = Array(lacunasNecessarias).fill({ texto: "" });
+                const linesPreenchimento = Array(lacunasNecessarias).fill({ texto: "" });
                 const { error: gapError } = await supabase
                     .from("conteudo_site")
-                    .insert(linhasPreenchimento);
+                    .insert(linesPreenchimento);
                 if (gapError) throw gapError;
             }
 
@@ -83,18 +75,6 @@ export async function buscarImagem(id: number): Promise<string | null> {
 }
 
 export async function salvarImagem(id: number, file: File): Promise<string | null> {
-    if (!BACKEND_ATIVO) {
-        return new Promise<string>((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64 = reader.result as string;
-                localStorage.setItem(`img-${id}`, base64);
-                resolve(base64);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
     try {
         const nomeArquivo = `midia-${id}-${Date.now()}-${file.name}`;
         
@@ -123,19 +103,11 @@ export async function salvarImagem(id: number, file: File): Promise<string | nul
 }
 
 export async function limparTodoConteudo(): Promise<boolean> {
-    if (!BACKEND_ATIVO) {
-        for (let i = 1; i <= 12; i++) {
-            localStorage.removeItem(`conteudo-${i}`);
-            localStorage.removeItem(`img-${i}`);
-        }
-        return true;
-    }
-
     try {
         const { error } = await supabase
             .from("conteudo_site")
             .update({ texto: "" })
-            .neq("id", 0);
+            .gt("id", 0); 
 
         if (error) {
             console.error("Erro ao limpar dados do Supabase:", error);

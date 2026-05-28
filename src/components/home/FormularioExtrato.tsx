@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "../Scrollbar/scrollbar.css";
 import FormularioCard from "./admin/FormularioCard";
 import { formularioService, type FormularioData } from "../../Services/formularioService";
-import { BACKEND_ATIVO } from "../../config/admin/backend";
+import { Star } from "lucide-react"; 
 
 interface ItemExtrato {
   tipo: "premio" | "pontos" | "resgate" | "ganho";
@@ -91,6 +91,7 @@ export default function FormularioExtrato({
       <div className="flex flex-col lg:flex-row gap-3 lg:h-[95vh] w-full">
         
         <div className={`bg-[#DDF4FF] ${modoAdmin ? "w-full" : "w-full lg:w-3/4"} h-[650px] sm:h-[700px] lg:h-[95vh] rounded-[15px] shadow-2xl flex flex-col px-4 sm:px-6 md:px-10 py-6 relative overflow-hidden`}>
+          
           <div className="absolute top-3 sm:top-10 left-0 bg-white text-[#101625] text-[1.2rem] min-[350px]:text-[1.4rem] sm:text-[2rem] md:text-[3rem] font-black px-8 sm:px-[150px] md:px-[200px] lg:px-[250px] py-1 rounded-r-[10px] shadow-md whitespace-nowrap">
             Formulários
           </div>
@@ -198,12 +199,13 @@ export default function FormularioExtrato({
 
                       <div className="shrink-0">
                         {(item.tipo === "resgate" || item.tipo === "premio") && (
-                          <span 
-                            className={`text-lg sm:text-xl filter ${premium ? "drop-shadow-[0_1px_3px_rgba(234,179,8,0.5)]" : "grayscale opacity-40"}`} 
-                            style={{ color: premium ? "#EAB308" : "#94A3B8" }}
-                          >
-                            ⭐
-                          </span>
+                          <Star
+                            className={`w-5 h-5 sm:w-6 sm:h-6 ${
+                              premium
+                                ? "text-[#B8860B] fill-[#DAA520] drop-shadow-[0_1px_3px_rgba(234,179,8,0.5)]"
+                                : "text-[#C4C4C4] fill-[#C0C0C0] opacity-40"
+                            }`}
+                          />
                         )}
                       </div>
 

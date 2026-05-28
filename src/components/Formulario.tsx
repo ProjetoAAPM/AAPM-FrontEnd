@@ -21,6 +21,10 @@ function Formulario({ tipo, setUsuario }: any) {
     const navigate = useNavigate();
     const { login: loginAdmin } = useAuth();
 
+    const loginGoogle = () => {
+        console.log("Login com Google");
+    };
+
     const guardar = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setDados({
             ...dados,
@@ -35,7 +39,7 @@ function Formulario({ tipo, setUsuario }: any) {
         });
     };
 
-    const cursos = [
+    const courses = [
         "Tec Administração",
         "Tec Desenvolvimento de Sistemas",
         "Tec Eletroeletrônica",
@@ -84,16 +88,16 @@ function Formulario({ tipo, setUsuario }: any) {
                 ? cores.aluno
                 : cores.docente;
 
-    const estiloLabel = `${tema.bg_label} w-fit py-2 px-14 rounded-r-full mb-2 text-lg inset-shadow-sm inset-shadow-indigo-700/10 ${
+    const estiloLabel = `${tema.bg_label} w-fit py-2 px-10 sm:px-14 rounded-r-full mb-2 text-lg inset-shadow-sm inset-shadow-indigo-700/10 ${
         tipo === "login"
             ? "text-[#373737] font-bold"
-            : "pl-20 -ml-18.5 text-[#FFFFFF] font-semibold"
+            : "pl-6 sm:pl-20 sm:-ml-18.5 text-[#FFFFFF] font-semibold"
     }`;
 
-    const estiloInput = `h-[40px] p-3 bg-white rounded-md ${
+    const estiloInput = `h-[40px] p-3 bg-white rounded-md mx-2 shadow-md ${
         tipo === "login"
-            ? "w-[380px] mx-15 shadow-md"
-            : "mx-2 shadow-md"
+            ? "w-[92%] sm:w-[380px] self-center"
+            : "w-[calc(100%-1rem)]"
     }`;
 
     const enviar = async (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
@@ -117,9 +121,8 @@ function Formulario({ tipo, setUsuario }: any) {
 
                     if (tipoUsuario === "administrador") {
                         console.log("Login de ADMINISTRADOR confirmado pelo backend");
-                        
-                        loginAdmin(dados.email, dados.senha); 
-                        
+                        await loginAdmin(dados.email, dados.senha); 
+                        alert(resultado.mensagem || "Login de Administrador realizado com sucesso!");
                         navigate("/admin");
                         return;
                     }
@@ -157,81 +160,15 @@ function Formulario({ tipo, setUsuario }: any) {
             }
             return;
         }
-
-        if (dados.senha !== dados.confirmar_senha) {
-            alert("Senhas diferentes!");
-            return;
-        }
-
-        if (dados.tipo_usuario === "aluno" && !dados.curso) {
-            alert("Informe o seu curso!");
-            return;
-        }
-
-        if (dados.tipo_usuario === "docente" && !dados.especialidade) {
-            alert("Informe sua especialidade!");
-            return;
-        }
-
-        try {
-            const rota =
-                dados.tipo_usuario === "aluno"
-                    ? "/cadastro/aluno"
-                    : "/cadastro/docente";
-
-            const resposta = await fetch(
-                `http://localhost:5000${rota}`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    credentials: "include",
-                    body: JSON.stringify(dados)
-                }
-            );
-
-            const resultado = await resposta.json();
-
-            if (resposta.ok) {
-                localStorage.setItem(
-                    "usuario_id",
-                    resultado.usuario_id
-                );
-
-                if (resultado.status_usuario === "INATIVO") {
-                    alert(resultado.mensagem);
-                    navigate("/escolhaplano");
-                    return;
-                }
-
-                alert(resultado.mensagem || "Cadastro realizado com sucesso!");
-                navigate("/escolhaplano");
-                
-                setTimeout(() => {
-                    window.location.reload();
-                }, 0);
-                return;
-            }
-
-            alert(resultado.mensagem || "Erro no cadastro");
-        } catch (erro) {
-            console.error("Erro na requisição:", erro);
-            alert("Não foi possível conectar ao servidor.");
-        }
-    };
-
-    const loginGoogle = () => {
-        window.location.href = "http://localhost:5000/login/google";
     };
 
     return (
-        <div className="w-full flex justify-center py-20">
+        <div className="w-full flex justify-center py-20 px-2 sm:px-4">
             <form
                 onSubmit={enviar}
                 className={`${tema.bg} ${
                     tipo === "login"
-                        ? "min-h-[500px] w-[500px] mt-35"
+                        ? "min-h-[500px] w-full max-w-[500px] mt-35"
                         : "max-w-[848px] w-full mt-20 mb-20"
                 } py-10 rounded-xl flex flex-col items-center gap-6 relative`}
             >
@@ -241,11 +178,13 @@ function Formulario({ tipo, setUsuario }: any) {
                     className="absolute -top-[50px] h-[100px] w-auto drop-shadow-md"
                 />
 
-                <h2 className={`text-4xl font-bold italic mt-4 ${tema.titulo}`}>
-                    {tipo === "login" ? "Faça seu Login" : "Faça seu Cadastro"}
+                <h2 className="text-3xl sm:text-4xl font-bold italic mt-4 text-center px-4">
+                    <span className={tema.titulo}>
+                        {tipo === "login" ? "Faça seu Login" : "Faça seu Cadastro"}
+                    </span>
                 </h2>
 
-                <div className="w-full max-w-[700px] flex flex-col gap-8">
+                <div className="w-full max-w-[700px] flex flex-col gap-8 px-3 sm:px-0">
                     {tipo !== "login" && (
                         <div className="flex flex-col w-full">
                             <label className={estiloLabel}>Nome:</label>
@@ -260,7 +199,7 @@ function Formulario({ tipo, setUsuario }: any) {
                         </div>
                     )}
 
-                    <div className="flex flex-col">
+                    <div className="flex flex-col w-full">
                         <label className={estiloLabel}>E-mail:</label>
                         <input
                             type="email"
@@ -274,13 +213,13 @@ function Formulario({ tipo, setUsuario }: any) {
 
                     {tipo !== "login" && (
                         <>
-                            <div className="flex flex-col">
+                            <div className="flex flex-col w-full">
                                 <label className={estiloLabel}>Você é?</label>
-                                <div className="flex gap-6">
+                                <div className="flex gap-4 sm:gap-6 px-2">
                                     <button
                                         type="button"
                                         onClick={() => alternarUsuario("aluno")}
-                                        className={`w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer ${
+                                        className={`flex-1 sm:flex-initial w-full sm:w-[130px] h-[45px] rounded-xl text-base sm:text-lg font-bold shadow-sm cursor-pointer ${
                                             dados.tipo_usuario === "aluno"
                                                 ? "bg-[#383636] text-white"
                                                 : "bg-[#DDDDDD] text-black"
@@ -292,7 +231,7 @@ function Formulario({ tipo, setUsuario }: any) {
                                     <button
                                         type="button"
                                         onClick={() => alternarUsuario("docente")}
-                                        className={`w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer ${
+                                        className={`flex-1 sm:flex-initial w-full sm:w-[130px] h-[45px] rounded-xl text-base sm:text-lg font-bold shadow-sm cursor-pointer ${
                                             dados.tipo_usuario === "docente"
                                                 ? "bg-[#383636] text-white"
                                                 : "bg-[#DDDDDD] text-black"
@@ -305,32 +244,32 @@ function Formulario({ tipo, setUsuario }: any) {
 
                             {dados.tipo_usuario === "aluno" ? (
                                 <>
-                                    <div className="relative flex flex-col">
+                                    <div className="relative flex flex-col w-full">
                                         <label className={estiloLabel}>Curso:</label>
                                         <select
                                             name="curso"
                                             value={dados.curso}
                                             onChange={guardar}
-                                            className="h-[40px] p-2 m-1.5 bg-white rounded-md shadow-md appearance-none"
+                                            className="h-[40px] p-2 mx-2 bg-white rounded-md shadow-md appearance-none w-[calc(100%-1rem)] text-sm sm:text-base"
                                             required
                                         >
                                             <option value="">Selecione seu curso</option>
-                                            {cursos.map((item) => (
+                                            {courses.map((item) => (
                                                 <option key={item} value={item}>
                                                     {item}
                                                 </option>
                                             ))}
                                         </select>
-                                        <div className="absolute right-3 top-20 -translate-y-1/2 pointer-events-none">
+                                        <div className="absolute right-5 bottom-2.5 pointer-events-none">
                                             <ChevronDown size={20} className="text-gray-500" />
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col">
+                                    <div className="flex flex-col w-full">
                                         <label className={estiloLabel}>Duração do Curso:</label>
-                                        <div className="grid grid-cols-2 gap-4">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-2">
                                             <div className="flex flex-col">
-                                                <label className="text-white text-lg text-center font-semibold mb-2">
+                                                <label className="text-white text-base sm:text-lg text-center font-semibold mb-2">
                                                     Data Início
                                                 </label>
                                                 <input
@@ -342,13 +281,13 @@ function Formulario({ tipo, setUsuario }: any) {
                                                     onFocus={(e) => (e.target.style.color = "black")}
                                                     onBlur={(e) => (e.target.style.color = e.target.value ? "black" : "transparent")}
                                                     style={{ color: dados.inicio_curso ? "black" : "transparent" }}
-                                                    className={`${estiloInput} pl-3 pr-3 cursor-pointer`}
+                                                    className="h-[40px] p-3 bg-white rounded-md shadow-md pl-3 pr-3 cursor-pointer w-full"
                                                     required
                                                 />
                                             </div>
 
                                             <div className="flex flex-col">
-                                                <label className="text-white text-lg text-center font-semibold mb-2">
+                                                <label className="text-white text-base sm:text-lg text-center font-semibold mb-2">
                                                     Data Final
                                                 </label>
                                                 <input
@@ -360,7 +299,7 @@ function Formulario({ tipo, setUsuario }: any) {
                                                     onFocus={(e) => (e.target.style.color = "black")}
                                                     onBlur={(e) => (e.target.style.color = e.target.value ? "black" : "transparent")}
                                                     style={{ color: dados.fim_curso ? "black" : "transparent" }}
-                                                    className={`${estiloInput} pl-3 pr-3 cursor-pointer`}
+                                                    className="h-[40px] p-3 bg-white rounded-md shadow-md pl-3 pr-3 cursor-pointer w-full"
                                                     required
                                                 />
                                             </div>
@@ -368,13 +307,13 @@ function Formulario({ tipo, setUsuario }: any) {
                                     </div>
                                 </>
                             ) : (
-                                <div className="relative flex flex-col">
+                                <div className="relative flex flex-col w-full">
                                     <label className={estiloLabel}>Especialidade:</label>
                                     <select
                                         name="especialidade"
                                         value={dados.especialidade}
                                         onChange={guardar}
-                                        className="h-[40px] p-2 m-1.5 bg-white rounded-md shadow-md appearance-none"
+                                        className="h-[40px] p-2 mx-2 bg-white rounded-md shadow-md appearance-none w-[calc(100%-1rem)]"
                                         required
                                     >
                                         <option value="">Selecione seu nicho</option>
@@ -384,7 +323,7 @@ function Formulario({ tipo, setUsuario }: any) {
                                             </option>
                                         ))}
                                     </select>
-                                    <div className="absolute right-3 top-20 -translate-y-1/2 pointer-events-none">
+                                    <div className="absolute right-5 bottom-2.5 pointer-events-none">
                                         <ChevronDown size={20} className="text-gray-500" />
                                     </div>
                                 </div>
@@ -392,7 +331,7 @@ function Formulario({ tipo, setUsuario }: any) {
                         </>
                     )}
 
-                    <div className="flex flex-col">
+                    <div className="flex flex-col w-full">
                         <label className={estiloLabel}>Senha:</label>
                         <input
                             type="password"
@@ -405,7 +344,7 @@ function Formulario({ tipo, setUsuario }: any) {
                     </div>
 
                     {tipo === "login" && (
-                        <div className="w-full flex justify-start pl-15 -mt-3">
+                        <div className="w-full flex justify-start w-[92%] sm:w-[380px] self-center px-2 -mt-3">
                             <a
                                 href="https://pess.sesisenaispedu.org.br/Portal.aspx"
                                 target="_blank"
@@ -418,7 +357,7 @@ function Formulario({ tipo, setUsuario }: any) {
                     )}
 
                     {tipo !== "login" && (
-                        <div className="flex flex-col">
+                        <div className="flex flex-col w-full">
                             <label className={estiloLabel}>Confirmar Senha:</label>
                             <input
                                 type="password"
@@ -431,14 +370,14 @@ function Formulario({ tipo, setUsuario }: any) {
                         </div>
                     )}
 
-                    <div className="flex justify-center mt-4 gap-6">
+                    <div className="flex flex-wrap justify-center mt-4 gap-4 sm:gap-6 px-2">
                         <button
                             type="submit"
                             className={`${tema.btn} ${
                                 tipo === "login"
-                                    ? "w-[170px] h-[50px] rounded-full text-[#373737]"
-                                    : "w-[170px] h-[50px] rounded-2xl text-[#FFFFFF]"
-                            } text-xl font-bold shadow-md cursor-pointer`}
+                                    ? "w-[140px] sm:w-[170px] h-[50px] rounded-full text-[#373737]"
+                                    : "w-[140px] sm:w-[170px] h-[50px] rounded-2xl text-[#FFFFFF]"
+                            } text-lg sm:text-xl font-bold shadow-md cursor-pointer`}
                         >
                             {tipo === "login" ? "Entrar" : "Cadastrar-se"}
                         </button>
@@ -447,12 +386,12 @@ function Formulario({ tipo, setUsuario }: any) {
                             <button
                                 type="button"
                                 onClick={loginGoogle}
-                                className="w-[170px] h-[50px] bg-white border border-gray-300 rounded-full flex items-center justify-center gap-3 text-gray-700 font-semibold shadow-sm hover:bg-gray-50 cursor-pointer transition-all"
+                                className="w-[140px] sm:w-[170px] h-[50px] bg-white border border-gray-300 rounded-full flex items-center justify-center gap-3 text-gray-700 font-semibold shadow-sm hover:bg-gray-50 cursor-pointer transition-all"
                             >
                                 <img
                                     src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg"
                                     alt="Google"
-                                    className="w-6 h-6"
+                                    className="w-5 h-5 sm:w-6 sm:h-6"
                                 />
                             </button>
                         )}

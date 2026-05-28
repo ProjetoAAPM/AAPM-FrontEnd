@@ -1,4 +1,3 @@
-import { BACKEND_ATIVO, FORMULARIOS_ID } from "../config/admin/backend";
 import { supabase } from "./supabaseClient";
 
 export interface FormularioData {
@@ -10,14 +9,11 @@ export interface FormularioData {
   link: string;
 }
 
+const FORMULARIOS_ID = -1;
+
 export const formularioService = {
   async listarFormularios(): Promise<FormularioData[]> {
     try {
-      if (!BACKEND_ATIVO) {
-        const dados = localStorage.getItem("formularios_local");
-        return dados ? JSON.parse(dados) : [];
-      }
-
       const { data, error } = await supabase
         .from("conteudo_site")
         .select("texto")
@@ -56,39 +52,34 @@ export const formularioService = {
   },
 
   async salvarNoBanco(lista: FormularioData[]) {
-    if (!BACKEND_ATIVO) {
-        localStorage.setItem("formularios_local", JSON.stringify(lista));
-        return true;
-    }
-
     try {
-        const { data: existe, error: errorBusca } = await supabase
-            .from("conteudo_site")
-            .select("id")
-            .eq("id", FORMULARIOS_ID)
-            .maybeSingle();
+      const { data: existe, error: errorBusca } = await supabase
+        .from("conteudo_site")
+        .select("id")
+        .eq("id", FORMULARIOS_ID)
+        .maybeSingle();
 
-        if (errorBusca) throw errorBusca;
+      if (errorBusca) throw errorBusca;
 
-        if (existe) {
-            const { error: errorUpdate } = await supabase
-                .from("conteudo_site")
-                .update({ texto: JSON.stringify(lista) })
-                .eq("id", FORMULARIOS_ID);
+      if (existe) {
+        const { error: errorUpdate } = await supabase
+          .from("conteudo_site")
+          .update({ texto: JSON.stringify(lista) })
+          .eq("id", FORMULARIOS_ID);
 
-            if (errorUpdate) throw errorUpdate;
-        } else {
-            const { error: errorInsert } = await supabase
-                .from("conteudo_site")
-                .insert({ texto: JSON.stringify(lista) });
+        if (errorUpdate) throw errorUpdate;
+      } else {
+        const { error: errorInsert } = await supabase
+          .from("conteudo_site")
+          .insert({ id: FORMULARIOS_ID, texto: JSON.stringify(lista) });
 
-            if (errorInsert) throw errorInsert;
-        }
+        if (errorInsert) throw errorInsert;
+      }
 
-            return true;
-        } catch (error) {
-            console.error("Erro ao salvar formulários:", error);
-            throw error;
-        }
+      return true;
+    } catch (error) {
+      console.error("Erro ao salvar formulários:", error);
+      throw error;
     }
+  }
 };

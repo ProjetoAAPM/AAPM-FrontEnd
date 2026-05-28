@@ -5,7 +5,8 @@ import {
     useEffect
 } from "react";
 import type { ReactNode } from "react";
-import { BACKEND_ATIVO, API_BASE } from "../../config/admin/backend";
+
+const API_BASE = "http://localhost:5000"; 
 
 interface AuthContextType {
     isAdmin: boolean;
@@ -20,12 +21,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         async function verificarSessao() {
-            if (!BACKEND_ATIVO) {
-                const adminMarcado = localStorage.getItem("isAdmin") === "true";
-                setIsAdmin(adminMarcado);
-                return;
-            }
-
             try {
                 const res = await fetch(`${API_BASE}/admin`, {
                     method: "GET",
@@ -34,15 +29,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
                 if (res.ok) {
                     setIsAdmin(true);
-                    localStorage.setItem("isAdmin", "true");
                 } else {
                     setIsAdmin(false);
-                    localStorage.removeItem("isAdmin");
                 }
             } catch (error) {
                 console.error("Erro ao verificar sessão admin:", error);
                 setIsAdmin(false);
-                localStorage.removeItem("isAdmin");
             }
         }
 
@@ -50,30 +42,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const login = async (email: string, senha: string): Promise<boolean> => {
-        if (!BACKEND_ATIVO) {
-            return false;
-        }
-
         try {
-            setIsAdmin(true);
-            localStorage.setItem("isAdmin", "true");
-            return true;
+            const res = await fetch(`${API_BASE}/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email, senha }),
+                credentials: "include"
+            });
+
+            if (res.ok) {
+                setIsAdmin(true);
+                return true;
+            }
+            
+            setIsAdmin(false);
+            return false;
         } catch (error) {
             console.error("Erro no login admin:", error);
+            setIsAdmin(false);
             return false;
         }
     };
 
     const logout = () => {
-        localStorage.removeItem("isAdmin");
         setIsAdmin(false);
 
-        if (BACKEND_ATIVO) {
-            fetch(`${API_BASE}/logout`, {
-                method: "POST",
-                credentials: "include"
-            }).catch(() => {});
-        }
+        fetch(`${API_BASE}/logout`, {
+            method: "POST",
+            credentials: "include"
+        }).catch(() => {});
     };
 
     return (

@@ -1,6 +1,5 @@
 import fundo from "../../assets/images/FundoNotas.png";
 import { useEffect, useState } from "react";
-import { BACKEND_ATIVO } from "../../config/admin/backend";
 import { buscarConteudo, salvarConteudo } from "../../Services/conteudoService";
 
 interface PostIt {
@@ -56,14 +55,6 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
 
   async function carregarPosts() {
     try {
-      if (!BACKEND_ATIVO) {
-        const dadosLocalStorage = localStorage.getItem("quadro_notas");
-        if (dadosLocalStorage) {
-          setPosts(JSON.parse(dadosLocalStorage));
-        }
-        return;
-      }
-
       const stringDados = await buscarConteudo(20);
 
       if (stringDados) {
@@ -77,15 +68,6 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
   async function salvarPosts() {
     try {
       const jsonString = JSON.stringify(posts);
-
-      if (!BACKEND_ATIVO) {
-        localStorage.setItem("quadro_notas", jsonString);
-        alert("Salvo com sucesso!");
-        setEditMode(false);
-        setPostSelecionado(null);
-        return;
-      }
-
       const sucesso = await salvarConteudo(20, jsonString);
 
       if (sucesso) {
