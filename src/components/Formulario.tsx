@@ -222,7 +222,7 @@ function Formulario({ tipo, setUsuario }: any) {
               name="email"
               value={dados.email}
               onChange={guardar}
-              className={`${estiloInput} ml-5.5 md:ml-8.5 cursor-pointer`}
+              className={`${estiloInput} ml-5.5 md:ml-8.5`}
               required
             />
           </div>
@@ -372,7 +372,7 @@ function Formulario({ tipo, setUsuario }: any) {
               name="senha"
               value={dados.senha}
               onChange={guardar}
-              className={`${estiloInput} ml-5.5 md:ml-8.5 cursor-pointer`}
+              className={`${estiloInput} ml-5.5 md:ml-8.5`}
               required
             />
           </div>

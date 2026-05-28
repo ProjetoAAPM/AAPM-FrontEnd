@@ -12,7 +12,7 @@ function Login({ setUsuario }: any) {
 
             <button
                 onClick={() => navigate('/')}
-                className="hidden lg:absolute top-10 left-15 flex items-center gap-2 cursor-pointer"
+                className="hidden lg:flex absolute top-10 left-15 flex items-center gap-2 cursor-pointer"
             >
                 <ArrowLeft size={30} color="#FFFFFF" strokeWidth={3}/>
             </button>
