@@ -101,25 +101,48 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
 
   return (
     <div className="w-full flex flex-col items-center overflow-hidden">
-      <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-start gap-4 mb-4">
-        <div className="self-start bg-[#14358F] text-white text-[1rem] sm:text-[2rem] md:text-[2.2rem] lg:text-[2.3rem] xl:text-[3.1rem] 2xl:text-[3.3rem] font-black px-[80px] sm:px-[150px] md:px-[150px] lg:px-[250px] xl:px-[300px] 2xl:px-[350px] rounded-r-[10px] shadow-md py-2">
+      <div className="w-full flex flex-row items-center justify-between gap-2 sm:gap-4 mb-4">
+        <div className="self-start bg-[#14358F] text-white font-black rounded-r-[10px] shadow-md py-2
+          text-[1rem]
+          sm:text-[2rem]
+          md:text-[2.2rem]
+          lg:text-[2.3rem]
+          xl:text-[3.1rem]
+          2xl:text-[3.3rem]
+
+          px-10
+          sm:px-20
+          md:px-24
+          lg:px-40
+          xl:px-52
+          2xl:px-64
+
+          whitespace-nowrap
+        ">
           Quadro de Notas
         </div>
 
         {isAdmin && (
-          <button
-            onClick={() => {
-              if (editMode) {
-                salvarPosts();
-              } else {
-                setEditMode(true);
-              }
-            }}
-            className="ml-[-10px] md:ml-[-25px] lg:ml-[300px] [@min-width:1330px]:ml-[-60px] bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-semibold rounded-full px-5 sm:px-6 md:px-8 py-2 text-sm sm:text-base min-w-[110px] sm:min-w-[170px] text-center shrink-0"
-          >
-            {editMode ? "Salvar" : "Editar"}
-          </button>
+          <div className="self-center sm:ml-auto md:mr-[70px] xl:mr-[190px] 2xl:mr-[180px]">
+            <button
+              onClick={() => {
+                if (editMode) {
+                  salvarPosts();
+                } else {
+                  setEditMode(true);
+                }
+              }}
+              className="bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-semibold rounded-full
+              px-5 sm:px-6 md:px-7 py-2
+              text-sm sm:text-base
+              min-w-[120px] md:min-w-[150px]
+              whitespace-nowrap"
+            >
+              {editMode ? "Salvar" : "Editar"}
+            </button>
+          </div>
         )}
+
       </div>
 
       <div
