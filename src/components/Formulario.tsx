@@ -169,12 +169,12 @@ function Formulario({ tipo, setUsuario }: any) {
         : cores.docente;
 
   const estiloLabel = `${tema.bg_label
-    } w-fit py-2 px-14 rounded-r-full mb-2 text-lg inset-shadow-sm inset-shadow-indigo-700/10 ${tipo === "login"
+    } w-fit py-1.5 px-8 lg:py-2 lg:px-14 rounded-r-full mb-2 text-sm md:text-base lg:text-lg inset-shadow-sm inset-shadow-indigo-700/10 ${tipo === "login"
       ? " text-[#373737] font-bold"
-      : "pl-20  -ml-18.5 text-[#FFFFFF] font-semibold"
+      : "lg:pl-20 ml-0.1 md:pl-10 lg:-ml-18.5 text-[#FFFFFF] font-semibold"
     }`;
 
-  const estiloInput = `h-[40px] p-3 bg-white rounded-md ${tipo === "login" ? "w-[380px] mx-15 shadow-md" : "mx-2 shadow-md"
+  const estiloInput = `h-[35px] lg:h-[40px] p-3 bg-white rounded-md ${tipo === "login" ? "text-sm md:text-base w-[380px] mx-15 shadow-md" : "text-sm md:text-base mx-2 md:mx-10 lg:mx-0 shadow-md"
     }`;
 
   return (
@@ -183,16 +183,16 @@ function Formulario({ tipo, setUsuario }: any) {
         onSubmit={enviar}
         className={`${tema.bg} ${tipo === "login"
           ? "min-h-[500px] w-[500px] mt-35"
-          : "max-w-[848px] w-full mt-20"
+          : "max-w-[330px] md:max-w-[600px] lg:max-w-[848px] w-full mt-10 lg:mt-20"
           } py-10 rounded-xl flex flex-col items-center gap-6 relative`}
       >
         <img
           src="src/assets/icons/Logo48.svg"
           alt="logo"
-          className={`${tipo === "login" ? "-top-[50px]" : "-top-[50px]"
-            } absolute h-[100px] w-auto drop-shadow-md`}
+          className={`${tipo === "login" ? "-top-[50px]" : "-top-[40px] lg:-top-[50px]"
+            } absolute h-[80px] md: lg:h-[100px] w-auto drop-shadow-md`}
         />
-        <h2 className={`text-4xl font-bold italic mt-4 ${tema.titulo}`}>
+        <h2 className={`text-2xl md:text-3xl lg:text-4xl font-bold italic mt-4 ${tema.titulo}`}>
           {tipo === "login" ? "Faça seu Login" : "Faça seu Cadastro"}
         </h2>
 
@@ -227,14 +227,14 @@ function Formulario({ tipo, setUsuario }: any) {
             <>
               <div className="flex flex-col">
                 <label className={estiloLabel}>Você é?</label>
-                <div className="grid grid-cols-5 gap-6">
+                <div className="grid grid-cols-3 ml-2 gap-2 md:grid-cols-5 md:ml-10.5 lg:grid-cols-5 lg:gap-6 lg:ml-0">
                   <button
                     type="button"
                     onClick={() => alternarUsuario("aluno")}
                     className={`
-                                            w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer
-                                            ${dados.tipo_usuario === "aluno"
-                        ? "bg-[#383636] text-white "
+                        w-[100px] h-[40px] lg:w-[130px] lg:h-[45px] rounded-xl text-sm lg:text-lg font-bold shadow-sm cursor-pointer
+                        ${dados.tipo_usuario === "aluno"
+                        ? "bg-[#383636] text-white"
                         : "bg-[#DDDDDD] text-black"
                       }`}
                   >
@@ -245,8 +245,8 @@ function Formulario({ tipo, setUsuario }: any) {
                     type="button"
                     onClick={() => alternarUsuario("docente")}
                     className={`
-                                            w-[130px] h-[45px] rounded-xl text-lg font-bold shadow-sm cursor-pointer 
-                                            ${dados.tipo_usuario === "docente"
+                        w-[100px] h-[40px] lg:w-[130px] lg:h-[45px] rounded-xl text-sm lg:text-lg font-bold shadow-sm cursor-pointer 
+                        ${dados.tipo_usuario === "docente"
                         ? "bg-[#383636] text-white "
                         : "bg-[#DDDDDD] text-black"
                       }`}
@@ -264,7 +264,7 @@ function Formulario({ tipo, setUsuario }: any) {
                       name="curso"
                       value={dados.curso}
                       onChange={guardar}
-                      className="h-[40px] p-2 m-1.5 bg-white rounded-md shadow-md appearance-none"
+                      className="h-[35px] lg:h-[40px] p-1 lg:p-2 m-2 lg:m-1.5 md:mx-10 lg:mx-0 bg-white rounded-md shadow-md appearance-none text-sm lg:text-base"
                       required
                     >
                       <option value="">Selecione seu curso</option>
@@ -275,7 +275,7 @@ function Formulario({ tipo, setUsuario }: any) {
                       ))}
                     </select>
 
-                    <div className="absolute right-3 top-20 -translate-y-1/2 pointer-events-none">
+                    <div className="absolute right-4 md:right-12 md:top-17.5 lg:right-3 top-16.5 lg:top-20 -translate-y-1/2 pointer-events-none">
                       <ChevronDown size={20} className="text-gray-500" />
                     </div>
                   </div>
@@ -283,9 +283,9 @@ function Formulario({ tipo, setUsuario }: any) {
                   <div className=" flex flex-col">
                     <label className={estiloLabel}>Duração do Curso:</label>
 
-                    <div className="grid grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-4">
                       <div className="flex flex-col">
-                        <label className="text-white text-lg text-center font-semibold mb-2">
+                        <label className="text-white text-base lg:text-lg text-center font-semibold mb-2">
                           Data Inicio
                         </label>
                         <input
@@ -305,13 +305,13 @@ function Formulario({ tipo, setUsuario }: any) {
                           style={{
                             color: dados.inicio_curso ? "black" : "transparent",
                           }}
-                          className={`${estiloInput} pl-3 pr-3 cursor-pointer`}
+                          className={`${estiloInput} pl-3 pr-3 md:ml-10 md:pl-2 md:mr-8 md:pr-1 lg:pl-4 lg:pr-4  cursor-pointer`}
                           required
                         />
                       </div>
 
                       <div className="flex flex-col">
-                        <label className="text-white text-lg text-center font-semibold mb-2">
+                        <label className="text-white text-base lg:text-lg text-center font-semibold mb-2">
                           Data Final
                         </label>
                         <input
@@ -328,7 +328,7 @@ function Formulario({ tipo, setUsuario }: any) {
                           style={{
                             color: dados.fim_curso ? "black" : "transparent",
                           }}
-                          className={`${estiloInput} pl-3 pr-3 cursor-pointer`}
+                          className={`${estiloInput} pl-3 pr-3 md:ml-10 md:pl-2 md:mr-8 md:pr-1 lg:pl-4 lg:pr-4 cursor-pointer`}
                           required
                         />
                       </div>
@@ -342,7 +342,7 @@ function Formulario({ tipo, setUsuario }: any) {
                     name="especialidade"
                     value={dados.especialidade}
                     onChange={guardar}
-                    className="h-[40px] p-2 m-1.5 bg-white rounded-md shadow-md appearance-none"
+                    className="h-[40px] p-2 m-1.5 md:mx-10 bg-white rounded-md shadow-md appearance-none text-sm lg:text-base"
                     required
                   >
                     <option value="">Selecione seu nicho</option>
@@ -404,9 +404,9 @@ function Formulario({ tipo, setUsuario }: any) {
             <button
               type="submit"
               className={`${tema.btn} ${tipo === "login"
-                ? "w-[170px] h-[50px] rounded-full text-[#373737]"
-                : "w-[170px] h-[50px] rounded-2xl text-[#FFFFFF]"
-                } text-xl font-bold shadow-md cursor-pointer`}
+                ? "lg:w-[170px] lg:h-[50px] rounded-full text-[#373737]"
+                : "w-[140px] h-[45px] lg:w-[170px] lg:h-[50px] rounded-2xl text-[#FFFFFF]"
+                } text-base md:text-lg lg:text-xl font-bold shadow-md cursor-pointer`}
             >
               {tipo === "login" ? "Entrar" : "Cadastrar-se"}
             </button>
