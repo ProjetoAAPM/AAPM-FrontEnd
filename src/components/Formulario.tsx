@@ -174,7 +174,7 @@ function Formulario({ tipo, setUsuario }: any) {
       : "lg:pl-20 ml-0.1 md:pl-10 lg:-ml-18.5 text-[#FFFFFF] font-semibold"
     }`;
 
-  const estiloInput = `h-[35px] lg:h-[40px] p-3 bg-white rounded-md ${tipo === "login" ? "text-sm md:text-base w-[380px] mx-15 shadow-md" : "text-sm md:text-base mx-2 md:mx-10 lg:mx-0 shadow-md"
+  const estiloInput = `h-[35px] lg:h-[40px] p-3 bg-white rounded-md ${tipo === "login" ? "text-sm md:text-base w-[85%] lg:w-[85%] mx-15 shadow-md" : "text-sm md:text-base mx-2 md:mx-10 lg:mx-0 shadow-md"
     }`;
 
   return (
@@ -182,15 +182,15 @@ function Formulario({ tipo, setUsuario }: any) {
       <form
         onSubmit={enviar}
         className={`${tema.bg} ${tipo === "login"
-          ? "min-h-[500px] w-[500px] mt-35"
+          ? "w-[320px] md:w-[450px] lg:w-[500px] mt-3 md:mt-5 lg:mt-12"
           : "max-w-[330px] md:max-w-[600px] lg:max-w-[848px] w-full mt-10 lg:mt-20"
           } py-10 rounded-xl flex flex-col items-center gap-6 relative`}
       >
         <img
           src="src/assets/icons/Logo48.svg"
           alt="logo"
-          className={`${tipo === "login" ? "-top-[50px]" : "-top-[40px] lg:-top-[50px]"
-            } absolute h-[80px] md: lg:h-[100px] w-auto drop-shadow-md`}
+          className={`${tipo === "login" ? "-top-[40px] md:-top-[45px] lg:-top-[50px]" : "-top-[40px] md:-top-[45px] lg:-top-[50px]"
+            } absolute h-[80px] md:h-[90px] lg:h-[100px] w-auto drop-shadow-md`}
         />
         <h2 className={`text-2xl md:text-3xl lg:text-4xl font-bold italic mt-4 ${tema.titulo}`}>
           {tipo === "login" ? "Faça seu Login" : "Faça seu Cadastro"}
@@ -218,7 +218,7 @@ function Formulario({ tipo, setUsuario }: any) {
               name="email"
               value={dados.email}
               onChange={guardar}
-              className={estiloInput}
+              className={`${estiloInput} ml-5.5 md:ml-8.5 cursor-pointer`}
               required
             />
           </div>
@@ -368,18 +368,18 @@ function Formulario({ tipo, setUsuario }: any) {
               name="senha"
               value={dados.senha}
               onChange={guardar}
-              className={estiloInput}
+              className={`${estiloInput} ml-5.5 md:ml-8.5 cursor-pointer`}
               required
             />
           </div>
 
           {tipo === "login" && (
-            <div className="w-full flex justify-start pl-15 -mt-3">
+            <div className="w-full flex justify-start pl-6 -mt-3 md:pl-8.5 md:-mt-2 lg:pl-9 lg:-mt-3">
               <a
                 href="https://pess.sesisenaispedu.org.br/Portal.aspx"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#101625] text-sm font-semibold underline underline-offset-4 cursor-pointer"
+                className="text-[#101625] text-xs md:text-sm lg:text-base font-semibold underline underline-offset-4 cursor-pointer"
               >
                 Esqueceu a senha?
               </a>
@@ -404,7 +404,7 @@ function Formulario({ tipo, setUsuario }: any) {
             <button
               type="submit"
               className={`${tema.btn} ${tipo === "login"
-                ? "lg:w-[170px] lg:h-[50px] rounded-full text-[#373737]"
+                ? "w-[120px] h-[40px] md:w-[150px] lg:w-[170px] lg:h-[50px] rounded-full text-[#373737]"
                 : "w-[140px] h-[45px] lg:w-[170px] lg:h-[50px] rounded-2xl text-[#FFFFFF]"
                 } text-base md:text-lg lg:text-xl font-bold shadow-md cursor-pointer`}
             >
@@ -416,7 +416,7 @@ function Formulario({ tipo, setUsuario }: any) {
                 <button
                   type="button"
                   onClick={loginGoogle}
-                  className="w-[170px] h-[50px] bg-white border border-gray-300 rounded-full flex items-center justify-center gap-3 text-gray-700 font-semibold shadow-sm hover:bg-gray-50 cursor-pointer transition-all"
+                  className="w-[120px] h-[40px] md:w-[150px] lg:w-[170px] lg:h-[50px] bg-white border border-gray-300 rounded-full flex items-center justify-center gap-3 text-gray-700 font-semibold shadow-sm hover:bg-gray-50 cursor-pointer transition-all"
                 >
                   <img
                     src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg"
