@@ -6,6 +6,6 @@ const supabaseKey = "sb_publishable_1xaapgJol2PER955vtXx5Q_alnt2H2_";
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 
-/* Instalar: npm install @supabase/supabase-js
+/*
 caso de erro: desinstala node_modules e package-lock 
 e instale apenas o npm install novamente*/

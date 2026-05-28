@@ -15,8 +15,9 @@ import GlobalClickHandler from "./components/admin/GlobalClickHandler";
 import { AuthProvider, useAuth } from "./contexts/admin/AuthContext";
 import perfil1 from "./assets/perfis/user1.png";
 import type { Usuario } from "./types/Usuario";
+import { RotaProtegida } from "./components/RotaProtegida";
 
-function PrivateRoute({ children }: { children: React.ReactElement }) {
+function AdminRoute({ children }: { children: React.ReactElement }) {
     const { isAdmin } = useAuth();
 
     return isAdmin ? children : <Navigate to="/login" replace />;
@@ -25,11 +26,11 @@ function PrivateRoute({ children }: { children: React.ReactElement }) {
 function App() {
     const location = useLocation();
 
-    const esconderHeader = [
+    const esconderHeader = new Set([
         "/cadastro",
         "/login",
         "/escolhaplano"
-    ].includes(location.pathname);
+    ]).has(location.pathname);
 
     const [usuario, setUsuario] = useState<Usuario>({
         nome: "",
@@ -68,12 +69,10 @@ function App() {
     }
 
     useEffect(() => {
-        if (esconderHeader) {
-            return;
-        }
-        
+        if (esconderHeader) return;
+
         carregarUsuario();
-    }, [location.pathname]); 
+    }, [location.pathname]);
 
     return (
         <AuthProvider>
@@ -86,22 +85,28 @@ function App() {
 
                 <Routes>
                     <Route path="/" element={<LandingPage />} />
-                    <Route path="/home" element={<Home usuario={usuario} />} />
-                    <Route path="/novidades" element={<Novidades />} />
-                    <Route path="/pagamento" element={<Pagamento />} />
                     <Route path="/login" element={<Login setUsuario={setUsuario} />} />
                     <Route path="/cadastro" element={<Cadastro setUsuario={setUsuario} />} />
                     <Route path="/escolhaplano" element={<EscolhaPlano />} />
 
-                    <Route path="/admin" element={
-                        <PrivateRoute>
-                            <Admin />
-                        </PrivateRoute>
-                    }>
+                    <Route element={<RotaProtegida />}>
+                        <Route path="/home" element={<Home usuario={usuario} />} />
+                        <Route path="/novidades" element={<Novidades />} />
+                        <Route path="/pagamento" element={<Pagamento />} />
+                    </Route>
+
+                    <Route
+                        path="/admin"
+                        element={
+                            <AdminRoute>
+                                <Admin />
+                            </AdminRoute>
+                        }
+                    >
                         <Route index element={<LandingPage />} />
                         <Route path="home" element={<Home usuario={usuario} />} />
                         <Route path="usuario" element={<Home usuario={usuario} modoAdmin />} />
-                        <Route path="novidades" element={<Novidades modoAdmin={true} />} />
+                        <Route path="novidades" element={<Novidades modoAdmin />} />
                         <Route path="pagamento" element={<Pagamento isAdmin />} />
                     </Route>
 
