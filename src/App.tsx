@@ -15,6 +15,7 @@ import EscolhaPlano from "./pages/EscolhaPlano";
 import perfil1 from "./assets/perfis/user1.png";
 
 import type { Usuario } from "./types/Usuario";
+import { RotaProtegida } from "./components/RotaProtegida";
 
 function App() {
   const location = useLocation();
@@ -71,19 +72,19 @@ function App() {
 
       <Routes>
         <Route path="/" element={<LandingPage />} />
-
-        <Route
-          path="/home"
-          element={<Home usuario={usuario} />}
-        />
-
-        <Route path="/novidades" element={<Novidades />} />
-        <Route path="/pagamento" element={<Pagamento />} />
         <Route path="/login" element={<Login setUsuario={setUsuario} />} />
         <Route path="/cadastro" element={<Cadastro setUsuario={setUsuario} />} />
         <Route path="/escolhaplano" element={<EscolhaPlano />} />
-
         <Route path="*" element={<p>Página não encontrada</p>} />
+
+        <Route element={<RotaProtegida />}>
+          <Route
+          path="/home"
+          element={<Home usuario={usuario} />}
+          />
+          <Route path="/novidades" element={<Novidades />} />
+          <Route path="/pagamento" element={<Pagamento />} />
+        </Route>
       </Routes>
 
       <Footer />

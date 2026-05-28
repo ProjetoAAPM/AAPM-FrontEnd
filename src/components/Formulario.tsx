@@ -85,6 +85,7 @@ function Formulario({ tipo, setUsuario }: any) {
       if (resposta.ok) {
         if (resultado.status_usuario === "INATIVO") {
           localStorage.setItem("usuario_id", resultado.usuario_id);
+          localStorage.setItem("status_usuario", "INATIVO");
           alert(resultado.mensagem);
           navigate("/escolhaplano"); 
           return;
