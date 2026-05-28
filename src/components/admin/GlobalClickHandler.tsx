@@ -2,25 +2,34 @@ import { useEffect } from "react";
 import { useEditMode } from "../../contexts/modo_editar";
 
 export default function GlobalClickHandler() {
-  const { setActiveEditorId } = useEditMode();
+  const { editMode, setActiveEditorId } = useEditMode();
 
   useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
+    if (!editMode) return;
+
+    const handleGlobalClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
 
-      if (target.closest(".ProseMirror") || target.closest(".tiptap-toolbar")) {
+      if (
+        target.closest(".editor-reset") || 
+        target.closest(".ProseMirror") ||
+        target.closest(".small-screen-editor") ||
+        target.closest("button") ||
+        target.closest("select") ||
+        target.closest("input")
+      ) {
         return;
       }
 
-      setActiveEditorId(null);
+      setActiveEditorId("");
     };
 
-    document.addEventListener("click", handleClick);
+    document.addEventListener("click", handleGlobalClick);
 
     return () => {
-      document.removeEventListener("click", handleClick);
+      document.removeEventListener("click", handleGlobalClick);
     };
-  }, [setActiveEditorId]);
+  }, [editMode, setActiveEditorId]);
 
   return null;
 }

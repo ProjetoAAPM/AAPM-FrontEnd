@@ -95,7 +95,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                     className={`w-full max-w-[1812px] h-[75px] flex items-center justify-between px-4 md:px-6 transition-all duration-300 ${
                         isOpen
                             ? "fixed bg-[#FFD44B]"
-                            : "bg-[#211F1D]/80 backdrop-blur-lg min-[1330px]:rounded-full shadow-[0_0_25px_rgba(255,255,255,0.35)]"
+                            : "bg-[#211F1D]/80 backdrop-blur-lg min-[1330px]:rounded-full shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
                     }`}
                 >
 
