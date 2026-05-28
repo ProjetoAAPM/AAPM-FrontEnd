@@ -16,6 +16,9 @@ function Header({ usuario, setUsuario }: HeaderProps) {
   const navigate = useNavigate();
 
   function logout() {
+    localStorage.removeItem("usuario_id");
+    localStorage.removeItem("status_usuario");
+
     setUsuario({
       nome: "",
       foto: "",
@@ -26,6 +29,10 @@ function Header({ usuario, setUsuario }: HeaderProps) {
     setIsOpen(false);
 
     navigate("/");
+
+    setTimeout(() => {
+    localStorage.clear();
+  }, 0);
   }
 
   return (

@@ -91,6 +91,9 @@ function Formulario({ tipo, setUsuario }: any) {
           return;
         }
 
+        localStorage.setItem("usuario_id", resultado.usuario_id || resultado.usuario?.id);
+        localStorage.setItem("status_usuario", "ATIVO");
+
         if (tipo === "login") {
           setUsuario({
             nome: resultado.usuario.usuario_nome,
