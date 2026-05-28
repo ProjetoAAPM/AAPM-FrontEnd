@@ -9,77 +9,123 @@ export interface FormularioData {
   link: string;
 }
 
-const FORMULARIOS_ID = -1;
+const ID_FORMULARIOS = 19;
 
 export const formularioService = {
   async listarFormularios(): Promise<FormularioData[]> {
+    const { data, error } = await supabase
+      .from("conteudo_site")
+      .select("texto")
+      .eq("id", ID_FORMULARIOS)
+      .single();
+
+    if (error) {
+      console.error(error);
+      return [];
+    }
+
+    if (!data?.texto || data.texto.trim() === "") {
+      return [];
+    }
+
     try {
-      const { data, error } = await supabase
-        .from("conteudo_site")
-        .select("texto")
-        .eq("id", FORMULARIOS_ID)
-        .single();
-
-      if (error || !data?.texto) return [];
-
       return JSON.parse(data.texto);
     } catch (err) {
-      console.error("Erro ao listar formulários:", err);
+      console.error("Erro ao converter formulários:", err);
       return [];
     }
   },
 
-  async criarFormulario(formulario: Omit<FormularioData, "id">) {
-    const existentes = await this.listarFormularios();
-    const novo = { ...formulario, id: Date.now() };
-    const atualizados = [...existentes, novo];
+  async criarFormulario(
+    novoFormulario: FormularioData
+  ): Promise<FormularioData> {
 
-    return this.salvarNoBanco(atualizados);
+    const formularios =
+      await this.listarFormularios();
+
+    const formularioComId = {
+      ...novoFormulario,
+      id: Date.now(),
+    };
+
+    const novaLista = [
+      ...formularios,
+      formularioComId,
+    ];
+
+    const { error } = await supabase
+      .from("conteudo_site")
+      .update({
+        texto: JSON.stringify(novaLista),
+      })
+      .eq("id", ID_FORMULARIOS);
+
+    if (error) {
+      console.error(error);
+      throw new Error(
+        "Erro ao criar formulário"
+      );
+    }
+
+    return formularioComId;
   },
 
-  async atualizarFormulario(id: number, dadosAtualizados: Partial<FormularioData>) {
-    const existentes = await this.listarFormularios();
-    const atualizados = existentes.map(item =>
-      item.id === id ? { ...item, ...dadosAtualizados } : item
+  async atualizarFormulario(
+    id: number,
+    dadosAtualizados: Partial<FormularioData>
+  ) {
+
+    const formularios =
+      await this.listarFormularios();
+
+    const novaLista = formularios.map(
+      (formulario) =>
+        formulario.id === id
+          ? {
+              ...formulario,
+              ...dadosAtualizados,
+            }
+          : formulario
     );
-    return this.salvarNoBanco(atualizados);
+
+    const { error } = await supabase
+      .from("conteudo_site")
+      .update({
+        texto: JSON.stringify(novaLista),
+      })
+      .eq("id", ID_FORMULARIOS);
+
+    if (error) {
+      console.error(error);
+      throw new Error(
+        "Erro ao atualizar formulário"
+      );
+    }
   },
 
   async deletarFormulario(id: number) {
-    const existentes = await this.listarFormularios();
-    const filtrados = existentes.filter(item => item.id !== id);
-    return this.salvarNoBanco(filtrados);
-  },
 
-  async salvarNoBanco(lista: FormularioData[]) {
-    try {
-      const { data: existe, error: errorBusca } = await supabase
-        .from("conteudo_site")
-        .select("id")
-        .eq("id", FORMULARIOS_ID)
-        .maybeSingle();
+    const formularios =
+      await this.listarFormularios();
 
-      if (errorBusca) throw errorBusca;
+    const novaLista = formularios.filter(
+      (formulario) =>
+        formulario.id !== id
+    );
 
-      if (existe) {
-        const { error: errorUpdate } = await supabase
-          .from("conteudo_site")
-          .update({ texto: JSON.stringify(lista) })
-          .eq("id", FORMULARIOS_ID);
+    const { error } = await supabase
+      .from("conteudo_site")
+      .update({
+        texto: JSON.stringify(novaLista),
+      })
+      .eq("id", ID_FORMULARIOS);
 
-        if (errorUpdate) throw errorUpdate;
-      } else {
-        const { error: errorInsert } = await supabase
-          .from("conteudo_site")
-          .insert({ id: FORMULARIOS_ID, texto: JSON.stringify(lista) });
-
-        if (errorInsert) throw errorInsert;
-      }
-
-      return true;
-    } catch (error) {
-      console.error("Erro ao salvar formulários:", error);
-      throw error;
+    if (error) {
+      console.error(error);
+      throw new Error(
+        "Erro ao deletar formulário"
+      );
     }
-  }
+  },
 };
+

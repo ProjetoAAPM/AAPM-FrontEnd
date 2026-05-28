@@ -102,6 +102,24 @@ function Formulario({ tipo, setUsuario }: any) {
 
     const enviar = async (e: SyntheticEvent<HTMLFormElement, SubmitEvent>) => {
         e.preventDefault();
+
+        if (tipo === "cadastro") {
+            if (dados.senha !== dados.confirmar_senha) {
+                alert("Senhas diferentes!");
+                return;
+            }
+
+            if (dados.tipo_usuario === "aluno" && !dados.curso) {
+                alert("Informe o seu curso!");
+                return;
+            }
+
+            if (dados.tipo_usuario === "docente" && !dados.especialidade) {
+                alert("Informe sua especialidade!");
+                return;
+            }
+        }
+
         if (tipo === "login") {
             try {
                 const resposta = await fetch("http://localhost:5000/login", {
@@ -117,19 +135,29 @@ function Formulario({ tipo, setUsuario }: any) {
                 const resultado = await resposta.json();
 
                 if (resposta.ok) {
-                    const tipoUsuario = resultado.tipo_usuario || resultado.usuario?.tipo_usuario;
+                    const tipoUsuario =
+                        resultado.tipo_usuario ||
+                        resultado.usuario?.tipo_usuario;
 
                     if (tipoUsuario === "administrador") {
                         console.log("Login de ADMINISTRADOR confirmado pelo backend");
-                        await loginAdmin(dados.email, dados.senha); 
-                        alert(resultado.mensagem || "Login de Administrador realizado com sucesso!");
+
+                        await loginAdmin(dados.email, dados.senha);
+
+                        alert(
+                            resultado.mensagem ||
+                            "Login de Administrador realizado com sucesso!"
+                        );
+
                         navigate("/admin");
                         return;
                     }
 
                     if (resultado.status_usuario === "INATIVO") {
                         localStorage.setItem("usuario_id", resultado.usuario_id);
+
                         alert(resultado.mensagem);
+
                         navigate("/escolhaplano");
                         return;
                     }
@@ -142,23 +170,77 @@ function Formulario({ tipo, setUsuario }: any) {
                     });
 
                     alert(resultado.mensagem || "Login realizado com sucesso!");
+
                     navigate("/home");
-                    setTimeout(() => window.location.reload(), 100);
+
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 100);
+
                     return;
                 }
 
                 if (resposta.status === 403) {
-                    alert("Seu acesso está inativo. Redirecionando para regularização...");
+                    alert(
+                        "Seu acesso está inativo. Redirecionando para regularização..."
+                    );
+
                     navigate("/escolhaplano");
                     return;
                 }
 
                 alert(resultado.mensagem || "Email ou senha incorretos!");
+
             } catch (erro) {
                 console.error("Erro na requisição:", erro);
+
                 alert("Não foi possível conectar ao servidor.");
             }
+
             return;
+        }
+
+        try {
+            const rota =
+                dados.tipo_usuario === "aluno"
+                    ? "/cadastro/aluno"
+                    : "/cadastro/docente";
+
+            const resposta = await fetch(`http://localhost:5000${rota}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(dados)
+            });
+
+            const resultado = await resposta.json();
+
+            if (resposta.ok) {
+                localStorage.setItem("usuario_id", resultado.usuario_id);
+
+                alert(resultado.mensagem || "Cadastro realizado com sucesso!");
+
+                navigate("/escolhaplano");
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 100);
+
+            } else {
+                const mensagemErro =
+                    resultado.erro_validacao ||
+                    resultado.erro_interno ||
+                    resultado.erro_usuario ||
+                    resultado.mensagem ||
+                    "Falha no cadastro.";
+
+                alert(`Erro: ${mensagemErro}`);
+            }
+
+        } catch (erro) {
+            console.error("Erro na requisição:", erro);
+
+            alert("Não foi possível conectar ao servidor.");
         }
     };
 

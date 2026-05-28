@@ -26,7 +26,7 @@ interface HomeProps {
 function Home({ modoAdmin = false, usuario }: HomeProps) {
   const [progresso, setProgresso] = useState<Progresso>({ pontos: 0, porcentagem: 0 });
   const [extrato, setExtrato] = useState<ExtratoItem[]>([]);
-  const [premiosDaBarra, setPremiosDaBarra] = useState<ExtratoItem[]>([]); 
+  const [premiosDaBarra, setPremiosDaBarra] = useState<ExtratoItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   async function carregarDados() {
@@ -34,6 +34,7 @@ function Home({ modoAdmin = false, usuario }: HomeProps) {
       setLoading(false);
       return;
     }
+
     try {
       setLoading(true);
       const [resProgresso, resExtrato] = await Promise.all([
@@ -56,13 +57,12 @@ function Home({ modoAdmin = false, usuario }: HomeProps) {
       const extratoFormatado: ExtratoItem[] = (dataExtrato || []).map((item: any) => {
         const ehGanho = item.tipo === "ganho";
         const pontosNumericos = parseInt(item.pontos.replace(/[^\d-]/g, '')) * (ehGanho ? 1 : -1);
-
         return {
           tipo: ehGanho ? "pontos" : "resgate",
-          mensagem: item.titulo,       
-          descricao: item.subtitulo,  
-          pontos: pontosNumericos,     
-          premio: item.data,         
+          mensagem: item.titulo,
+          descricao: item.subtitulo,
+          pontos: pontosNumericos,
+          premio: item.data,
         };
       });
 
@@ -84,25 +84,25 @@ function Home({ modoAdmin = false, usuario }: HomeProps) {
     <div className="w-full overflow-x-hidden bg-[#101625]">
       {!modoAdmin && (
         <section className="w-full px-3 sm:px-5 lg:px-8 mt-25 flex items-center justify-center">
-          <Pontuacao 
-            pontos={progresso.pontos} 
-            progresso={progresso.pontos}
-            loading={loading} 
-            usuario={usuario} 
-            onPremiosCalculados={setPremiosDaBarra} 
+          <Pontuacao
+            pontos={progresso.pontos}        
+            progresso={progresso.porcentagem}   
+            loading={loading}
+            usuario={usuario}
+            onPremiosCalculados={setPremiosDaBarra}
           />
         </section>
       )}
 
       <section className={`w-full px-3 sm:px-5 lg:px-8 py-6 flex items-center justify-center ${modoAdmin ? "mt-20 sm:mt-24 lg:mt-18" : ""}`}>
-        <FormularioExtrato 
+        <FormularioExtrato
           extrato={
-            modoAdmin 
-              ? [...extrato, ...premiosDaBarra] 
+            modoAdmin
+              ? [...extrato, ...premiosDaBarra]
               : [...extrato, ...premiosDaBarra.filter(item => item.tipo === "premio")]
-          } 
-          modoAdmin={modoAdmin} 
-          premium={usuario?.premium} 
+          }
+          modoAdmin={modoAdmin}
+          premium={usuario?.premium}
         />
       </section>
 

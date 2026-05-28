@@ -65,24 +65,27 @@ const FormularioCard = ({
   };
 
   const confirmarSalvar = () => {
-    let dataFormatada = dados.data;
+      let dataFormatada = dados.data;
+      if (dados.data.includes("/")) {
+          const [dia, mes, ano] = dados.data.split("/");
+          dataFormatada = `${ano}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}`;
+      }
 
-    if (dados.data.includes("/")) {
-      const [dia, mes, ano] = dados.data.split("/");
-      dataFormatada = `${ano}-${mes.padStart(2, "0")}-${dia.padStart(2, "0")}`;
-    }
+      const horaFormatada = dados.hora.length === 5 ? `${dados.hora}:00` : dados.hora;
 
-    const horaFormatada = dados.hora.length === 5 ? `${dados.hora}:00` : dados.hora;
+      const dadosFormatados = {
+          ...dados,
+          data: dataFormatada,
+          hora: horaFormatada,
+      };
 
-    const dadosFormatados = {
-      ...dados,
-      data: dataFormatada,
-      hora: horaFormatada,
-    };
+      if (!dadosIniciais?.id) {
+          delete (dadosFormatados as any).id;  
+      }
 
-    onSalvar?.(dadosFormatados);
-    setIsEditing(false);
-    setPopupSalvarAberto(false);
+      onSalvar?.(dadosFormatados);
+      setIsEditing(false);
+      setPopupSalvarAberto(false);
   };
 
   const handleSalvar = () => {
