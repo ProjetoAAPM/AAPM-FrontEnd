@@ -59,8 +59,11 @@ function Header({ usuario, setUsuario }: HeaderProps) {
 
   return (
     <>
-      <div className={`absolute w-full flex justify-center z-50 transition-all duration-300 ${isOpen ? "mt-0 px-0" : "mt-0 px-0 lg:mt-4 lg:px-10"}`}>
-        <div className={`w-full max-w-[1812px] h-[75px] flex items-center justify-between px-4 md:px-6 transition-all duration-300 ${isOpen ? "fixed bg-[#FFD44B] rounded-none" : "bg-[#211F1D]/80 backdrop-blur-lg rounded-none lg:rounded-full shadow-[0_0_25px_rgba(255,255,255,0.35)]"}`}>
+
+      <div className={`absolute w-full flex justify-center z-50 transition-all duration-300 ${isOpen ? "mt-0 px-0" : "mt-0 px-0 min-[1330px]:mt-4 min-[1330px]:px-10"}`}>
+        
+        <div className={`w-full max-w-[1812px] h-[75px] flex items-center justify-between px-4 md:px-6 transition-all duration-300 ${isOpen ? "fixed bg-[#FFD44B] rounded-none" : "bg-[#211F1D]/80 backdrop-blur-lg rounded-none min-[1330px]:rounded-full shadow-[0_0_25px_rgba(255,255,255,0.35)]"}`}>
+          
           <div className="flex items-center gap-2 md:gap-3">
             <img src={logoImg} alt="Logo" className="h-[40px] md:h-[45px] w-auto object-contain" />
             <p className={`text-sm md:text-xl font-semibold whitespace-nowrap leading-tight transition-colors ${isOpen ? "text-black" : "text-white"}`}>
@@ -68,7 +71,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
             </p>
           </div>
 
-          <div className="hidden lg:flex gap-4 xl:gap-16 2xl:gap-28 text-white text-sm xl:text-base 2xl:text-lg font-medium">
+          <div className="hidden min-[1330px]:flex gap-4 xl:gap-16 2xl:gap-28 text-white text-sm xl:text-base 2xl:text-lg font-medium">
             <Link to={isAdmin ? "/admin" : "/home"}>Home</Link>
             {isAdmin && <Link to="/admin/usuario">Usuário</Link>}
             <Link to={isAdmin ? "/admin/novidades" : "/novidades"}>Novidades</Link>
@@ -78,18 +81,21 @@ function Header({ usuario, setUsuario }: HeaderProps) {
           <div className="flex gap-2 md:gap-4 xl:gap-6 items-center">
             {isAdmin ? (
               <>
-                <button onClick={resetarPadrao} className="bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-semibold rounded-full px-8 py-2 text-base min-w-[130px] text-center cursor-pointer">
-                  Padrão
-                </button>
-                <div className="hidden xl:block w-[2px] h-8 bg-gray-500/50"></div>
-                <button onClick={() => { if (editMode) { alert("Salvo com sucesso!"); } setEditMode(!editMode); }} className="bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-semibold rounded-full px-8 py-2 text-base min-w-[130px] text-center cursor-pointer">
-                  {editMode ? "Salvar" : "Editar"}
-                </button>
+
+                <div className="hidden min-[1330px]:flex items-center gap-4">
+                  <button onClick={resetarPadrao} className="bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-semibold rounded-full px-8 py-2 text-base min-w-[130px] text-center cursor-pointer">
+                    Padrão
+                  </button>
+                  <div className="w-[2px] h-8 bg-gray-500/50"></div>
+                  <button onClick={() => { if (editMode) { alert("Salvo com sucesso!"); } setEditMode(!editMode); }} className="bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-semibold rounded-full px-8 py-2 text-base min-w-[130px] text-center cursor-pointer">
+                    {editMode ? "Salvar" : "Editar"}
+                  </button>
+                </div>
               </>
             ) : (
               <>
                 {usuario?.nome ? (
-                  <div onClick={() => setPerfilOpen(true)} className="hidden lg:flex items-center gap-3 cursor-pointer">
+                  <div onClick={() => setPerfilOpen(true)} className="hidden min-[1330px]:flex items-center gap-3 cursor-pointer">
                     <img src={usuario.foto} className="w-11 h-11 rounded-full object-cover" />
                     <p className={`px-4 py-1.5 rounded-full font-bold ${usuario.premium ? "bg-gradient-to-r from-[#FFD700] to-[#C9A227] text-black" : "bg-gray-300 text-black"}`}>
                       {usuario.nome}
@@ -99,7 +105,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                     </button>
                   </div>
                 ) : (
-                  <div className="hidden lg:flex items-center">
+                  <div className="hidden min-[1330px]:flex items-center">
                     <Link to="/login" className="bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-semibold rounded-full px-8 py-2 text-base min-w-[130px] text-center">Login</Link>
                     <div className="mx-4 text-white/70 text-xl font-light">|</div>
                     <Link to="/cadastro" className="bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-semibold rounded-full px-8 py-2 text-base min-w-[130px] text-center">Cadastrar</Link>
@@ -108,18 +114,19 @@ function Header({ usuario, setUsuario }: HeaderProps) {
               </>
             )}
 
-            <div className={`flex items-center gap-3 ${isAdmin ? "xl:hidden" : "lg:hidden"}`}>
-              {usuario?.nome && (
+            <div className={`flex items-center gap-3 min-[1330px]:hidden`}>
+              {!isAdmin && usuario?.nome && (
                 <button onClick={() => setPerfilOpen(true)}>
                   <img src={usuario.foto} className="w-10 h-10 rounded-full" />
                 </button>
               )}
-              <button onClick={() => setIsOpen(!isOpen)} className="flex flex-col justify-center w-10 h-10 gap-1.5">
-                <span className={`h-0.5 w-6 ${isOpen ? "rotate-45 translate-y-2 bg-black" : "bg-white"}`} />
-                <span className={`h-0.5 w-6 ${isOpen ? "opacity-0" : "bg-white"}`} />
-                <span className={`h-0.5 w-6 ${isOpen ? "-rotate-45 -translate-y-2 bg-black" : "bg-white"}`} />
+              <button onClick={() => setIsOpen(!isOpen)} className="flex flex-col justify-center items-center w-10 h-10 gap-1.5 z-50 cursor-pointer" aria-label="Menu">
+                <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? "rotate-45 translate-y-2 bg-black" : "bg-white"}`} />
+                <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? "opacity-0" : "bg-white"}`} />
+                <span className={`h-0.5 w-6 transition-all duration-300 ${isOpen ? "-rotate-45 -translate-y-2 bg-black" : "bg-white"}`} />
               </button>
             </div>
+
           </div>
         </div>
       </div>

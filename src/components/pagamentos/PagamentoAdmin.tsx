@@ -82,20 +82,20 @@ const PagamentoAdmin = () => {
     };
 
     return (
-        <div className="bg-[#0F121D] h-screen w-screen flex flex-col pt-20 sm:pt-24 md:pt-28 overflow-hidden px-2 sm:px-4 md:px-0">
-            <div className="w-full flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8 flex-1 min-h-0 h-full lg:h-[calc(100vh-140px)] pb-4 sm:pb-6">
+        <div className="bg-[#0F121D] min-h-screen flex flex-col pt-24 md:pt-28 px-3 md:px-6 min-[1330px]:h-screen min-[1330px]:w-screen min-[1330px]:pt-20 min-[1330px]:overflow-hidden min-[1330px]:px-0">
+            
+            <div className="w-full flex flex-col gap-6 flex-1 pb-6 min-[1330px]:flex-row min-[1330px]:gap-8 min-[1330px]:min-h-0 min-[1330px]:h-full min-[1330px]:h-[calc(100vh-140px)] min-[1330px]:pb-4">
 
-                <aside className="w-full lg:w-[415px] bg-white rounded-[15px] lg:rounded-r-[15px] p-4 sm:p-6 md:p-8 lg:p-10 shadow-xl flex flex-col h-full mb-2 -mt">
+                <aside className="w-full bg-white rounded-[15px] p-4 md:p-6 shadow-xl flex flex-col min-[1330px]:w-[415px] min-[1330px]:rounded-none min-[1330px]:rounded-r-[15px] min-[1330px]:p-10 min-[1330px]:h-full min-[1330px]:mb-2 min-[1330px]:-mt">
 
-                    <div className="flex flex-col justify-end gap-3 sm:gap-4 md:gap-6 lg:gap-10 lg:mt-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 min-[1330px]:flex min-[1330px]:flex-col min-[1330px]:justify-end min-[1330px]:gap-10 min-[1330px]:lg:mt-4">
                         
                         {Object.entries(stats).map(([key, value]) => (
                             <div
                                 key={key}
-
-                                className="bg-[#0F121D] text-white rounded-[15px] sm:rounded-[18px] md:rounded-[20px] flex items-center justify-center gap-2 min-h-[80px] sm:min-h-[90px] md:min-h-[100px] px-3 text-center"
+                                className="bg-[#0F121D] text-white rounded-[15px] flex items-center justify-center gap-2 h-16 md:h-20 min-[1330px]:rounded-[20px] min-[1330px]:min-h-[100px] min-[1330px]:px-3 text-center"
                             >
-                                <span className="text-[0.9rem] sm:text-[1.1rem] md:text-[1.3rem] font-bold capitalize">
+                                <span className="text-[1rem] md:text-[1.1rem] min-[1330px]:text-[1.3rem] font-bold capitalize">
                                     {key}: {value}
                                 </span>
                             </div>
@@ -104,15 +104,14 @@ const PagamentoAdmin = () => {
                     </div>
                 </aside>
 
-                {/* CORREÇÃO: Alinhando o topo removendo o padding vertical excessivo */}
-                <main className="flex-1 min-h-0 flex flex-col overflow-hidden px-2 sm:px-4 md:px-6 lg:pr-10">
+                <main className="flex-1 flex flex-col min-[1330px]:min-h-0 min-[1330px]:overflow-hidden min-[1330px]:px-0 min-[1330px]:lg:pr-10">
     
-                    <div className="flex flex-col gap-4 flex-shrink-0 relative">
+                    <div className="flex flex-col gap-4 flex-shrink-0 relative mb-3 min-[1330px]:mb-0">
                         <div className="flex items-center justify-between gap-4">
-                            <div className="flex flex-row items-center gap-2 sm:gap-3 relative z-40">
+                            <div className="flex flex-row items-center gap-2 relative z-40">
                                 <button
                                     onClick={() => setShowDropdown(!showDropdown)}
-                                    className=" w-16 h-16 lg:mt-3 cursor-pointer"
+                                    className="w-12 h-12 md:w-16 md:h-16 cursor-pointer min-[1330px]:w-16 min-[1330px]:h-16 min-[1330px]:lg:mt-3"
                                     aria-label="Filtro"
                                 >
                                     <img
@@ -121,21 +120,21 @@ const PagamentoAdmin = () => {
                                         className="w-full h-full transform object-contain"
                                     />
                                 </button>
-                                <span className="text-white font-bold text-[1rem] sm:text-[1.1rem] md:text-xl lg:-ml-4">
+                                <span className="text-white font-bold text-[1rem] md:text-xl min-[1330px]:text-xl min-[1330px]:lg:-ml-4">
                                     {filtro}
                                 </span>
                             </div>
 
                             <button
                                 onClick={handleAtualizar}
-                                className="bg-[#C83D3D] text-white rounded-full h-[38px] sm:h-[40px] md:h-[42px] px-4 sm:px-6 md:px-8 shadow-lg font-bold hover:bg-[#b03535] transition-all text-[0.9rem] sm:text-[1rem] md:text-lg"
+                                className="bg-[#C83D3D] text-white rounded-full h-[38px] md:h-[42px] px-5 md:px-8 shadow-lg font-bold hover:bg-[#b03535] transition-all text-[0.9rem] md:text-lg"
                             >
                                 Atualizar
                             </button>
                         </div>
 
                         {showDropdown && (
-                            <div className="absolute top-11 sm:top-12 md:top-14 lg:top-15 left-0 bg-white rounded-xl shadow-2xl py-2 z-50 w-40 sm:w-44 md:w-48">
+                            <div className="absolute top-12 md:top-14 left-0 bg-white rounded-xl shadow-2xl py-2 z-50 w-40 md:w-48 min-[1330px]:top-15">
                                 {["Todos", "Pendentes", "Aprovados", "Reprovados"].map((opt) => (
                                     <button
                                         key={opt}
@@ -143,7 +142,7 @@ const PagamentoAdmin = () => {
                                             setFiltro(opt as any);
                                             setShowDropdown(false);
                                         }}
-                                        className="w-full text-left px-4 sm:px-5 py-2 sm:py-3 hover:bg-gray-100 font-bold text-[#101625] text-[0.9rem] sm:text-[1rem]"
+                                        className="w-full text-left px-4 md:px-5 py-2 md:py-3 hover:bg-gray-100 font-bold text-[#101625] text-[0.9rem] md:text-[1rem]"
                                     >
                                         {opt}
                                     </button>
@@ -152,9 +151,9 @@ const PagamentoAdmin = () => {
                         )}
                     </div>
 
-                    <div className="flex-1 min-h-0 bg-white rounded-[12px] shadow-inner overflow-hidden flex flex-col">
+                    <div className="flex-1 bg-white rounded-[12px] shadow-inner overflow-hidden flex flex-col min-h-[400px] min-[1330px]:min-h-0">
                         <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
-                            <div className="flex-1 min-h-0 overflow-y-auto scroll-modern p-4 sm:p-5">
+                            <div className="flex-1 min-h-0 overflow-y-auto scroll-modern p-4 md:p-5">
                                 {loading ? (
                                     <div className="text-center py-20 text-gray-500">
                                         Carregando pagamentos...
@@ -172,7 +171,7 @@ const PagamentoAdmin = () => {
                                         </button>
                                     </div>
                                 ) : (
-                                    <div className="flex flex-col gap-3 sm:gap-4 md:gap-5 pb-4">
+                                    <div className="flex flex-col gap-3 md:gap-5 pb-4">
                                         {lista.map((p) => (
                                             <CardPagamento
                                                 key={p.id}

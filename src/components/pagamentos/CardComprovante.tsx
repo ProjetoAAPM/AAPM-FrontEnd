@@ -68,9 +68,9 @@ const CardComprovante = ({
 
                 </div>
 
-                <div className="bg-white p-4 sm:p-5 pb-3 rounded-b-[14px] flex flex-col items-center">
+                <div className="bg-white p-4 sm:p-5 pb-5 rounded-b-[14px] flex flex-col items-center">
 
-                    <div className="scroll-modern bg-[#DFF4FF] rounded-[18px] w-full px-6 sm:px-10 pt-6 pb-0 mb-4 relative overflow-y-auto max-h-[380px]">
+                    <div className="scroll-modern bg-[#DFF4FF] rounded-[18px] w-full px-6 sm:px-10 pt-6 pb-6 mb-4 relative overflow-y-auto max-h-[400px]">
 
                         <h2 className="text-center font-bold text-[#0B1220] text-[22px] sm:text-[28px] tracking-tight mb-6">
 
@@ -78,9 +78,9 @@ const CardComprovante = ({
 
                         </h2>
 
-                        <div className="flex flex-col md:flex-row items-end justify-between gap-6">
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
 
-                            <div className="w-full md:w-auto flex flex-col justify-start min-w-[240px] pb-8">
+                            <div className="w-full md:w-auto flex flex-col justify-start min-w-[240px] pb-2">
 
                                 <p className="text-[#718096] uppercase font-semibold text-[18px] tracking-[0.05em] mb-6">
 
@@ -148,7 +148,7 @@ const CardComprovante = ({
 
                             <div className="w-full md:flex-1 flex justify-center md:justify-end">
 
-                                <div className="relative w-full max-w-[300px] aspect-[1/1.1] bg-[#3B4A54] rounded-t-[15px] flex items-center justify-center overflow-hidden shadow-xl translate-y-[2px]">
+                                <div className="relative w-full max-w-[300px] aspect-[1/1.1] bg-[#3B4A54] rounded-[15px] flex items-center justify-center overflow-hidden shadow-xl">
 
                                     {isValidUrl ? (
 
@@ -156,7 +156,7 @@ const CardComprovante = ({
 
                                             <iframe
                                                 src={`${comprovanteUrl}#toolbar=0&navpanes=0&scrollbar=0`}
-                                                className="w-full h-full border-0 rounded-t-[15px]"
+                                                className="w-full h-full border-0 rounded-[15px]"
                                                 title="Comprovante PDF"
                                             />
 
@@ -228,13 +228,13 @@ const CardComprovante = ({
 
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-4 w-full mt-2">
+                    <div className="flex flex-row justify-center gap-4 w-full mt-2">
 
                         <button
                             onClick={() =>
                                 onApprove(data.id)
                             }
-                            className="w-full sm:w-[200px] h-[50px] rounded-full bg-[#63B3ED] text-white font-bold text-[18px] shadow-md hover:brightness-105 active:scale-[0.98] transition-all"
+                            className="w-[160px] sm:w-[200px] h-[50px] rounded-full bg-[#63B3ED] text-white font-bold text-[18px] shadow-md hover:brightness-105 active:scale-[0.98] transition-all"
                         >
 
                             Aprovar
@@ -245,7 +245,7 @@ const CardComprovante = ({
                             onClick={() =>
                                 onReject(data.id)
                             }
-                            className="w-full sm:w-[200px] h-[50px] rounded-full bg-[#C53030] text-white font-bold text-[18px] shadow-md hover:brightness-105 active:scale-[0.98] transition-all"
+                            className="w-[160px] sm:w-[200px] h-[50px] rounded-full bg-[#C53030] text-white font-bold text-[18px] shadow-md hover:brightness-105 active:scale-[0.98] transition-all"
                         >
 
                             Reprovar
