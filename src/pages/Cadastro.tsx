@@ -1,6 +1,33 @@
-function Cadastro() {
+import Formulario from "../components/Formulario";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+
+function Cadastro({ setUsuario }: any) {
+    const navigate = useNavigate();
+
     return (
-        <p>Cadastro</p>
+        <div className="bg-[#101625] min-h-screen flex flex-col items-center relative pb-20">
+            <img src="src/assets/detalheEstilo.png" alt="bolinhas" className="absolute top-0 left-0 z-0 opacity-80 w-[210px] md:w-[225px] lg:w-[350px]" />
+            <img src="src/assets/detalheEstilo.png" alt="bolinhas" className="absolute bottom-0 right-0 z-0 opacity-80 w-[190px] md:w-[210px] lg:w-[300px] -scale-x-100 -scale-y-100" />
+
+            <button
+                onClick={() => navigate('/')}
+                className="hidden lg:flex absolute top-10 left-10 xl:left-15 items-center gap-2 cursor-pointer z-10"
+            >
+                <ArrowLeft size={30} color="#FFFFFF" strokeWidth={3}/>
+            </button>
+
+            <Formulario tipo="cadastro" setUsuario={setUsuario} className="-mt-20" />
+
+            <div className="z-10 -mt-14 mb-10">
+                <Link to="/login" className="text-white text-bse lg:text-lg font-semibold underline underline-offset-4">
+                    Já possui conta? {" "}
+                    <span className="text-[#42B9F4]">
+                        Faça login.
+                    </span>
+                </Link>
+            </div>
+        </div>
     );
 }
 

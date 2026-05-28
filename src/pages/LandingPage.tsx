@@ -9,7 +9,7 @@ function LandingPage() {
                 <Inicio />
             </section>
 
-            <section id="sobre" className=" bg-[#101625] min-h-screen">
+            <section id="sobre" className="bg-[#101625] min-h-screen">
                 <SobreNos />
             </section>
 
