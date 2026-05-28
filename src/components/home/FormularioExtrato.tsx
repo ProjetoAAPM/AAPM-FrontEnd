@@ -1,4 +1,6 @@
 import "../Scrollbar/scrollbar.css";
+import { Star} from "lucide-react";
+
 
 type ExtratoItem = {
   tipo: "premio" | "pontos" | "resgate";
@@ -259,7 +261,7 @@ export default function FormularioExtrato({
                               Ganho de pontos
                             </p>
                             <p className={`text-[13px] sm:text-[15px] font-bold mt-0.5 ${premium ? "text-yellow-600" : "text-slate-500"}`}>
-                              {premium ? "Plano Premium" : "Pagamento do plano Comum"}
+                              {item.descricao}
                             </p>
                           </div>
                           
@@ -288,25 +290,15 @@ export default function FormularioExtrato({
 
                     <div className="shrink-0">
                       {(item.tipo === "resgate" || item.tipo === "premio") && (
-                        <>
-                          {premium ? (
-                            <span 
-                              className="text-lg sm:text-xl filter drop-shadow-[0_1px_3px_rgba(234,179,8,0.5)]" 
-                              style={{ color: "#EAB308" }}
-                            >
-                              ⭐
-                            </span>
-                          ) : (
-                            <span 
-                              className="text-lg sm:text-xl filter grayscale opacity-40"
-                              style={{ color: "#94A3B8" }}
-                            >
-                              ⭐
-                            </span>
-                          )}
-                        </>
+                        <Star
+                          className={`w-2 h-2 sm:w-5 sm:h-5 md:w-7 md:h-7 ${
+                            premium
+                              ? "text-[#B8860B] fill-[#DAA520]"
+                              : "text-[#C4C4C4] fill-[#C0C0C0]"
+                          }`}
+                        />
                       )}
-
+                      
                     </div>
 
                   </div>

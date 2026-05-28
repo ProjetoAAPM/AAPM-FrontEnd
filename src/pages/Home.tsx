@@ -102,7 +102,7 @@ function Home({ usuario }: HomeProps) {
       </section>
 
       <section className="w-full px-3 sm:px-5 lg:px-8 py-6 flex items-center justify-center">
-        <FormularioExtrato extrato={[...extrato, ...premiosDaBarra]} premium={usuario?.premium} />
+        <FormularioExtrato extrato={[...extrato, ...premiosDaBarra.filter(item => item.tipo === "premio")]} premium={usuario?.premium} />
       </section>
 
       <section className="w-full px-3 sm:px-5 lg:px-8 py-6 flex items-center justify-center">
