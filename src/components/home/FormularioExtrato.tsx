@@ -55,9 +55,12 @@ export default function FormularioExtrato({
   const formulariosFuturos = formularios.filter((formulario) => {
     if (!formulario.data || !formulario.hora) return false;
 
-    const dataEvento = new Date(
-      `${formulario.data}T${formulario.hora}`
-    );
+    let horaFormatada = formulario.hora;
+    if (horaFormatada.length === 5) {
+      horaFormatada += ":00";
+    }
+
+    const dataEvento = new Date(`${formulario.data}T${horaFormatada}`);
 
     return !isNaN(dataEvento.getTime()) && dataEvento >= new Date();
   });
