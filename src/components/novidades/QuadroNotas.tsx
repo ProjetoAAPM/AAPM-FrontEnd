@@ -1,8 +1,6 @@
 import fundo from "../../assets/images/FundoNotas.png";
 import { useEffect, useState } from "react";
 import { buscarConteudo, salvarConteudo } from "../../Services/conteudoService";
-import BlocoEditavel from "../admin/BlocoEditavel";
-import { useEditMode } from "../../contexts/modo_editar"; // Importado o contexto para ativar o id
 
 interface PostIt {
   cor: string;
@@ -17,7 +15,10 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [postSelecionado, setPostSelecionado] = useState<number | null>(null);
-  const { setActiveEditorId } = useEditMode(); // Resgatando a função que ativa o toolbar globalmente
+  const [textoNegrito, setTextoNegrito] = useState(false);
+  const [textoItalico, setTextoItalico] = useState(false);
+  const [textoSublinhado, setTextoSublinhado] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const postsPadrao: PostIt[] = [
     { cor: "bg-[#C0BD61]", texto: "" },
@@ -56,6 +57,27 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
     carregarPosts();
   }, []);
 
+  useEffect(() => {
+    const handleClickFora = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+
+      if (
+        target.closest(".postit-card") ||
+        target.closest(".toolbar-postit")
+      ) {
+        return;
+      }
+
+      setPostSelecionado(null);
+    };
+
+    document.addEventListener("click", handleClickFora);
+
+    return () => {
+      document.removeEventListener("click", handleClickFora);
+    };
+  }, []);
+
   async function carregarPosts() {
     try {
       const stringDados = await buscarConteudo(20);
@@ -69,6 +91,7 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
   }
 
   async function salvarPosts() {
+    setIsSaving(true);
     try {
       const jsonString = JSON.stringify(posts);
       const sucesso = await salvarConteudo(20, jsonString);
@@ -77,13 +100,14 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
         alert("Salvo com sucesso!");
         setEditMode(false);
         setPostSelecionado(null);
-        setActiveEditorId(""); // Limpa o editor ativo ao salvar
       } else {
         alert("Erro ao salvar no banco de dados!");
       }
     } catch (err) {
       console.error("Erro ao salvar notas do quadro:", err);
       alert("Erro ao salvar!");
+    } finally {
+      setIsSaving(false);
     }
   }
 
@@ -106,29 +130,14 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
   return (
     <div className="w-full flex flex-col items-center overflow-hidden">
       <div className="w-full flex flex-row items-center justify-between gap-2 sm:gap-4 mb-4">
-        <div className="self-start bg-[#14358F] text-white font-black rounded-r-[10px] shadow-md py-2
-          text-[1rem]
-          sm:text-[2rem]
-          md:text-[2.2rem]
-          lg:text-[2.3rem]
-          xl:text-[3.1rem]
-          2xl:text-[3.3rem]
-
-          px-10
-          sm:px-20
-          md:px-24
-          lg:px-40
-          xl:px-52
-          2xl:px-64
-
-          whitespace-nowrap
-        ">
+        <div className="self-start bg-[#14358F] text-white font-black rounded-r-[10px] shadow-md py-2 text-[1rem] sm:text-[2rem] md:text-[2.2rem] lg:text-[2.3rem] xl:text-[3.1rem] 2xl:text-[3.3rem] px-10 sm:px-20 md:px-24 lg:px-40 xl:px-52 2xl:px-64 whitespace-nowrap">
           Quadro de Notas
         </div>
 
         {isAdmin && (
-          <div className="self-center sm:ml-auto md:mr-[70px] xl:mr-[190px] 2xl:mr-[270px]">
+          <div className="self-center sm:ml-auto md:mr-[70px] xl:mr-[190px] 2xl:mr-[275px]">
             <button
+              disabled={isSaving}
               onClick={() => {
                 if (editMode) {
                   salvarPosts();
@@ -136,17 +145,12 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
                   setEditMode(true);
                 }
               }}
-              className="bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-semibold rounded-full
-              px-5 sm:px-6 md:px-7 py-3
-              text-sm sm:text-base
-              min-w-[120px] md:min-w-[170px]
-              whitespace-nowrap"
+              className={`bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-bold rounded-full px-4 min-[360px]:px-5 sm:px-6 md:px-7 md:text-lg py-1 text-sm min-[360px]:text-base sm:text-lg min-w-[110px] min-[360px]:min-w-[120px] md:min-w-[156px] whitespace-nowrap border border-transparent shadow-sm transform translate-y-1 sm:translate-y-4 md:translate-y-3.5 ${isSaving ? "opacity-75 cursor-not-allowed" : ""}`}
             >
-              {editMode ? "Salvar" : "Editar"}
+              {isSaving ? "Salvando..." : editMode ? "Salvar" : "Editar"}
             </button>
           </div>
         )}
-
       </div>
 
       <div
@@ -158,59 +162,84 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
             <div
               key={i}
               onClick={() => {
-                if (isAdmin && editMode) {
+                if (isAdmin && editMode && !isSaving) {
                   setPostSelecionado(i);
-                  setActiveEditorId(String(i)); // Sincroniza o clique do card diretamente com o id do BlocoEditavel
                 }
               }}
-              className={`relative w-[110px] sm:w-[130px] md:w-[140px] lg:w-[140px] xl:w-[190px] 2xl:w-[200px] aspect-square ${post.cor} shadow-md p-3 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${isAdmin && editMode && postSelecionado === i ? "border-[4px] border-dashed border-blue-500" : ""}`}
+              className={`postit-card relative overflow-visible w-[110px] sm:w-[130px] md:w-[140px] lg:w-[140px] xl:w-[190px] 2xl:w-[200px] aspect-square ${post.cor} shadow-md p-3 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${isAdmin && editMode && postSelecionado === i ? "border-[4px] border-dashed border-blue-500 z-50" : ""}`}
             >
               {isAdmin && editMode && postSelecionado === i && (
-                <>
-                  {/* Cápsula de Cores Original */}
-                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white px-2 py-1 rounded-full shadow-lg z-50">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        alterarCor(i, "bg-[#C06161]");
-                      }}
-                      className="w-5 h-5 rounded-full bg-[#C06161] border-2 border-white shadow-md"
-                    />
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        alterarCor(i, "bg-[#6196C0]");
-                      }}
-                      className="w-5 h-5 rounded-full bg-[#6196C0] border-2 border-white shadow-md"
-                    />
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        alterarCor(i, "bg-[#C0BD61]");
-                      }}
-                      className="w-5 h-5 rounded-full bg-[#C0BD61] border-2 border-white shadow-md"
-                    />
-                  </div>
-                </>
+                <div 
+                  className="toolbar-postit absolute bottom-full left-1/2 -translate-x-1/2 mb-3 flex max-[420px]:flex-col items-center justify-center gap-2 bg-white border border-gray-200 shadow-xl px-3 py-2 rounded-full max-[420px]:rounded-2xl z-[999]"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setTextoNegrito(!textoNegrito)}
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center ${textoNegrito ? "bg-blue-600 text-white" : "hover:bg-gray-100"}`}
+                  >
+                    <b>B</b>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setTextoItalico(!textoItalico)}
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center ${textoItalico ? "bg-blue-600 text-white" : "hover:bg-gray-100"}`}
+                  >
+                    <i>I</i>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setTextoSublinhado(!textoSublinhado)}
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center ${textoSublinhado ? "bg-blue-600 text-white" : "hover:bg-gray-100"}`}
+                  >
+                    U
+                  </button>
+
+                  <span className="w-px h-5 bg-gray-300 max-[420px]:hidden" />
+
+                  <button
+                    type="button"
+                    onClick={() => alterarCor(i, "bg-[#C06161]")}
+                    className="w-5 h-5 rounded-full bg-[#C06161]"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => alterarCor(i, "bg-[#6196C0]")}
+                    className="w-5 h-5 rounded-full bg-[#6196C0]"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => alterarCor(i, "bg-[#C0BD61]")}
+                    className="w-5 h-5 rounded-full bg-[#C0BD61]"
+                  />
+                </div>
               )}
 
               {isAdmin && editMode ? (
-                <BlocoEditavel
-                  id={i}
-                  content={post.texto}
-                  className="w-full h-full bg-transparent resize-none outline-none text-black text-sm md:text-base font-medium text-center break-words pt-6"
-                  onFocusEditor={(editorInstance) => {
-                    alterarTexto(i, editorInstance.getHTML());
+                <textarea
+                  disabled={isSaving}
+                  value={post.texto}
+                  style={{
+                    fontWeight: textoNegrito ? "bold" : "normal",
+                    fontStyle: textoItalico ? "italic" : "normal",
+                    textDecoration: textoSublinhado ? "underline" : "none",
                   }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!isSaving) setPostSelecionado(i);
+                  }}
+                  onChange={(e) => alterarTexto(i, e.target.value)}
+                  className="w-full h-full bg-transparent resize-none outline-none text-black text-sm md:text-base font-medium text-center break-words pt-6"
+                  maxLength={120}
                 />
               ) : (
-                <div 
-                  className="text-black text-sm md:text-base font-medium break-words whitespace-pre-wrap"
-                  dangerouslySetInnerHTML={{ __html: post.texto }}
-                />
+                <p className="text-black text-sm md:text-base font-medium break-words whitespace-pre-wrap">
+                  {post.texto}
+                </p>
               )}
             </div>
           ))}

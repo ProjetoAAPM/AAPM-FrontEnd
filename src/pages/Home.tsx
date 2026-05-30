@@ -106,7 +106,7 @@ function Home({ modoAdmin = false, usuario }: HomeProps) {
         />
       </section>
 
-      <section className={`w-full px-3 sm:px-5 lg:px-8 py-6 flex items-center justify-center ${modoAdmin ? "mt-4 sm:mt-6" : ""}`}>
+      <section className={`w-full px-3 sm:px-5 lg:px-8 py-1 flex items-center justify-center ${modoAdmin ? "mt-4 sm:mt-1" : ""}`}>
         <Sugestoes modoAdmin={modoAdmin} />
       </section>
     </div>
