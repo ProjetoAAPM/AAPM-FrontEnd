@@ -87,7 +87,6 @@ export default function BlocoEditavel({
         }
       }}
     >
-      {/* TOOLBAR FLUTUANTE PREMIUM RESPONSIVA */}
       {editMode && isActive && (
         <div
           className="
@@ -104,7 +103,7 @@ export default function BlocoEditavel({
           "
           onClick={(e) => e.stopPropagation()}
         >
-          {/* GRUPO PRINCIPAL: Sempre Visível (Perfeito para 360px) */}
+
           <div className="flex items-center gap-1">
             <button
               type="button"
@@ -150,7 +149,6 @@ export default function BlocoEditavel({
               •=
             </button>
             
-            {/* Seletor de Cor rápido sempre à mão */}
             <div className="relative w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-800 transition-all">
               <input
                 type="color"
@@ -162,10 +160,8 @@ export default function BlocoEditavel({
             </div>
           </div>
 
-          {/* DIVISOR VISUAL */}
           <span className="w-[1px] h-5 bg-slate-700 block" />
 
-          {/* DESKTOP VIEW (Visível acima de 768px, oculto no mobile) */}
           <div className="hidden md:flex items-center gap-1.5">
             <select
               className="text-xs bg-slate-800 border border-slate-700 rounded-lg px-2 py-1.5 cursor-pointer outline-none text-slate-200"
@@ -207,7 +203,6 @@ export default function BlocoEditavel({
             </button>
           </div>
 
-          {/* MOBILE MENU (Hambúrguer / "Mais Opções" para telas de 360px até 768px) */}
           <div className="relative block md:hidden">
             <button
               type="button"
@@ -222,7 +217,6 @@ export default function BlocoEditavel({
               <span className="w-4 h-0.5 bg-current rounded-full" />
             </button>
 
-            {/* POPOVER SUSPENSO (MENU HAMBÚRGUER FLUTUANTE) */}
             {menuMaisAberto && (
               <div
                 className="
