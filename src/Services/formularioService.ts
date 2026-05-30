@@ -29,7 +29,14 @@ export const formularioService = {
     }
 
     try {
-      return JSON.parse(data.texto);
+      const formularios = JSON.parse(data.texto);
+
+      console.log(
+        "SUPABASE RETORNOU:",
+        formularios
+      );
+
+      return formularios;
     } catch (err) {
       console.error("Erro ao converter formulários:", err);
       return [];
@@ -52,6 +59,16 @@ export const formularioService = {
       ...formularios,
       formularioComId,
     ];
+
+    console.log(
+      "SALVANDO FORMULÁRIO:",
+      formularioComId
+    );
+
+    console.log(
+      "NOVA LISTA:",
+      novaLista
+    );
 
     const { error } = await supabase
       .from("conteudo_site")

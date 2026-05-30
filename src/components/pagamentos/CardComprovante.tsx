@@ -8,6 +8,9 @@ interface ModalProps {
     onClose: () => void;
     onApprove: (id: number) => void;
     onReject: (id: number) => void;
+    isApproving?: boolean;
+    isRejecting?: boolean;
+    isLoading?: boolean;
 }
 
 const CardComprovante = ({
@@ -15,6 +18,9 @@ const CardComprovante = ({
     onClose,
     onApprove,
     onReject,
+    isApproving = false,
+    isRejecting = false,
+    isLoading = false,
 }: ModalProps) => {
 
     const [imageLoaded, setImageLoaded] = useState(false);
@@ -58,8 +64,9 @@ const CardComprovante = ({
                     </div>
 
                     <button
+                        disabled={isLoading}
                         onClick={onClose}
-                        className="text-white text-[35px] leading-none font-light hover:opacity-70 transition-opacity pr-2"
+                        className={`text-white text-[35px] leading-none font-light pr-2 ${isLoading ? "opacity-50 cursor-not-allowed" : "hover:opacity-70 transition-opacity"}`}
                     >
 
                         ×
@@ -231,24 +238,22 @@ const CardComprovante = ({
                     <div className="flex flex-row justify-center gap-4 w-full mt-2">
 
                         <button
-                            onClick={() =>
-                                onApprove(data.id)
-                            }
-                            className="w-[160px] sm:w-[200px] h-[50px] rounded-full bg-[#63B3ED] text-white font-bold text-[18px] shadow-md hover:brightness-105 active:scale-[0.98] transition-all"
+                            disabled={isLoading}
+                            onClick={() => onApprove(data.id)}
+                            className={`w-[160px] sm:w-[200px] h-[50px] rounded-full bg-[#63B3ED] text-white font-bold text-[18px] shadow-md transition-all ${isLoading ? "opacity-75 cursor-not-allowed" : "hover:brightness-105 active:scale-[0.98]"}`}
                         >
 
-                            Aprovar
+                            {isApproving ? "Aprovando..." : "Aprovar"}
 
                         </button>
 
                         <button
-                            onClick={() =>
-                                onReject(data.id)
-                            }
-                            className="w-[160px] sm:w-[200px] h-[50px] rounded-full bg-[#C53030] text-white font-bold text-[18px] shadow-md hover:brightness-105 active:scale-[0.98] transition-all"
+                            disabled={isLoading}
+                            onClick={() => onReject(data.id)}
+                            className={`w-[160px] sm:w-[200px] h-[50px] rounded-full bg-[#C53030] text-white font-bold text-[18px] shadow-md transition-all ${isLoading ? "opacity-75 cursor-not-allowed" : "hover:brightness-105 active:scale-[0.98]"}`}
                         >
 
-                            Reprovar
+                            {isRejecting ? "Reprovando..." : "Reprovar"}
 
                         </button>
 

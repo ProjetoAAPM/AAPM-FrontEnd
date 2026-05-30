@@ -16,6 +16,8 @@ const PagamentoAdmin = () => {
     const [itemParaModal, setItemParaModal] = useState<IPagamento | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isApproving, setIsApproving] = useState(false);
+    const [isRejecting, setIsRejecting] = useState(false);
 
     const carregarPagamentos = async () => {
         setLoading(true);
@@ -62,22 +64,28 @@ const PagamentoAdmin = () => {
     }), [lista]);
 
     const handleApprove = async (id: number) => {
+        setIsApproving(true);
         try {
             await pagamentoAdminService.aprovarPagamento(id);
             await carregarPagamentos();
             setItemParaModal(null);
         } catch (err: any) {
             alert(err.message || "Erro ao aprovar pagamento");
+        } finally {
+            setIsApproving(false);
         }
     };
 
     const handleReject = async (id: number) => {
+        setIsRejecting(true);
         try {
             await pagamentoAdminService.reprovarPagamento(id);
             await carregarPagamentos();
             setItemParaModal(null);
         } catch (err: any) {
             alert(err.message || "Erro ao reprovar pagamento");
+        } finally {
+            setIsRejecting(false);
         }
     };
 
@@ -111,7 +119,7 @@ const PagamentoAdmin = () => {
                             <div className="flex flex-row items-center gap-2 relative z-40">
                                 <button
                                     onClick={() => setShowDropdown(!showDropdown)}
-                                    className="w-12 h-12 md:w-16 md:h-16 cursor-pointer min-[1330px]:w-16 min-[1330px]:h-16 min-[1330px]:lg:mt-3"
+                                    className="w-12 h-12 md:w-12 md:h-12 cursor-pointer min-[1330px]:w-16 min-[1330px]:h-16 min-[1330px]:lg:mt-3"
                                     aria-label="Filtro"
                                 >
                                     <img
@@ -120,21 +128,22 @@ const PagamentoAdmin = () => {
                                         className="w-full h-full transform object-contain"
                                     />
                                 </button>
-                                <span className="text-white font-bold text-[1rem] md:text-xl min-[1330px]:text-xl min-[1330px]:lg:-ml-4">
+                                <span className="text-white font-bold text-[1rem] md:text-xl min-[1330px]:text-xl min-[1330px]:lg:mt-3">
                                     {filtro}
                                 </span>
                             </div>
 
                             <button
+                                disabled={loading}
                                 onClick={handleAtualizar}
-                                className="bg-[#C83D3D] text-white rounded-full h-[38px] md:h-[42px] px-5 md:px-8 shadow-lg font-bold hover:bg-[#b03535] transition-all text-[0.9rem] md:text-lg"
+                                className={`bg-[#C83D3D] text-white rounded-full h-[38px] md:h-[42px] px-5 md:px-8 shadow-lg font-bold hover:bg-[#b03535] transition-all text-[0.9rem] md:text-lg ${loading ? "opacity-75 cursor-not-allowed" : ""}`}
                             >
-                                Atualizar
+                                {loading ? "Carregando..." : "Atualizar"}
                             </button>
                         </div>
 
                         {showDropdown && (
-                            <div className="absolute top-12 md:top-14 left-0 bg-white rounded-xl shadow-2xl py-2 z-50 w-40 md:w-48 min-[1330px]:top-15">
+                            <div className="absolute top-12 md:top-14 left-0 bg-white rounded-xl shadow-2xl py-2 z-50 w-40 md:w-48 min-[1330px]:top-15 md:translate-y-3">
                                 {["Todos", "Pendentes", "Aprovados", "Reprovados"].map((opt) => (
                                     <button
                                         key={opt}
@@ -154,7 +163,7 @@ const PagamentoAdmin = () => {
                     <div className="flex-1 bg-white rounded-[12px] shadow-inner overflow-hidden flex flex-col min-h-[400px] min-[1330px]:min-h-0">
                         <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
                             <div className="flex-1 min-h-0 overflow-y-auto scroll-modern p-4 md:p-5">
-                                {loading ? (
+                                {loading && lista.length === 0 ? (
                                     <div className="text-center py-20 text-gray-500">
                                         Carregando pagamentos...
                                     </div>
@@ -198,6 +207,9 @@ const PagamentoAdmin = () => {
                     onClose={() => setItemParaModal(null)}
                     onApprove={handleApprove}
                     onReject={handleReject}
+                    isApproving={isApproving}
+                    isRejecting={isRejecting}
+                    isLoading={isApproving || isRejecting}
                 />
             )}
         </div>
