@@ -1,6 +1,8 @@
 import fundo from "../../assets/images/FundoNotas.png";
 import { useEffect, useState } from "react";
 import { buscarConteudo, salvarConteudo } from "../../Services/conteudoService";
+import BlocoEditavel from "../admin/BlocoEditavel";
+import { useEditMode } from "../../contexts/modo_editar"; // Importado o contexto para ativar o id
 
 interface PostIt {
   cor: string;
@@ -15,6 +17,7 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [postSelecionado, setPostSelecionado] = useState<number | null>(null);
+  const { setActiveEditorId } = useEditMode(); // Resgatando a função que ativa o toolbar globalmente
 
   const postsPadrao: PostIt[] = [
     { cor: "bg-[#C0BD61]", texto: "" },
@@ -74,6 +77,7 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
         alert("Salvo com sucesso!");
         setEditMode(false);
         setPostSelecionado(null);
+        setActiveEditorId(""); // Limpa o editor ativo ao salvar
       } else {
         alert("Erro ao salvar no banco de dados!");
       }
@@ -123,7 +127,7 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
         </div>
 
         {isAdmin && (
-          <div className="self-center sm:ml-auto md:mr-[70px] xl:mr-[190px] 2xl:mr-[180px]">
+          <div className="self-center sm:ml-auto md:mr-[70px] xl:mr-[190px] 2xl:mr-[270px]">
             <button
               onClick={() => {
                 if (editMode) {
@@ -133,9 +137,9 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
                 }
               }}
               className="bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-semibold rounded-full
-              px-5 sm:px-6 md:px-7 py-2
+              px-5 sm:px-6 md:px-7 py-3
               text-sm sm:text-base
-              min-w-[120px] md:min-w-[150px]
+              min-w-[120px] md:min-w-[170px]
               whitespace-nowrap"
             >
               {editMode ? "Salvar" : "Editar"}
@@ -156,54 +160,57 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
               onClick={() => {
                 if (isAdmin && editMode) {
                   setPostSelecionado(i);
+                  setActiveEditorId(String(i)); // Sincroniza o clique do card diretamente com o id do BlocoEditavel
                 }
               }}
               className={`relative w-[110px] sm:w-[130px] md:w-[140px] lg:w-[140px] xl:w-[190px] 2xl:w-[200px] aspect-square ${post.cor} shadow-md p-3 flex flex-col items-center justify-center text-center cursor-pointer transition-all ${isAdmin && editMode && postSelecionado === i ? "border-[4px] border-dashed border-blue-500" : ""}`}
             >
               {isAdmin && editMode && postSelecionado === i && (
-                <div className="absolute -top-10 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white px-2 py-1 rounded-full shadow-lg z-50">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      alterarCor(i, "bg-[#C06161]");
-                    }}
-                    className="w-5 h-5 rounded-full bg-[#C06161] border-2 border-white shadow-md"
-                  />
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      alterarCor(i, "bg-[#6196C0]");
-                    }}
-                    className="w-5 h-5 rounded-full bg-[#6196C0] border-2 border-white shadow-md"
-                  />
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      alterarCor(i, "bg-[#C0BD61]");
-                    }}
-                    className="w-5 h-5 rounded-full bg-[#C0BD61] border-2 border-white shadow-md"
-                  />
-                </div>
+                <>
+                  {/* Cápsula de Cores Original */}
+                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white px-2 py-1 rounded-full shadow-lg z-50">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        alterarCor(i, "bg-[#C06161]");
+                      }}
+                      className="w-5 h-5 rounded-full bg-[#C06161] border-2 border-white shadow-md"
+                    />
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        alterarCor(i, "bg-[#6196C0]");
+                      }}
+                      className="w-5 h-5 rounded-full bg-[#6196C0] border-2 border-white shadow-md"
+                    />
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        alterarCor(i, "bg-[#C0BD61]");
+                      }}
+                      className="w-5 h-5 rounded-full bg-[#C0BD61] border-2 border-white shadow-md"
+                    />
+                  </div>
+                </>
               )}
 
               {isAdmin && editMode ? (
-                <textarea
-                  value={post.texto}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setPostSelecionado(i);
-                  }}
-                  onChange={(e) => alterarTexto(i, e.target.value)}
+                <BlocoEditavel
+                  id={i}
+                  content={post.texto}
                   className="w-full h-full bg-transparent resize-none outline-none text-black text-sm md:text-base font-medium text-center break-words pt-6"
-                  maxLength={120}
+                  onFocusEditor={(editorInstance) => {
+                    alterarTexto(i, editorInstance.getHTML());
+                  }}
                 />
               ) : (
-                <p className="text-black text-sm md:text-base font-medium break-words whitespace-pre-wrap">
-                  {post.texto}
-                </p>
+                <div 
+                  className="text-black text-sm md:text-base font-medium break-words whitespace-pre-wrap"
+                  dangerouslySetInnerHTML={{ __html: post.texto }}
+                />
               )}
             </div>
           ))}
