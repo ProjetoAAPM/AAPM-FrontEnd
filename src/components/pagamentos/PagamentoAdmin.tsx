@@ -90,18 +90,18 @@ const PagamentoAdmin = () => {
     };
 
     return (
-        <div className="bg-[#0F121D] min-h-screen flex flex-col pt-24 md:pt-28 px-3 md:px-6 min-[1330px]:h-screen min-[1330px]:w-screen min-[1330px]:pt-20 min-[1330px]:overflow-hidden min-[1330px]:px-0">
-            
+        <div className="bg-[#101625] min-h-screen flex flex-col pt-24 md:pt-28 px-3 md:px-6 min-[1330px]:h-screen min-[1330px]:w-screen min-[1330px]:pt-20 min-[1330px]:overflow-hidden min-[1330px]:px-0">
+
             <div className="w-full flex flex-col gap-6 flex-1 pb-6 min-[1330px]:flex-row min-[1330px]:gap-8 min-[1330px]:min-h-0 min-[1330px]:h-full min-[1330px]:h-[calc(100vh-140px)] min-[1330px]:pb-4">
 
-                <aside className="w-full bg-white rounded-[15px] p-4 md:p-6 shadow-xl flex flex-col min-[1330px]:w-[415px] min-[1330px]:rounded-none min-[1330px]:rounded-r-[15px] min-[1330px]:p-10 min-[1330px]:h-full min-[1330px]:mb-2 min-[1330px]:-mt">
+                <aside className="w-full bg-white rounded-[15px] p-4 md:p-6 shadow-xl flex flex-col min-[1330px]:w-[415px] min-[1330px]:rounded-none min-[1330px]:rounded-r-[5px] min-[1330px]:p-10 min-[1330px]:h-full min-[1330px]:mb-2">
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 min-[1330px]:flex min-[1330px]:flex-col min-[1330px]:justify-end min-[1330px]:gap-10 min-[1330px]:lg:mt-4">
-                        
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 min-[1330px]:flex min-[1330px]:flex-col min-[1330px]:justify-end min-[1330px]:gap-10.5 min-[1330px]:lg:mt-9.5">
+
                         {Object.entries(stats).map(([key, value]) => (
                             <div
                                 key={key}
-                                className="bg-[#0F121D] text-white rounded-[15px] flex items-center justify-center gap-2 h-16 md:h-20 min-[1330px]:rounded-[20px] min-[1330px]:min-h-[100px] min-[1330px]:px-3 text-center"
+                                className="bg-[#101625] text-white rounded-[15px] flex items-center justify-center gap-2 h-16 md:h-20 lg:h-35 min-[1330px]:rounded-[20px] min-[1330px]:min-h-[100px] min-[1330px]:px-3 text-center min-[1330px]:w-[368px]"
                             >
                                 <span className="text-[1rem] md:text-[1.1rem] min-[1330px]:text-[1.3rem] font-bold capitalize">
                                     {key}: {value}
@@ -113,7 +113,7 @@ const PagamentoAdmin = () => {
                 </aside>
 
                 <main className="flex-1 flex flex-col min-[1330px]:min-h-0 min-[1330px]:overflow-hidden min-[1330px]:px-0 min-[1330px]:lg:pr-10">
-    
+
                     <div className="flex flex-col gap-4 flex-shrink-0 relative mb-3 min-[1330px]:mb-0">
                         <div className="flex items-center justify-between gap-4">
                             <div className="flex flex-row items-center gap-2 relative z-40">
@@ -128,6 +128,7 @@ const PagamentoAdmin = () => {
                                         className="w-full h-full transform object-contain"
                                     />
                                 </button>
+
                                 <span className="text-white font-bold text-[1rem] md:text-xl min-[1330px]:text-xl min-[1330px]:lg:mt-3">
                                     {filtro}
                                 </span>
@@ -152,66 +153,67 @@ const PagamentoAdmin = () => {
                         )}
                     </div>
 
-                    <div className="flex-1 bg-white rounded-[12px] shadow-inner overflow-hidden flex flex-col min-h-[400px] min-[1330px]:min-h-0 relative">
-                        
-                        <button 
-                            onClick={handleAtualizar}
-                            disabled={loading}
-                            className="absolute top-4 right-4 z-30 p-2 text-gray-500 hover:text-[#0F121D] hover:bg-gray-100 active:scale-95 rounded-full transition-all duration-200 disabled:opacity-50"
-                            title="Atualizar pagamentos"
-                        >
-                            <svg 
-                                xmlns="http://www.w3.org/2000/svg" 
-                                fill="none" 
-                                viewBox="0 0 24 24" 
-                                strokeWidth={2.5} 
-                                stroke="currentColor" 
-                                className={`w-5 h-5 sm:w-6 sm:h-6 ${loading ? "animate-spin" : ""}`}
+                    <div className="flex-1 bg-[#1B263B] rounded-[12px] shadow-inner overflow-hidden flex flex-col min-h-[400px] min-[1330px]:min-h-0">
+
+                        <div className="flex justify-end px-4 pt-4 pb-3 flex-shrink-0">
+                            <button
+                                onClick={handleAtualizar}
+                                disabled={loading}
+                                className="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-lg text-[#1B263B] hover:bg-gray-100 active:scale-95 transition-all duration-200 disabled:opacity-50"
+                                title="Atualizar pagamentos"
                             >
-                                <path 
-                                    strokeLinecap="round" 
-                                    strokeLinejoin="round" 
-                                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" 
-                                />
-                            </svg>
-                        </button>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={2.5}
+                                    stroke="currentColor"
+                                    className={`w-5 h-5 sm:w-6 sm:h-6 ${loading ? "animate-spin" : ""}`}
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
 
-                        <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
+                        <div className="flex-1 min-h-0 overflow-y-auto scroll-modern px-4 md:px-5 pb-4">
+                            {loading && lista.length === 0 ? (
+                                <div className="text-center py-20 text-gray-300">
+                                    Carregando pagamentos...
+                                </div>
+                            ) : error ? (
+                                <div className="flex flex-col items-center justify-center py-20 text-center h-full">
+                                    <p className="text-red-300 mb-4 text-lg">
+                                        {error}
+                                    </p>
 
-                            <div className="flex-1 min-h-0 overflow-y-auto scroll-modern p-4 md:p-5 pt-14 md:pt-14">
-                                {loading && lista.length === 0 ? (
-                                    <div className="text-center py-20 text-gray-500">
-                                        Carregando pagamentos...
-                                    </div>
-                                ) : error ? (
-                                    <div className="flex flex-col items-center justify-center py-20 text-center h-full">
-                                        <p className="text-red-500 mb-4 text-lg">
-                                            {error}
-                                        </p>
-                                        <button
-                                            onClick={handleAtualizar}
-                                            className="bg-[#0F121D] text-white px-8 py-3 rounded-full font-bold hover:bg-slate-800 transition"
-                                        >
-                                            Tentar novamente
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="flex flex-col gap-3 md:gap-5 pb-4">
-                                        {lista.map((p) => (
-                                            <CardPagamento
-                                                key={p.id}
-                                                data={p}
-                                                onOpenComprovante={() => setItemParaModal(p)}
-                                            />
-                                        ))}
-                                        {lista.length === 0 && (
-                                            <div className="text-center py-20 text-gray-400 font-bold uppercase text-[1rem]">
-                                                Nenhum registro encontrado.
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
+                                    <button
+                                        onClick={handleAtualizar}
+                                        className="bg-white text-[#1B263B] px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition"
+                                    >
+                                        Tentar novamente
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="flex flex-col gap-3 md:gap-5 pb-4">
+                                    {lista.map((p) => (
+                                        <CardPagamento
+                                            key={p.id}
+                                            data={p}
+                                            onOpenComprovante={() => setItemParaModal(p)}
+                                        />
+                                    ))}
+
+                                    {lista.length === 0 && (
+                                        <div className="text-center py-20 text-gray-300 font-bold uppercase text-[1rem]">
+                                            Nenhum registro encontrado.
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </main>

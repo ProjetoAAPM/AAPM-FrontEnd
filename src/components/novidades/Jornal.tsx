@@ -2,12 +2,10 @@ import { useEffect, useState } from "react";
 import { useEditMode } from "../../contexts/modo_editar";
 import BlocoEditavel from "../admin/BlocoEditavel";
 import { buscarConteudo, salvarImagem, buscarImagem } from "../../Services/conteudoService";
-
 import img1 from "../../assets/images/formatura2.png";
 import img2 from "../../assets/images/carros.jpg";
 import img3 from "../../assets/images/medalhasDesafio.jpg";
 import img4 from "../../assets/images/senaiPredio.jpg";
-
 import iconeEditar from "../../assets/icons/icone_editar.png";
 
 export default function Jornal() {
@@ -76,7 +74,7 @@ export default function Jornal() {
     const IconeEditarOverlay = () => (
         <img
             src={iconeEditar}
-            className="absolute top-2 right-2 w-5 h-5 z-20 pointer-events-none"
+            className="absolute top-4 right-2 w-5 h-5 z-20 pointer-events-none"
         />
     );
 
@@ -125,19 +123,21 @@ export default function Jornal() {
         content: string,
         children: any
     ) => (
-        editMode ? (
-            <div className="relative">
-                <IconeEditarOverlay />
+            editMode ? (
+            <div className="relative jornal-wrapper">
 
                 <BlocoEditavel
                     id={id}
                     content={content}
-                    className="text-[0.9rem] sm:text-[1rem] md:text-[1rem] lg:text-[1rem] xl:text-[1.05rem] 2xl:text-[1.05rem] leading-relaxed text-justify"
+                    className="jornal-texto"
                 />
             </div>
         ) : (
-            <div className="text-[0.9rem] sm:text-[1rem] md:text-[1rem] lg:text-[1rem] xl:text-[1.05rem] 2xl:text-[1.05rem] leading-relaxed text-justify">
-                {children}
+            <div className="jornal-wrapper">
+                <div
+                    className="jornal-texto"
+                    dangerouslySetInnerHTML={{ __html: content }}
+                />
             </div>
         )
     );

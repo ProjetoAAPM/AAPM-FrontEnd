@@ -106,9 +106,9 @@ export default function Sugestoes({ modoAdmin = false }: SugestoesProps) {
             <div className="w-full max-w-[95%] sm:max-w-[800px] md:max-w-[1100px] lg:max-w-[1300px] flex items-center justify-between relative mb-6 mt-6 min-[360px]:mt-10 md:mt-16 xl:mt-10">
               <button onClick={() => setShowDropdown(!showDropdown)} className="flex items-center gap-2 sm:gap-5 md:gap-8 relative z-40">
                 <div className="relative w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10">
-                  <img src={filtroIcon} alt="filtro" className="relative top-[10px] sm:top-[15px] w-full h-full scale-[1.1] sm:scale-[1.3] object-contain md:translate-y-2" />
+                  <img src={filtroIcon} alt="filtro" className="relative top-[10px] sm:top-[15px] w-full h-full scale-[1.1] sm:scale-[1.3] object-contain md:translate-y-1" />
                 </div>
-                <span className="text-white font-bold text-sm sm:text-[1.1rem] md:text-xl translate-y-2.5 sm:translate-y-4 md:translate-y-6.5 -translate-x-1 sm:-translate-x-3 md:-translate-x-8.5">
+                <span className="text-white font-bold text-sm sm:text-[1.1rem] md:text-xl translate-y-2.5 sm:translate-y-4 md:translate-y-6.5 -translate-x-1 sm:-translate-x-3 md:-translate-x-5.5">
                   {filtro}
                 </span>
               </button>

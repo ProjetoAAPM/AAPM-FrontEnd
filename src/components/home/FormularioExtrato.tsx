@@ -203,8 +203,10 @@ export default function FormularioExtrato({
                       />
                     ))}
 
-                    {listaRenderizada.length === 0 && !mostrarFormulario && (
-                      <div className="py-20 sm:py-32 flex items-center justify-center text-gray-500 font-semibold text-sm sm:text-base text-center px-4">
+                    {/* {listaRenderizada.length === 0 && !mostrarFormulario && (
+                      <div className="py-20 sm:py-32 flex items-center justify-center text-gray-500 font-semibold text-sm sm:text-base text-center px-4"> */}
+                      {listaRenderizada.length === 0 && !mostrarFormulario && (
+                        <div className="absolute inset-0 flex items-center justify-center text-center px-4 text-gray-500 font-semibold text-sm sm:text-base translate-y-[10px] sm:translate-y-[15px] lg:-translate-y-[5px]">  
                         {modoAdmin
                           ? "Nenhum formulário cadastrado ainda."
                           : "Novos formulários aparecerão aqui quando forem publicados."}
