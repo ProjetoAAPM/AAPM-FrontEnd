@@ -7,15 +7,20 @@ type Usuario = {
 };
 
 type ExtratoItem = {
-  tipo: "premio";
-  premio: string;
+  tipo: "premio" | "pontos" | "resgate" | "ganho";
+  premio?: string;
+  pontos?: number;
+  valor?: number;
+  descricao?: string;
+  mensagem?: string;
 };
 
 type PontuacaoProps = {
   pontos?: number;
-  progresso?: number;      
+  progresso?: number;
   loading: boolean;
   usuario?: Usuario;
+  animar?: boolean;
   onPremiosCalculados?: (premios: ExtratoItem[]) => void;
 };
 
@@ -24,6 +29,7 @@ export default function Pontuacao({
   progresso = 0,
   loading,
   usuario,
+  animar = false,
   onPremiosCalculados,
 }: PontuacaoProps) {
   return (
@@ -39,14 +45,17 @@ export default function Pontuacao({
           <>
             <div className="flex flex-col items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
               <BarraPontos
-                progresso={pontos}                    
+                progresso={pontos}
                 premium={usuario?.premium}
                 onPremiosCalculados={onPremiosCalculados}
               />
-              <PorcoPorcentagem 
-                progresso={progresso}             
+
+              <PorcoPorcentagem
+                progresso={progresso}
+                animar={animar}
               />
             </div>
+
             <Moeda
               total={pontos}
               premium={usuario?.premium}

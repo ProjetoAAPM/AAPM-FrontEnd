@@ -24,10 +24,23 @@ interface HomeProps {
 }
 
 function Home({ modoAdmin = false, usuario }: HomeProps) {
-  const [progresso, setProgresso] = useState<Progresso>({ pontos: 0, porcentagem: 0 });
+  const [progresso, setProgresso] = useState<Progresso>({
+    pontos: 0,
+    porcentagem: 0,
+  });
+
   const [extrato, setExtrato] = useState<ExtratoItem[]>([]);
   const [premiosDaBarra, setPremiosDaBarra] = useState<ExtratoItem[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [animarPorco, setAnimarPorco] = useState(false);
+  const [animacaoPendente, setAnimacaoPendente] = useState(false);
+  const [progressoPendente, setProgressoPendente] =
+    useState<Progresso | null>(null);
+
+  function usuarioEstaPresente() {
+    return document.visibilityState === "visible" && document.hasFocus();
+  }
 
   async function carregarDados() {
     if (modoAdmin) {
@@ -37,9 +50,14 @@ function Home({ modoAdmin = false, usuario }: HomeProps) {
 
     try {
       setLoading(true);
+
       const [resProgresso, resExtrato] = await Promise.all([
-        fetch("http://localhost:5000/usuario/meu-progresso", { credentials: "include" }),
-        fetch("http://localhost:5000/usuario/extrato-pontos", { credentials: "include" }),
+        fetch("http://localhost:5000/usuario/meu-progresso", {
+          credentials: "include",
+        }),
+        fetch("http://localhost:5000/usuario/extrato-pontos", {
+          credentials: "include",
+        }),
       ]);
 
       if (!resProgresso.ok || !resExtrato.ok) {
@@ -48,23 +66,55 @@ function Home({ modoAdmin = false, usuario }: HomeProps) {
 
       const dataProgresso = await resProgresso.json();
       const dataExtrato = await resExtrato.json();
-      
-      setProgresso({
+
+      const novoProgresso: Progresso = {
         pontos: dataProgresso?.pontos_totais || 0,
         porcentagem: dataProgresso?.porcentagem_cofre || 0,
-      });
+      };
 
-      const extratoFormatado: ExtratoItem[] = (dataExtrato || []).map((item: any) => {
-        const ehGanho = item.tipo === "ganho";
-        const pontosNumericos = parseInt(item.pontos.replace(/[^\d-]/g, '')) * (ehGanho ? 1 : -1);
-        return {
-          tipo: ehGanho ? "pontos" : "resgate",
-          mensagem: item.titulo,
-          descricao: item.subtitulo,
-          pontos: pontosNumericos,
-          premio: item.data,
-        };
-      });
+      const ultimoGanho = (dataExtrato || []).find(
+        (item: any) => item.tipo === "ganho"
+      );
+
+      if (ultimoGanho) {
+        const idUltimoGanho = `${ultimoGanho.titulo}-${ultimoGanho.subtitulo}-${ultimoGanho.data}-${ultimoGanho.pontos}`;
+        const ultimoGanhoVisto = sessionStorage.getItem(
+          "ultimo_ganho_animado"
+        );
+
+        if (idUltimoGanho !== ultimoGanhoVisto) {
+          if (usuarioEstaPresente()) {
+            setProgresso(novoProgresso);
+            setAnimarPorco(true);
+            sessionStorage.setItem("ultimo_ganho_animado", idUltimoGanho);
+          } else {
+            setProgressoPendente(novoProgresso);
+            setAnimacaoPendente(true);
+          }
+        } else {
+          setProgresso(novoProgresso);
+        }
+      } else {
+        setProgresso(novoProgresso);
+      }
+
+      const extratoFormatado: ExtratoItem[] = (dataExtrato || []).map(
+        (item: any) => {
+          const ehGanho = item.tipo === "ganho";
+
+          const pontosNumericos =
+            parseInt(String(item.pontos).replace(/[^\d-]/g, "")) *
+            (ehGanho ? 1 : -1);
+
+          return {
+            tipo: ehGanho ? "pontos" : "resgate",
+            mensagem: item.titulo,
+            descricao: item.subtitulo,
+            pontos: pontosNumericos,
+            premio: item.data,
+          };
+        }
+      );
 
       setExtrato(extratoFormatado);
     } catch (error) {
@@ -80,33 +130,78 @@ function Home({ modoAdmin = false, usuario }: HomeProps) {
     }
   }, [usuario, modoAdmin]);
 
+  useEffect(() => {
+    function executarAnimacaoPendente() {
+      if (!usuarioEstaPresente()) return;
+
+      if (animacaoPendente && progressoPendente) {
+        setProgresso(progressoPendente);
+        setAnimarPorco(true);
+        setAnimacaoPendente(false);
+        setProgressoPendente(null);
+      } else if (usuario && !modoAdmin) {
+        carregarDados();
+      }
+    }
+
+    window.addEventListener("focus", executarAnimacaoPendente);
+    document.addEventListener("visibilitychange", executarAnimacaoPendente);
+
+    return () => {
+      window.removeEventListener("focus", executarAnimacaoPendente);
+      document.removeEventListener("visibilitychange", executarAnimacaoPendente);
+    };
+  }, [usuario, modoAdmin, animacaoPendente, progressoPendente]);
+
+  useEffect(() => {
+    if (!animarPorco) return;
+
+    const timer = setTimeout(() => {
+      setAnimarPorco(false);
+    }, 1600);
+
+    return () => clearTimeout(timer);
+  }, [animarPorco]);
+
   return (
     <div className="w-full overflow-x-hidden bg-[#101625]">
       {!modoAdmin && (
         <section className="w-full px-3 sm:px-5 lg:px-8 mt-25 flex items-center justify-center">
           <Pontuacao
-            pontos={progresso.pontos}        
-            progresso={progresso.porcentagem}   
+            pontos={progresso.pontos}
+            progresso={progresso.porcentagem}
             loading={loading}
             usuario={usuario}
+            animar={animarPorco}
             onPremiosCalculados={setPremiosDaBarra}
           />
         </section>
       )}
 
-      <section className={`w-full px-3 sm:px-5 lg:px-8 py-6 flex items-center justify-center ${modoAdmin ? "mt-20 sm:mt-24 lg:mt-18" : ""}`}>
+      <section
+        className={`w-full px-3 sm:px-5 lg:px-8 py-6 flex items-center justify-center ${
+          modoAdmin ? "mt-20 sm:mt-24 lg:mt-18" : ""
+        }`}
+      >
         <FormularioExtrato
           extrato={
             modoAdmin
               ? [...extrato, ...premiosDaBarra]
-              : [...extrato, ...premiosDaBarra.filter(item => item.tipo === "premio")]
+              : [
+                  ...extrato,
+                  ...premiosDaBarra.filter((item) => item.tipo === "premio"),
+                ]
           }
           modoAdmin={modoAdmin}
           premium={usuario?.premium}
         />
       </section>
 
-      <section className={`w-full px-3 sm:px-5 lg:px-8 py-1 flex items-center justify-center ${modoAdmin ? "mt-4 sm:mt-1" : ""}`}>
+      <section
+        className={`w-full px-3 sm:px-5 lg:px-8 py-1 flex items-center justify-center ${
+          modoAdmin ? "mt-4 sm:mt-1" : ""
+        }`}
+      >
         <Sugestoes modoAdmin={modoAdmin} />
       </section>
     </div>

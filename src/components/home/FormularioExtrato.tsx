@@ -52,16 +52,6 @@ export default function FormularioExtrato({
     }
   };
 
-  useEffect(() => {
-    carregarFormularios();
-
-    const interval = setInterval(() => {
-      carregarFormularios();
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   const salvarFormulario = async (dados: FormularioData) => {
     try {
       await formularioService.criarFormulario(dados);
@@ -159,7 +149,7 @@ export default function FormularioExtrato({
               </div>
             )}
 
-            <div className="bg-white rounded-[12px] shadow-md w-full max-w-[95%] sm:max-w-[800px] md:max-w-[1100px] lg:max-w-[1300px] mx-auto h-[340px] min-[360px]:h-[380px] sm:h-[420px] md:h-[340px] lg:h-[380px] xl:h-[420px] flex flex-col overflow-hidden relative">
+            <div className="bg-white rounded-[12px] shadow-md w-full max-w-[95%] sm:max-w-[800px] md:max-w-[1100px] lg:max-w-[1300px] mx-auto h-[340px] min-[360px]:h-[380px] sm:h-[420px] md:h-[340px] lg:h-[380px] xl:h-[550px] flex flex-col overflow-hidden relative">
               
               {!modoAdmin && (
                 <button 
@@ -214,8 +204,10 @@ export default function FormularioExtrato({
                     ))}
 
                     {listaRenderizada.length === 0 && !mostrarFormulario && (
-                      <div className="py-20 sm:py-32 flex items-center justify-center text-gray-500 font-semibold text-sm sm:text-base">
-                        Nenhum formulário cadastrado ainda.
+                      <div className="py-20 sm:py-32 flex items-center justify-center text-gray-500 font-semibold text-sm sm:text-base text-center px-4">
+                        {modoAdmin
+                          ? "Nenhum formulário cadastrado ainda."
+                          : "Novos formulários aparecerão aqui quando forem publicados."}
                       </div>
                     )}
                   </>
