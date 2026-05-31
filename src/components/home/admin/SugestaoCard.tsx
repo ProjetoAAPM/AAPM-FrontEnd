@@ -63,7 +63,7 @@ const SugestaoCard = ({
                 >
                     {isAprovado && (
                         <div className="bg-green-50 px-4 py-1.5 flex items-center gap-1.5 border-b border-green-100">
-                            <span className="text-[11px] font-bold text-green-700 uppercase tracking-wider">Sugestão Fixada</span>
+                            <span className="text-[11px] font-bold text-green-700 uppercase tracking-wider">Sugestão Aprovada</span>
                         </div>
                     )}
 
@@ -151,5 +151,4 @@ const SugestaoCard = ({
         </div>
     );
 };
-
 export default SugestaoCard;

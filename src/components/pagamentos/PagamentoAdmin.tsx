@@ -90,7 +90,7 @@ const PagamentoAdmin = () => {
     };
 
     return (
-        <div className="bg-[#0F121D] min-h-screen flex flex-col pt-24 md:pt-28 px-3 md:px-6 min-[1330px]:h-screen min-[1330px]:w-screen min-[1330px]:pt-20 min-[1330px]:overflow-hidden min-[1330px]:px-0">
+        <div className="bg-[#101625] min-h-screen flex flex-col pt-24 md:pt-28 px-3 md:px-6 min-[1330px]:h-screen min-[1330px]:w-screen min-[1330px]:pt-20 min-[1330px]:overflow-hidden min-[1330px]:px-0">
             
             <div className="w-full flex flex-col gap-6 flex-1 pb-6 min-[1330px]:flex-row min-[1330px]:gap-8 min-[1330px]:min-h-0 min-[1330px]:h-full min-[1330px]:h-[calc(100vh-140px)] min-[1330px]:pb-4">
 
@@ -132,14 +132,6 @@ const PagamentoAdmin = () => {
                                     {filtro}
                                 </span>
                             </div>
-
-                            <button
-                                disabled={loading}
-                                onClick={handleAtualizar}
-                                className={`bg-[#C83D3D] text-white rounded-full h-[38px] md:h-[42px] px-5 md:px-8 shadow-lg font-bold hover:bg-[#b03535] transition-all text-[0.9rem] md:text-lg ${loading ? "opacity-75 cursor-not-allowed" : ""}`}
-                            >
-                                {loading ? "Carregando..." : "Atualizar"}
-                            </button>
                         </div>
 
                         {showDropdown && (
@@ -160,9 +152,34 @@ const PagamentoAdmin = () => {
                         )}
                     </div>
 
-                    <div className="flex-1 bg-white rounded-[12px] shadow-inner overflow-hidden flex flex-col min-h-[400px] min-[1330px]:min-h-0">
+                    <div className="flex-1 bg-white rounded-[12px] shadow-inner overflow-hidden flex flex-col min-h-[400px] min-[1330px]:min-h-0 relative">
+                        
+                        <button 
+                            onClick={handleAtualizar}
+                            disabled={loading}
+                            className="absolute top-4 right-4 z-30 p-2 text-gray-500 hover:text-[#0F121D] hover:bg-gray-100 active:scale-95 rounded-full transition-all duration-200 disabled:opacity-50"
+                            title="Atualizar pagamentos"
+                        >
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                strokeWidth={2.5} 
+                                stroke="currentColor" 
+                                className={`w-5 h-5 sm:w-6 sm:h-6 ${loading ? "animate-spin" : ""}`}
+                            >
+                                <path 
+                                    strokeLinecap="round" 
+                                    strokeLinejoin="round" 
+                                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" 
+                                />
+                            </svg>
+                        </button>
+
                         <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
-                            <div className="flex-1 min-h-0 overflow-y-auto scroll-modern p-4 md:p-5">
+
+                            <div className="flex-1 min-h-0 overflow-y-auto scroll-modern p-4 md:p-5 pt-14 md:pt-14">
+
                                 {loading && lista.length === 0 ? (
                                     <div className="text-center py-20 text-gray-500">
                                         Carregando pagamentos...
@@ -174,7 +191,7 @@ const PagamentoAdmin = () => {
                                         </p>
                                         <button
                                             onClick={handleAtualizar}
-                                            className="bg-[#C83D3D] text-white px-8 py-3 rounded-full font-bold hover:bg-[#b03535] transition"
+                                            className="bg-[#0F121D] text-white px-8 py-3 rounded-full font-bold hover:bg-slate-800 transition"
                                         >
                                             Tentar novamente
                                         </button>
