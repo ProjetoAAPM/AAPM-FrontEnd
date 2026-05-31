@@ -104,16 +104,16 @@ export default function Sugestoes({ modoAdmin = false }: SugestoesProps) {
           {modoAdmin && (
             <div className="w-full max-w-[95%] sm:max-w-[800px] md:max-w-[1100px] lg:max-w-[1300px] flex items-center justify-between relative mb-6 mt-6 min-[360px]:mt-10 md:mt-16 xl:mt-10">
               <button onClick={() => setShowDropdown(!showDropdown)} className="flex items-center gap-2 sm:gap-5 md:gap-8 relative z-40">
-                <div className="relative w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10">
+                <div className="relative w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 lg:w-10 lg:h-6">
                   <img src={filtroIcon} alt="filtro" className="relative top-[10px] sm:top-[15px] w-full h-full scale-[1.1] sm:scale-[1.3] object-contain md:translate-y-2" />
                 </div>
-                <span className="text-white font-bold text-sm sm:text-[1.1rem] md:text-xl translate-y-2.5 sm:translate-y-4 md:translate-y-6.5 -translate-x-1 sm:-translate-x-3 md:-translate-x-8.5">
+                <span className="text-white font-bold text-sm sm:text-[1.1rem] md:text-xl lg:text-[1.1rem] translate-y-2.5 sm:translate-y-4 md:translate-y-6.5 -translate-x-1 sm:-translate-x-3 md:-translate-x-5.5 lg:-translate-x-9 lg:translate-y-6">
                   {filtro}
                 </span>
               </button>
 
               {showDropdown && (
-                <div className="absolute top-10 sm:top-12 left-0 bg-white rounded-xl shadow-2xl overflow-hidden z-50 min-w-[150px] sm:min-w-[180px] md:translate-y-7">
+                <div className="absolute top-10 sm:top-12 lg:top-6 left-0 bg-white rounded-xl shadow-2xl overflow-hidden z-50 min-w-[150px] sm:min-w-[180px] md:translate-y-7">
                   {["Todos", "Pendentes", "Aprovados", "Reprovados"].map((item) => (
                     <button key={item} onClick={() => { setFiltro(item as TipoFiltro); setShowDropdown(false); }} className="w-full px-4 sm:px-6 py-2 sm:py-3 text-left font-semibold text-[#101625] hover:bg-[#f1f1f1] transition-all text-sm sm:text-base">
                       {item}

@@ -66,7 +66,6 @@ function Home({ modoAdmin = false, usuario }: HomeProps) {
 
       const dataProgresso = await resProgresso.json();
       const dataExtrato = await resExtrato.json();
-
       const novoProgresso: Progresso = {
         pontos: dataProgresso?.pontos_totais || 0,
         porcentagem: dataProgresso?.porcentagem_cofre || 0,
@@ -180,7 +179,7 @@ function Home({ modoAdmin = false, usuario }: HomeProps) {
 
       <section
         className={`w-full px-3 sm:px-5 lg:px-8 py-6 flex items-center justify-center ${
-          modoAdmin ? "mt-20 sm:mt-24 lg:mt-18" : ""
+          modoAdmin ? "mt-20 sm:mt-24 lg:mt-19.5" : ""
         }`}
       >
         <FormularioExtrato
