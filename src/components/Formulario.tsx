@@ -128,7 +128,7 @@ function Formulario({ tipo, setUsuario }: any) {
     md:text-base
     ${
       tipo === "login"
-        ? "w-[85%] lg:w-[85%] mx-15"
+        ? "w-[85%] lg:w-[85%] mx-15 ml-5.5 md:ml-8.5"
         : "mx-2 md:mx-10 lg:mx-0"
     }
   `;
@@ -385,7 +385,7 @@ function Formulario({ tipo, setUsuario }: any) {
           ${tema.bg}
           ${
             tipo === "login"
-              ? "w-[320px] md:w-[450px] lg:w-[500px] mt-3 md:mt-5 lg:mt-12"
+              ? "w-[320px] md:w-[450px] lg:w-[500px] mt-20 md:mt-25 lg:mt-30"
               : "max-w-[330px] md:max-w-[600px] lg:max-w-[848px] w-full mt-10 lg:mt-20"
           }
           py-10
@@ -457,7 +457,7 @@ function Formulario({ tipo, setUsuario }: any) {
               name="email"
               value={dados.email}
               onChange={guardar}
-              className={`${estiloInput} ml-5.5 md:ml-8.5 cursor-pointer`}
+              className={`${estiloInput}`}
               required
             />
           </div>
@@ -666,16 +666,20 @@ function Formulario({ tipo, setUsuario }: any) {
                     value={dados.especialidade}
                     onChange={guardar}
                     className="
-                      h-[40px]
-                      p-2
-                      m-1.5
-                      md:mx-10
-                      bg-white
-                      rounded-md
-                      shadow-md
-                      appearance-none
-                      text-sm
-                      lg:text-base
+                      h-[35px]
+                        lg:h-[40px]
+                        p-1
+                        lg:p-2
+                        m-2
+                        lg:m-1.5
+                        md:mx-10
+                        lg:mx-0
+                        bg-white
+                        rounded-md
+                        shadow-md
+                        appearance-none
+                        text-sm
+                        lg:text-base
                     "
                     required
                   >
@@ -695,7 +699,7 @@ function Formulario({ tipo, setUsuario }: any) {
                     )}
                   </select>
 
-                  <div className="absolute right-3 top-20 -translate-y-1/2 pointer-events-none">
+                  <div className="absolute right-4 md:right-12 md:top-17.5 lg:right-3 top-16.5 lg:top-20 -translate-y-1/2 pointer-events-none">
                     <ChevronDown
                       size={20}
                       className="text-gray-500"
@@ -716,7 +720,7 @@ function Formulario({ tipo, setUsuario }: any) {
               name="senha"
               value={dados.senha}
               onChange={guardar}
-              className={`${estiloInput} ml-5.5 md:ml-8.5 cursor-pointer`}
+              className={`${estiloInput}`}
               required
             />
           </div>
