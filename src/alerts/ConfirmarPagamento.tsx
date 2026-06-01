@@ -1,12 +1,13 @@
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 
 interface ConfirmarPagamentoProps {
     plano: "comum" | "premium";
     onConfirmar: () => void;
     onCancelar: () => void;
+    isLoading: boolean;
 }
 
-function ConfirmarPagamento({ plano, onConfirmar, onCancelar }: ConfirmarPagamentoProps) {
+function ConfirmarPagamento({ plano, onConfirmar, onCancelar, isLoading }: ConfirmarPagamentoProps) {
 
     const dadosPlano = {
         comum: {
@@ -73,19 +74,28 @@ function ConfirmarPagamento({ plano, onConfirmar, onCancelar }: ConfirmarPagamen
             <div className="flex gap-4">
                 <button
                     onClick={onConfirmar}
-                    className="flex-1 rounded-lg bg-[#86D5FE] py-2 text-lg md:text-xl lg:text-2xl font-bold text-[#373737] cursor-pointer"
+                    disabled={isLoading}
+                    className="flex-1 min-h-[46px] flex items-center justify-center gap-2 rounded-lg bg-[#86D5FE] py-2 text-lg md:text-xl lg:text-2xl font-bold text-[#373737] cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                    Continuar
+                    {isLoading ? (
+                        <div className="flex items-center justify-center gap-2 w-full">
+                            <Loader2 className="animate-spin shrink-0 text-[#373737]" size={20} />
+                            <span className="text-base md:text-lg lg:text-xl font-bold">Carregando...</span>
+                        </div>
+                    ) : (
+                        "Continuar"
+                    )}
                 </button>
                 <button
                     onClick={onCancelar}
-                    className="flex-1 rounded-lg bg-[#373737] py-2 text-lg md:text-xl lg:text-2xl font-bold text-white cursor-pointer"
+                    disabled={isLoading}
+                    className="flex-1 rounded-lg bg-[#373737] py-2 text-lg md:text-xl lg:text-2xl font-bold text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     Cancelar
                 </button>
             </div>
         </div>
-    )
+    );
 }
 
-export default ConfirmarPagamento
+export default ConfirmarPagamento;
