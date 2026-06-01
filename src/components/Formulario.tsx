@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/admin/AuthContext";
 import type { ChangeEvent, SyntheticEvent } from "react";
 import { ChevronDown } from "lucide-react";
 import perfil1 from "../assets/perfis/user1.png";
+import logo from "../../assets/icons/Logo48.svg";
 
 function Formulario({ tipo, setUsuario }: any) {
   const [dados, setDados] = useState({
@@ -398,7 +399,7 @@ function Formulario({ tipo, setUsuario }: any) {
         `}
       >
         <img
-          src="src/assets/icons/Logo48.svg"
+          src={logo}
           alt="logo"
           className="
             absolute

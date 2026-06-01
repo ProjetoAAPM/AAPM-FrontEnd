@@ -152,7 +152,7 @@ function SobreNos() {
             {editMode && (
               <div className="absolute top-4 right-4">
                 <img
-                  src="/src/assets/icons/icone_editar.png"
+                  src={iconeEditar}
                   alt="Editar"
                   className="w-7 h-7"
                 />
@@ -187,7 +187,7 @@ function SobreNos() {
             {editMode && (
               <div className="absolute top-4 right-4">
                 <img
-                  src="/src/assets/icons/icone_editar.png"
+                  src={iconeEditar}
                   alt="Editar"
                   className="w-7 h-7"
                 />

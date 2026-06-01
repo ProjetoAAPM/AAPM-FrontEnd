@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Copiador from "../alerts/Copiador";
 import { Copy, X, Loader2 } from "lucide-react";
+import qrcode from "../assets/images/qrcode.png"
 
 interface PopupProps {
   isOpen: boolean;
@@ -120,7 +121,7 @@ function PopupPagamento({ isOpen, onClose, planoSelecionado }: PopupProps) {
 
         <div className="p-6 md:p-8 flex flex-col items-center">
           <img
-            src="src/assets/images/qrcode.png"
+            src={qrcode}
             alt="Código QR para pagamento Pix"
             className="w-[110px] h-[110px] md:w-[150px] md:h-[150px] lg:w-[187px] lg:h-[187px] rounded-2xl border-2 border-[#383636]/50 object-cover"
           />

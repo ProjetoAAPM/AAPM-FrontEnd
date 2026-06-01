@@ -4,6 +4,8 @@ import CardPlano from "../components/CardPlano";
 import Copiador from "../alerts/Copiador";
 import { Copy } from "lucide-react";
 import ConfirmarPagamento from "../alerts/ConfirmarPagamento";
+import logo48 from "../assets/icons/Logo48.svg"
+import qrcode from "../assets/images/qrcode.png"
 
 function EscolhaPlano() {
     const navigate = useNavigate();
@@ -105,7 +107,7 @@ function EscolhaPlano() {
             )}
             <div className="w-full max-w-5xl mb-5">
                 <div className="flex justify-center mb-30">
-                    <img src="src/assets/icons/Logo48.svg" alt="logo" className="absolute lg:-mt-0.5 h-[70px] md:h-[80px] lg:h-[100px] w-auto drop-shadow-md" />
+                    <img src={logo48} alt="logo" className="absolute lg:-mt-0.5 h-[70px] md:h-[80px] lg:h-[100px] w-auto drop-shadow-md" />
                 </div>
                 <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] bg-[#42B9F4] py-4 -mt-8 -mb-4 md:-mt-5 md:mb-2 lg:-mt-1 lg:mb-3 lg:h-[80px]">
                     <h1 className="text-white text-center text-2xl md:text-3xl lg:text-4xl font-bold italic">Escolha o seu plano</h1>
@@ -121,7 +123,7 @@ function EscolhaPlano() {
                     corBtn="bg-[#373737] text-white"
                     onClick={() => handlPrepararEnvio("comum", comprovanteComum)}
                 >
-                    <img src="src/assets/images/qrcode.png" alt="qrcode" className="w-[110px] h-[110px] md:w-[150px] md:h-[150px] lg:w-[187px] lg:h-[187px] rounded-2xl" />
+                    <img src={qrcode} alt="qrcode" className="w-[110px] h-[110px] md:w-[150px] md:h-[150px] lg:w-[187px] lg:h-[187px] rounded-2xl" />
                     <Copiador textoParaCopiar="https://www.sp.senai.br/">
                         <div className="w-full max-w-[260px] md:max-w-[299px] h-[50px] bg-[#78C0E5] p-2 mt-3 rounded-lg flex items-center justify-between border-2 border-[#78C0E5] shadow-md cursor-pointer">
                             <div className="text-left overflow-hidden">
@@ -154,7 +156,7 @@ function EscolhaPlano() {
                     corBtn="bg-[#86D5FE]"
                     onClick={() => handlPrepararEnvio("premium", comprovantePremium)}
                 >
-                    <img src="src/assets/images/qrcode.png" alt="qrcode" className="w-[110px] h-[110px] md:w-[150px] md:h-[150px] lg:w-[187px] lg:h-[187px] rounded-2xl" />
+                    <img src={qrcode} alt="qrcode" className="w-[110px] h-[110px] md:w-[150px] md:h-[150px] lg:w-[187px] lg:h-[187px] rounded-2xl" />
                     <Copiador textoParaCopiar="https://www.sp.senai.br/">
                         <div className="w-full max-w-[260px] md:max-w-[299px] h-[50px] bg-[#424242] p-2 mt-3 rounded-lg flex items-center justify-between shadow-md cursor-pointer">
                             <div className="text-left overflow-hidden">

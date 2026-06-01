@@ -3,6 +3,7 @@ import Copiador from "../../alerts/Copiador";
 import CardPlano from "../CardPlano";
 import { Check, Copy, ChevronDown, ChevronUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import qrcode from "../../assets/images/qrcode.png"
 
 function Planos() {
     const [comumAberto, setComumAberto] = useState(false);
@@ -147,7 +148,7 @@ function Planos() {
                     <div className="w-full flex flex-col items-center">
                         <p className="text-base md:text-xl lg:text-2xl mt-3 lg:-mt-1 mb-4 font-medium leading-tight text-center">Sua contribuição apoia alunos e melhora o dia a dia na escola. Qualquer valor faz diferença.</p>
                         
-                        <img src="src/assets/images/qrcode.png" alt="qrcode" className="w-[110px] h-[110px] md:w-[150px] md:h-[150px] lg:w-[187px] lg:h-[187px] mt-4 rounded-2xl border-2 border-[#383636]/50" />
+                        <img src={qrcode} alt="qrcode" className="w-[110px] h-[110px] md:w-[150px] md:h-[150px] lg:w-[187px] lg:h-[187px] mt-4 rounded-2xl border-2 border-[#383636]/50" />
 
                         <Copiador textoParaCopiar="https://www.sp.senai.br/">
                             <div className="w-full max-w-[260px] md:max-w-[280px] h-auto bg-[#FFEBEB] p-2 mt-4 mb-4 rounded-lg flex items-center justify-between border-2 border-[#EFD0D0] shadow-md cursor-pointer">

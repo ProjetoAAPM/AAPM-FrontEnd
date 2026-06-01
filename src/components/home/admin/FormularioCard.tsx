@@ -1,5 +1,8 @@
 import { useState } from "react";
 import PopupAviso from "../../../alerts/PopupFormulario";
+import iconEditar from "../../../assets/icons/Editar.svg"
+import iconExcluir from "../../../assets/icons/Excluir.svg"
+
 
 interface FormularioCardProps {
   onSalvar?: (dados: any) => void;
@@ -138,14 +141,14 @@ const FormularioCard = ({
                     onClick={handleEditar}
                     className="w-[60px] sm:w-[80px] md:w-[92px] h-[38px] bg-[#C83D3D] rounded-[14px] shadow-md flex items-center justify-center hover:brightness-95 transition-all"
                   >
-                    <img src="/src/assets/icons/Editar.svg" alt="Editar" className="w-5 sm:w-6" />
+                    <img src={iconEditar} alt="Editar" className="w-5 sm:w-6" />
                   </button>
 
                   <button
                     onClick={() => setPopupExcluirAberto(true)}
                     className="w-[60px] sm:w-[80px] md:w-[92px] h-[38px] bg-[#C83D3D] rounded-[14px] shadow-md flex items-center justify-center hover:brightness-95 transition-all"
                   >
-                    <img src="/src/assets/icons/Excluir.svg" alt="Excluir" className="w-5 sm:w-6" />
+                    <img src={iconExcluir} alt="Excluir" className="w-5 sm:w-6" />
                   </button>
                 </div>
               )}
