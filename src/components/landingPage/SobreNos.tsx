@@ -2,6 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import BlocoEditavel from "../admin/BlocoEditavel";
 import { useEditMode } from "../../contexts/modo_editar";
 import iconeEditar from "../../assets/icons/icone_editar.png";
+import futsalImg from "../../assets/images/futsal.jpg"
+import fotoGrupo from "../../assets/images/fotoGrupo.jpg"
 import {
   buscarConteudo,
   buscarImagem,
@@ -11,8 +13,8 @@ import {
 function SobreNos() {
   const { editMode } = useEditMode();
 
-  const [imgFutsal, setImgFutsal] = useState("src/assets/images/futsal.jpg");
-  const [imgGrupo, setImgGrupo] = useState("src/assets/images/fotoGrupo.jpg");
+  const [imgFutsal, setImgFutsal] = useState(futsalImg);
+  const [imgGrupo, setImgGrupo] = useState(fotoGrupo);
   const [conteudoEditado, setConteudoEditado] = useState<string | null>(null);
 
   useEffect(() => {
