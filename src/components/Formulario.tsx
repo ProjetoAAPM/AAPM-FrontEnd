@@ -42,7 +42,7 @@ function Formulario({ tipo, setUsuario }: any) {
 
   const loginGoogle = () => {
     window.location.href =
-      "http://localhost:5000/login/google";
+      "https://aapm-api.onrender.com/login/google";
   };
 
   const cursos = [
@@ -164,7 +164,7 @@ function Formulario({ tipo, setUsuario }: any) {
     if (tipo === "login") {
       try {
         const resposta = await fetch(
-          "http://localhost:5000/login",
+          "https://aapm-api.onrender.com/login",
           {
             method: "POST",
 
@@ -297,7 +297,7 @@ function Formulario({ tipo, setUsuario }: any) {
           : "/cadastro/docente";
 
       const resposta = await fetch(
-        `http://localhost:5000${rota}`,
+        `https://aapm-api.onrender.com${rota}`,
         {
           method: "POST",
 

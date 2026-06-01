@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5000";
+const API_BASE = "https://aapm-api.onrender.com";
 
 export interface IPagamento {
     id: number;

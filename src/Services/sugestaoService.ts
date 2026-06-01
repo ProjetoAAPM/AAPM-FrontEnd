@@ -7,7 +7,7 @@ export interface ISugestao {
     tipo_usuario: string;
 }
 
-const API_BASE = "http://localhost:5000"; 
+const API_BASE = "https://aapm-api.onrender.com"; 
 
 export const sugestaoService = {
 

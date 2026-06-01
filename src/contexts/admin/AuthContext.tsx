@@ -6,7 +6,7 @@ import {
 } from "react";
 import type { ReactNode } from "react";
 
-const API_BASE = "http://localhost:5000"; 
+const API_BASE = "https://aapm-api.onrender.com"; 
 
 interface AuthContextType {
     isAdmin: boolean;

@@ -45,7 +45,7 @@ function App() {
     async function carregarUsuario() {
         try {
             const resposta = await fetch(
-                "http://localhost:5000/usuario/home-logada",
+                "https://aapm-api.onrender.com/usuario/home-logada",
                 { credentials: "include" }
             );
 
