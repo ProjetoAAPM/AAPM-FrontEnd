@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CardPlano from "../components/CardPlano";
 import Copiador from "../alerts/Copiador";
-import { Copy } from "lucide-react";
+import { Copy, ArrowLeft } from "lucide-react";
 import ConfirmarPagamento from "../alerts/ConfirmarPagamento";
 
 function EscolhaPlano() {
@@ -38,6 +38,7 @@ function EscolhaPlano() {
             plano: planoSelecionado,
             valor: planoSelecionado === "premium" ? 100.00 : 50.00
         };
+
         try {
             setLoading(true);
             const respostaEtapa1 = await fetch("http://localhost:5000/pagamento/gerar", {
@@ -46,17 +47,21 @@ function EscolhaPlano() {
                 credentials: "include",
                 body: JSON.stringify(dadosPagamento),
             });
+            
             const resultadoEtapa1 = await respostaEtapa1.json();
             if (!respostaEtapa1.ok) {
                 const mensagemErro = resultadoEtapa1.erro || resultadoEtapa1.mensagem || "Falha na operação.";
                 alert(`Erro: ${mensagemErro}`);
-                fecharModal();
+                setModalAberto(false);
+                setPlanoSelecionado(null);
                 return;
             }
+
             const idPagamento = resultadoEtapa1.id_pagamento;
             const formData = new FormData();
             formData.append("id_pagamento", String(idPagamento));
             formData.append("comprovante", comprovante);
+
             const respostaEtapa2 = await fetch(
                 "http://localhost:5000/pagamento/enviar-comprovante",
                 {
@@ -67,23 +72,32 @@ function EscolhaPlano() {
             );
 
             const resultadoEtapa2 = await respostaEtapa2.json();
+
             if (respostaEtapa2.ok) {
-                alert(resultadoEtapa2.mensagem || "Comprovante enviado com sucesso!");
+                setModalAberto(false);
+                setPlanoSelecionado(null);
+
                 if (planoSelecionado === "premium") {
                     setComprovantePremium(null);
                 } else {
                     setComprovanteComum(null);
                 }
-                fecharModal();
-                navigate("/login");
+
+                setTimeout(() => {
+                    alert(resultadoEtapa2.mensagem || "Comprovante enviado com sucesso!");
+                    navigate("/login");
+                }, 100);
             } else {
                 const mensagemErro = resultadoEtapa2.erro || resultadoEtapa2.mensagem || "Falha na operação.";
                 alert(`Erro: ${mensagemErro}`);
-                fecharModal();
+                setModalAberto(false);
+                setPlanoSelecionado(null);
             }
         } catch (erro) {
             console.error("Erro na requisição de pagamento:", erro);
             alert("Não foi possível conectar ao servidor.");
+            setModalAberto(false);
+            setPlanoSelecionado(null);
         } finally {
             setLoading(false);
         }
@@ -100,13 +114,19 @@ function EscolhaPlano() {
         <div className="min-h-[100vh] bg-[#101625] flex flex-col items-center py-5">
             {modalAberto && planoSelecionado && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <ConfirmarPagamento plano={planoSelecionado} onConfirmar={handleConfirmarEnvio} onCancelar={fecharModal} />
+                    <ConfirmarPagamento 
+                        plano={planoSelecionado} 
+                        onConfirmar={handleConfirmarEnvio} 
+                        onCancelar={fecharModal} 
+                        isLoading={loading} 
+                    />
                 </div>
             )}
             <div className="w-full max-w-5xl mb-5">
                 <div className="flex justify-center mb-30">
                     <img src="src/assets/icons/Logo48.svg" alt="logo" className="absolute lg:-mt-0.5 h-[70px] md:h-[80px] lg:h-[100px] w-auto drop-shadow-md" />
                 </div>
+
                 <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] bg-[#42B9F4] py-4 -mt-8 -mb-4 md:-mt-5 md:mb-2 lg:-mt-1 lg:mb-3 lg:h-[80px]">
                     <h1 className="text-white text-center text-2xl md:text-3xl lg:text-4xl font-bold italic">Escolha o seu plano</h1>
                 </div>
@@ -144,7 +164,9 @@ function EscolhaPlano() {
                         <p className="text-xs md:text-sm lg:text-base font-semibold text-[#888888]">{comprovanteComum ? comprovanteComum.name : "Arraste o arquivo até aqui!"}</p>
                     </label>
                 </CardPlano>
+
                 <div className="hidden lg:block w-[3px] h-30 mr-3 flex self-center rounded bg-[#969696]"></div>
+
                 <CardPlano
                     titulo="Plano Premium"
                     className="bg-[#1D1D1D] border-4 border-[#F0C41B]"
