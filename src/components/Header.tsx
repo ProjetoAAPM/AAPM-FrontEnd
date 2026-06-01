@@ -104,6 +104,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                             src={logoImg}
                             alt="Logo"
                             className="h-[40px] md:h-[45px] w-auto object-contain"
+                            onClick={()=>navigate("/")}
                         />
 
                         <p
@@ -112,6 +113,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                                     ? "text-black"
                                     : "text-white"
                             }`}
+                            onClick={()=>navigate("/")}
                         >
                             AAPM Senai Leopoldina
                         </p>
