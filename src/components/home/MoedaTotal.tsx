@@ -1,6 +1,6 @@
 import { useState } from "react";
 import moeda from "../../assets/images/moeda.png";
-import moedaPremium from "../../assets/images/moedaPremium.png";
+import moedaPremium from "../../assets/images/MoedaPremium.png";
 
 export default function Moeda({ total = 0, premium = false }) {
   const [animando, setAnimando] = useState(false);
