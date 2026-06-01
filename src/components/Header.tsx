@@ -99,7 +99,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                     }`}
                     >
 
-                    <div className="flex items-center gap-2 md:gap-3">
+                    <Link to="/" className="flex items-center gap-2 md:gap-3">
                         <img
                             src={logoImg}
                             alt="Logo"
@@ -115,7 +115,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                         >
                             AAPM Senai Leopoldina
                         </p>
-                    </div>
+                    </Link>
 
                     <div className="hidden min-[1330px]:flex gap-6 xl:gap-16 2xl:gap-28 text-white text-sm xl:text-base 2xl:text-lg font-medium">
                         <Link
