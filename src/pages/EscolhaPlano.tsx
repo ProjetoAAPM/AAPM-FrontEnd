@@ -127,6 +127,13 @@ function EscolhaPlano() {
                     <img src="src/assets/icons/Logo48.svg" alt="logo" className="absolute lg:-mt-0.5 h-[70px] md:h-[80px] lg:h-[100px] w-auto drop-shadow-md" />
                 </div>
 
+                <button
+                    onClick={() => navigate('/')}
+                    className="hidden lg:flex absolute top-10 left-15 flex items-center gap-2 cursor-pointer"
+                >
+                    <ArrowLeft size={30} color="#FFFFFF" strokeWidth={3}/>
+                </button>
+
                 <div className="w-screen relative left-1/2 right-1/2 -ml-[50vw] bg-[#42B9F4] py-4 -mt-8 -mb-4 md:-mt-5 md:mb-2 lg:-mt-1 lg:mb-3 lg:h-[80px]">
                     <h1 className="text-white text-center text-2xl md:text-3xl lg:text-4xl font-bold italic">Escolha o seu plano</h1>
                 </div>
