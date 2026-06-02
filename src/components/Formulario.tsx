@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react"; 
+import { useNavigate, useLocation } from "react-router-dom"; 
 import { useAuth } from "../contexts/admin/AuthContext";
 import type { ChangeEvent, SyntheticEvent } from "react";
 import { ChevronDown } from "lucide-react";
@@ -21,6 +21,20 @@ function Formulario({ tipo, setUsuario }: any) {
   });
 
   const navigate = useNavigate();
+  const location = useLocation(); 
+
+  const dadosGoogle = location.state as { nome?: string; email?: string; tipo_usuario?: "aluno" | "docente" } | null;
+
+  useEffect(() => {
+    if (tipo === "cadastro" && dadosGoogle) {
+      setDados((valoresAtuais) => ({
+        ...valoresAtuais,
+        nome: dadosGoogle.nome || "",
+        email: dadosGoogle.email || "",
+        tipo_usuario: dadosGoogle.tipo_usuario || "aluno"
+      }));
+    }
+  }, [dadosGoogle, tipo]);
 
   const { login: loginAdmin } = useAuth();
 
@@ -36,6 +50,8 @@ function Formulario({ tipo, setUsuario }: any) {
   const alternarUsuario = (
     selecao: "aluno" | "docente"
   ) => {
+    if (dadosGoogle?.tipo_usuario) return;
+
     setDados({
       ...dados,
       tipo_usuario: selecao,
@@ -59,14 +75,23 @@ function Formulario({ tipo, setUsuario }: any) {
         if (resposta.ok) {
           if (resultado.mensagem === "Usuário sem cadastro") {
             alert("Conta Google validada! Continue o preenchimento do seu cadastro.");
-            navigate(resultado.redirect);
+            
+            const tipoIdentificado = resultado.redirect.includes("docente") ? "docente" : "aluno";
+
+            navigate(resultado.redirect, {
+              state: {
+                nome: resultado.usuario_temporario?.temp_nome,
+                email: resultado.usuario_temporario?.temp_email,
+                tipo_usuario: tipoIdentificado
+              }
+            });
             return;
           }
 
           if (resultado.redirect === "/tela_pagamento" || resultado.status === "INATIVO") {
             localStorage.setItem("usuario_id", resultado.usuario?.usuario_id);
             localStorage.setItem("status_usuario", "INATIVO");
-            alert(resultado.erro_validacao || "Realize o pagamento para ativar sua conta.");
+            alert(resultado.erro_validacao || "Realize o pagamento para ativar sua account.");
             navigate("/escolhaplano");
             return;
           }
@@ -112,6 +137,8 @@ function Formulario({ tipo, setUsuario }: any) {
     "CAI Eletricista de Manutenção Eletroeletrônica",
     "CAI Ferramenteiro de Moldes para Plásticos",
   ];
+
+  const estiloInputBloqueado = "disabled:opacity-60 disabled:cursor-not-allowed bg-gray-100 select-none";
 
   const especialidades = [
     "Gestão",
@@ -220,13 +247,10 @@ function Formulario({ tipo, setUsuario }: any) {
           "https://aapm-api.onrender.com/login",
           {
             method: "POST",
-
             headers: {
               "Content-Type": "application/json",
             },
-
             credentials: "include",
-
             body: JSON.stringify({
               email: dados.email,
               senha: dados.senha,
@@ -353,13 +377,10 @@ function Formulario({ tipo, setUsuario }: any) {
         `https://aapm-api.onrender.com${rota}`,
         {
           method: "POST",
-
           headers: {
             "Content-Type": "application/json",
           },
-
           credentials: "include",
-
           body: JSON.stringify(dados),
         }
       );
@@ -493,7 +514,8 @@ function Formulario({ tipo, setUsuario }: any) {
                 name="nome"
                 value={dados.nome}
                 onChange={guardar}
-                className={estiloInput}
+                disabled={!!dadosGoogle?.nome}
+                className={`${estiloInput} ${dadosGoogle?.nome ? estiloInputBloqueado : ""}`}
                 required
               />
             </div>
@@ -509,7 +531,8 @@ function Formulario({ tipo, setUsuario }: any) {
               name="email"
               value={dados.email}
               onChange={guardar}
-              className={`${estiloInput} ml-5.5 md:ml-8.5 cursor-pointer`}
+              disabled={!!dadosGoogle?.email}
+              className={`${estiloInput} ml-5.5 md:ml-8.5 cursor-pointer ${dadosGoogle?.email ? estiloInputBloqueado : ""}`}
               required
             />
           </div>
@@ -527,6 +550,7 @@ function Formulario({ tipo, setUsuario }: any) {
                     onClick={() =>
                       alternarUsuario("aluno")
                     }
+                    disabled={!!dadosGoogle?.tipo_usuario}
                     className={`
                       w-[100px]
                       h-[40px]
@@ -537,7 +561,7 @@ function Formulario({ tipo, setUsuario }: any) {
                       lg:text-lg
                       font-bold
                       shadow-sm
-                      cursor-pointer
+                      ${dadosGoogle?.tipo_usuario ? "cursor-not-allowed opacity-60" : "cursor-pointer"}
                       ${dados.tipo_usuario ===
                         "aluno"
                         ? "bg-[#383636] text-white"
@@ -553,6 +577,7 @@ function Formulario({ tipo, setUsuario }: any) {
                     onClick={() =>
                       alternarUsuario("docente")
                     }
+                    disabled={!!dadosGoogle?.tipo_usuario}
                     className={`
                       w-[100px]
                       h-[40px]
@@ -563,7 +588,7 @@ function Formulario({ tipo, setUsuario }: any) {
                       lg:text-lg
                       font-bold
                       shadow-sm
-                      cursor-pointer
+                      ${dadosGoogle?.tipo_usuario ? "cursor-not-allowed opacity-60" : "cursor-pointer"}
                       ${dados.tipo_usuario ===
                         "docente"
                         ? "bg-[#383636] text-white"
@@ -607,7 +632,7 @@ function Formulario({ tipo, setUsuario }: any) {
                       required
                     >
                       <option value="">
-                        Selecione seu curso
+                        Seleccione seu curso
                       </option>
 
                       {cursos.map((item) => (
