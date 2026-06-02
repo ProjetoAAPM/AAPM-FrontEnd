@@ -5,6 +5,7 @@ import type { ChangeEvent, SyntheticEvent } from "react";
 import { ChevronDown } from "lucide-react";
 import perfil1 from "../assets/perfis/user1.png";
 import logo from "../assets/icons/Logo48.svg";
+import { useGoogleLogin } from '@react-oauth/google';
 
 function Formulario({ tipo, setUsuario }: any) {
   const [dados, setDados] = useState({
@@ -41,10 +42,63 @@ function Formulario({ tipo, setUsuario }: any) {
     });
   };
 
-  const loginGoogle = () => {
-    window.location.href =
-      "https://aapm-api.onrender.com/login/google";
-  };
+  const loginGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const resposta = await fetch("https://aapm-api.onrender.com/auth/google", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ token: tokenResponse.access_token }),
+        });
+
+        const resultado = await resposta.json();
+
+        if (resposta.ok) {
+          if (resultado.mensagem === "Usuário sem cadastro") {
+            alert("Conta Google validada! Continue o preenchimento do seu cadastro.");
+            navigate(resultado.redirect);
+            return;
+          }
+
+          if (resultado.redirect === "/tela_pagamento" || resultado.status === "INATIVO") {
+            localStorage.setItem("usuario_id", resultado.usuario?.usuario_id);
+            localStorage.setItem("status_usuario", "INATIVO");
+            alert(resultado.erro_validacao || "Realize o pagamento para ativar sua conta.");
+            navigate("/escolhaplano");
+            return;
+          }
+
+          localStorage.setItem("usuario_id", resultado.usuario?.usuario_id);
+          localStorage.setItem("status_usuario", "ATIVO");
+
+          setUsuario?.({
+            nome: resultado.usuario?.usuario_nome,
+            tipo_usuario: resultado.usuario?.tipo_usuario,
+            foto: perfil1,
+            premium: true, 
+          });
+
+          alert(resultado.mensagem || "Login realizado com sucesso!");
+          navigate(resultado.redirect); 
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 100);
+        } else {
+          alert(resultado.mensagem || resultado.erro_usuario || "Erro ao autenticar com o Google.");
+        }
+      } catch (erro) {
+        console.error("Erro na requisição do Google:", erro);
+        alert("Não foi possível conectar ao servidor.");
+      }
+    },
+    onError: () => {
+      alert("Falha na autenticação com o Google. Tente novamente.");
+    }
+  });
 
   const cursos = [
     "Tec Administração",
@@ -111,10 +165,9 @@ function Formulario({ tipo, setUsuario }: any) {
     lg:text-lg
     inset-shadow-sm
     inset-shadow-indigo-700/10
-    ${
-      tipo === "login"
-        ? "text-[#373737] font-bold"
-        : "text-[#FFFFFF] font-semibold lg:pl-20 md:pl-10 lg:-ml-18.5"
+    ${tipo === "login"
+      ? "text-[#373737] font-bold"
+      : "text-[#FFFFFF] font-semibold lg:pl-20 md:pl-10 lg:-ml-18.5"
     }
   `;
 
@@ -127,10 +180,9 @@ function Formulario({ tipo, setUsuario }: any) {
     shadow-md
     text-sm
     md:text-base
-    ${
-      tipo === "login"
-        ? "w-[85%] lg:w-[85%] mx-15"
-        : "mx-2 md:mx-10 lg:mx-0"
+    ${tipo === "login"
+      ? "w-[85%] lg:w-[85%] mx-15"
+      : "mx-2 md:mx-10 lg:mx-0"
     }
   `;
 
@@ -201,7 +253,7 @@ function Formulario({ tipo, setUsuario }: any) {
 
             alert(
               resultado.mensagem ||
-                "Login de Administrador realizado com sucesso!"
+              "Login de Administrador realizado com sucesso!"
             );
 
             navigate("/admin");
@@ -232,7 +284,7 @@ function Formulario({ tipo, setUsuario }: any) {
           localStorage.setItem(
             "usuario_id",
             resultado.usuario?.id ||
-              resultado.usuario_id
+            resultado.usuario_id
           );
 
           localStorage.setItem(
@@ -251,7 +303,7 @@ function Formulario({ tipo, setUsuario }: any) {
 
           alert(
             resultado.mensagem ||
-              "Login realizado com sucesso!"
+            "Login realizado com sucesso!"
           );
 
           navigate("/home");
@@ -275,7 +327,7 @@ function Formulario({ tipo, setUsuario }: any) {
 
         alert(
           resultado.mensagem ||
-            "Email ou senha incorretos!"
+          "Email ou senha incorretos!"
         );
       } catch (erro) {
         console.error(
@@ -338,7 +390,7 @@ function Formulario({ tipo, setUsuario }: any) {
         localStorage.setItem(
           "usuario_id",
           resultado.usuario_id ||
-            resultado.usuario?.id
+          resultado.usuario?.id
         );
 
         localStorage.setItem(
@@ -348,7 +400,7 @@ function Formulario({ tipo, setUsuario }: any) {
 
         alert(
           resultado.mensagem ||
-            "Cadastro realizado com sucesso!"
+          "Cadastro realizado com sucesso!"
         );
 
         navigate("/escolhaplano");
@@ -384,10 +436,9 @@ function Formulario({ tipo, setUsuario }: any) {
         onSubmit={enviar}
         className={`
           ${tema.bg}
-          ${
-            tipo === "login"
-              ? "w-[320px] md:w-[450px] lg:w-[500px] mt-3 md:mt-5 lg:mt-12"
-              : "max-w-[330px] md:max-w-[600px] lg:max-w-[848px] w-full mt-10 lg:mt-20"
+          ${tipo === "login"
+            ? "w-[320px] md:w-[450px] lg:w-[500px] mt-3 md:mt-5 lg:mt-12"
+            : "max-w-[330px] md:max-w-[600px] lg:max-w-[848px] w-full mt-10 lg:mt-20"
           }
           py-10
           rounded-xl
@@ -487,11 +538,10 @@ function Formulario({ tipo, setUsuario }: any) {
                       font-bold
                       shadow-sm
                       cursor-pointer
-                      ${
-                        dados.tipo_usuario ===
+                      ${dados.tipo_usuario ===
                         "aluno"
-                          ? "bg-[#383636] text-white"
-                          : "bg-[#DDDDDD] text-black"
+                        ? "bg-[#383636] text-white"
+                        : "bg-[#DDDDDD] text-black"
                       }
                     `}
                   >
@@ -514,11 +564,10 @@ function Formulario({ tipo, setUsuario }: any) {
                       font-bold
                       shadow-sm
                       cursor-pointer
-                      ${
-                        dados.tipo_usuario ===
+                      ${dados.tipo_usuario ===
                         "docente"
-                          ? "bg-[#383636] text-white"
-                          : "bg-[#DDDDDD] text-black"
+                        ? "bg-[#383636] text-white"
+                        : "bg-[#DDDDDD] text-black"
                       }
                     `}
                   >
@@ -528,7 +577,7 @@ function Formulario({ tipo, setUsuario }: any) {
               </div>
 
               {dados.tipo_usuario ===
-              "aluno" ? (
+                "aluno" ? (
                 <>
                   <div className="relative flex flex-col">
                     <label className={estiloLabel}>
@@ -603,14 +652,14 @@ function Formulario({ tipo, setUsuario }: any) {
                             ).showPicker()
                           }
                           onFocus={(e) =>
-                            (e.target.style.color =
-                              "black")
+                          (e.target.style.color =
+                            "black")
                           }
                           onBlur={(e) =>
-                            (e.target.style.color =
-                              e.target.value
-                                ? "black"
-                                : "transparent")
+                          (e.target.style.color =
+                            e.target.value
+                              ? "black"
+                              : "transparent")
                           }
                           style={{
                             color:
@@ -634,14 +683,14 @@ function Formulario({ tipo, setUsuario }: any) {
                           value={dados.fim_curso}
                           onChange={guardar}
                           onFocus={(e) =>
-                            (e.target.style.color =
-                              "black")
+                          (e.target.style.color =
+                            "black")
                           }
                           onBlur={(e) =>
-                            (e.target.style.color =
-                              e.target.value
-                                ? "black"
-                                : "transparent")
+                          (e.target.style.color =
+                            e.target.value
+                              ? "black"
+                              : "transparent")
                           }
                           style={{
                             color:
@@ -768,10 +817,9 @@ function Formulario({ tipo, setUsuario }: any) {
               type="submit"
               className={`
                 ${tema.btn}
-                ${
-                  tipo === "login"
-                    ? "w-[120px] h-[40px] md:w-[150px] lg:w-[170px] lg:h-[50px] rounded-full text-[#373737]"
-                    : "w-[140px] h-[45px] lg:w-[170px] lg:h-[50px] rounded-2xl text-[#FFFFFF]"
+                ${tipo === "login"
+                  ? "w-[120px] h-[40px] md:w-[150px] lg:w-[170px] lg:h-[50px] rounded-full text-[#373737]"
+                  : "w-[140px] h-[45px] lg:w-[170px] lg:h-[50px] rounded-2xl text-[#FFFFFF]"
                 }
                 text-base
                 md:text-lg
