@@ -22,7 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         async function verificarSessao() {
             try {
-                const res = await fetch(`${API_BASE}/admin`, {
+                const res = await fetch(`${API_BASE}/admin/home`, {
                     method: "GET",
                     credentials: "include"
                 });

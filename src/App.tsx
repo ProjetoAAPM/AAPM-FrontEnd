@@ -43,6 +43,11 @@ function App() {
     });
 
     async function carregarUsuario() {
+
+        if (location.pathname.includes("admin") || location.pathname.includes("administrador") || location.pathname === "/") {
+            return;
+        }
+
         try {
             const resposta = await fetch(
                 "https://aapm-api.onrender.com/usuario/home-logada",
