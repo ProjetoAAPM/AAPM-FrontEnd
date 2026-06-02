@@ -837,7 +837,7 @@ function Formulario({ tipo, setUsuario }: any) {
             {tipo === "login" && (
               <button
                 type="button"
-                onClick={loginGoogle}
+                onClick={() => loginGoogle()}
                 className="
                   w-[120px]
                   h-[40px]
