@@ -4,6 +4,7 @@ export interface IPagamento {
     id: number;
     nome: string;
     curso: string;
+    rotulo_vinculo?: string;
     valor: number;
     data: string;
     status: "Pendente" | "Aprovado" | "Reprovado";
@@ -58,12 +59,14 @@ export const pagamentoAdminService = {
                 p.id,
 
             nome:
+                p.usuario_nome ||
                 p.aluno_nome ||
                 "Nome não informado",
 
             curso:
+                p.detalhes ||
                 p.curso ||
-                "Curso não informado",
+                "Não informado",
 
             valor: Number(
                 p.valor ||
@@ -90,7 +93,11 @@ export const pagamentoAdminService = {
             plano:
                 p.plano ||
                 p.descricao_plano ||
-                "Não informado"
+                "Não informado",
+
+            rotulo_vinculo:
+                p.rotulo_vinculo ||
+                "Curso",
 
         }));
     },

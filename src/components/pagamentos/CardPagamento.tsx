@@ -21,7 +21,7 @@ const CardPagamento = ({
                 </p>
 
                 <p className="font-bold text-[0.72rem] text-black mt-1 break-words">
-                    Curso: {data.curso}
+                    {data.rotulo_vinculo || "Curso"}: {data.curso}
                 </p>
 
             </div>

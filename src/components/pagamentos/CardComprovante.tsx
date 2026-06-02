@@ -41,7 +41,7 @@ const CardComprovante = ({
 
     return (
 
-        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/80 backdrop-blur-[3px] p-3 font-['Montserrat']">
+        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 backdrop-blur-[3px] p-3 font-['Montserrat']">
 
             <div className="w-full max-w-[700px] rounded-[14px] overflow-hidden bg-[#0D101A] shadow-[0_10px_40px_rgba(0,0,0,0.35)]">
 
@@ -75,7 +75,7 @@ const CardComprovante = ({
 
                 </div>
 
-                <div className="bg-white p-4 sm:p-5 pb-5 rounded-b-[14px] flex flex-col items-center">
+                <div className="bg-white p-4 sm:p-5 pb-5 rounded-[16px] mx-[15.5px] mb-[6px] flex flex-col items-center">
 
                     <div className="scroll-modern bg-[#DFF4FF] rounded-[18px] w-full px-6 sm:px-10 pt-6 pb-6 mb-4 relative overflow-y-auto max-h-[400px]">
 
