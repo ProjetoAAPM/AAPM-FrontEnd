@@ -40,7 +40,7 @@ export default function LayoutAviso({
   if (!aberto) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/30 backdrop-blur-[6px] px-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-[6px] px-4">
 
       <div
         className={`w-full ${largura} rounded-[40px] p-[5px] pt-8 shadow-2xl`}
@@ -57,7 +57,7 @@ export default function LayoutAviso({
               drop-shadow-[0_2px_0_rgba(0,0,0,0.18)]
               md:text-2xl
               lg:text-3xl
-              xl:text-3xl
+              xl:text-[42px]
               ${className}
             `}
             style={{ color: corTitulo }}
@@ -103,11 +103,11 @@ export default function LayoutAviso({
               onClick={fechar}
               className="
                 w-full
-                max-w-[220px]
+                max-w-[180px]
+                h-[45.5px]
                 rounded-full
-                py-3
                 text-2xl
-                font-bold
+                font-semibold
                 text-white
                 shadow-[0_3px_5px_rgba(0,0,0,0.25)]
                 transition-all

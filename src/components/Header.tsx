@@ -103,7 +103,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
             fechar={() => setModalAberto(false)} 
             titulo="ATENÇÃO!"
             textoBotao="Fechar" 
-            largura="max-w-[95%] sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-2xl" 
+            largura="max-w-[95%] sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl" 
             corFundo="#BE2920" 
             corTitulo="#B42C24" 
             corBotao="#B42C24"

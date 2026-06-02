@@ -172,7 +172,7 @@ export default function Sugestoes({ modoAdmin = false }: SugestoesProps) {
         </div>
 
         {!modoAdmin && (
-          <LayoutAviso aberto={modalAberto} fechar={() => setModalAberto(false)} titulo="Sua sugestão foi enviada com sucesso!" descricao="Agradecemos sua contribuição para melhorar a experiência com a AAPM." textoBotao="Fechar" largura="max-w-[95%] sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-4xl" corFundo="#73B36B" corTitulo="#5E9F57" corBotao="#24933C" />
+          <LayoutAviso aberto={modalAberto} fechar={() => setModalAberto(false)} titulo="Sua sugestão foi enviada com sucesso!" descricao="Agradecemos sua contribuição para melhorar a experiência com a AAPM." textoBotao="Fechar" largura="max-w-[95%] sm:max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-4xl" corFundo="#73B36B" corTitulo="#5E9F57" corBotao="#24933C" className="lg:text-5xl" />
         )}
       </div>
     </div>
