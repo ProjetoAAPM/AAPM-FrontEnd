@@ -1,9 +1,11 @@
+import type { ReactNode } from "react";
+
 type LayoutAvisoProps = {
   aberto: boolean;
   fechar: () => void;
 
   titulo: string;
-  descricao: string;
+  descricao?: string;
 
   textoBotao?: string;
 
@@ -12,6 +14,9 @@ type LayoutAvisoProps = {
   corFundo?: string;
   corTitulo?: string;
   corBotao?: string;
+
+  children?: ReactNode;
+  className?: string;
 };
 
 export default function LayoutAviso({
@@ -28,6 +33,9 @@ export default function LayoutAviso({
   corFundo = "#73B36B",
   corTitulo = "#5E9F57",
   corBotao = "#24933C",
+
+  children,
+  className = "",
 }: LayoutAvisoProps) {
   if (!aberto) return null;
 
@@ -35,28 +43,46 @@ export default function LayoutAviso({
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/30 backdrop-blur-[6px] px-4">
 
       <div
-        className={`w-full ${largura} rounded-[40px] p-[10px] shadow-2xl`}
+        className={`w-full ${largura} rounded-[40px] p-[5px] pt-8 shadow-2xl`}
         style={{ backgroundColor: corFundo }}
       >
 
         <div className="rounded-[34px] bg-[#F2F2F2] px-6 py-10 md:px-10 mt-5">
 
           <h1
-            className="
+            className={`
               text-center
-              text-3xl
+              text-xl
               font-extrabold
-              drop-shadow-[0_4px_0_rgba(0,0,0,0.18)]
-              md:text-3.5xl
-              lg:text-4xl
-              xl:text-5xl
-            "
+              drop-shadow-[0_2px_0_rgba(0,0,0,0.18)]
+              md:text-2xl
+              lg:text-3xl
+              xl:text-3xl
+              ${className}
+            `}
             style={{ color: corTitulo }}
           >
             {titulo}
           </h1>
 
-          <p
+          {children ? (
+            <div 
+            className="
+              mt-8 
+              text-center 
+              text-lg
+              font-bold 
+              text-black 
+              md:text-2xl
+              lg:text-2xl
+              xl:text-2.5xl
+              flex flex-col
+              gap-4"
+            >
+              {children}
+            </div>
+          ) : (
+            <p
             className="
               mt-8
               text-center
@@ -65,24 +91,25 @@ export default function LayoutAviso({
               text-black
               md:text-2xl
               lg:text-2.5xl
-              xl:text-3xl
+              xl:text-xl
             "
           >
             {descricao}
           </p>
+          )}
 
           <div className="mt-10 flex justify-center">
             <button
               onClick={fechar}
               className="
                 w-full
-                max-w-[330px]
+                max-w-[220px]
                 rounded-full
                 py-3
                 text-2xl
                 font-bold
                 text-white
-                shadow-[0_6px_10px_rgba(0,0,0,0.25)]
+                shadow-[0_3px_5px_rgba(0,0,0,0.25)]
                 transition-all
                 hover:scale-105
               "

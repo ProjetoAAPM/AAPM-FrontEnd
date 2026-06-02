@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import MenuMobile from "./MenuMobile";
 import ModalPerfil from "./ModalPerfil";
@@ -7,6 +7,7 @@ import type { Usuario } from "../types/Usuario";
 import { useEditMode } from "../contexts/modo_editar";
 import logoImg from "/src/assets/icons/Logo48.svg";
 import { limparTodoConteudo } from "../Services/conteudoService";
+import LayoutAviso from "../alerts/LayoutAviso";
 
 interface HeaderProps {
     usuario: Usuario;
@@ -16,6 +17,7 @@ interface HeaderProps {
 function Header({ usuario, setUsuario }: HeaderProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [perfilOpen, setPerfilOpen] = useState(false);
+    const [modalAberto, setModalAberto] = useState(false);
 
     const { editMode, setEditMode } = useEditMode();
 
@@ -40,6 +42,17 @@ function Header({ usuario, setUsuario }: HeaderProps) {
         setIsOpen(false);
 
         navigate("/");
+    }
+
+    function verificarAcesso(e: React.MouseEvent<HTMLAnchorElement>) {
+        if (isAdmin) {
+            return;
+        }
+
+        if (!usuario?.nome){
+            e.preventDefault();
+            setModalAberto(true);
+        }
     }
 
     async function resetarPadrao() {
@@ -84,6 +97,27 @@ function Header({ usuario, setUsuario }: HeaderProps) {
 
     return (
         <>
+
+        <LayoutAviso 
+            aberto={modalAberto} 
+            fechar={() => setModalAberto(false)} 
+            titulo="ATENÇÃO!"
+            textoBotao="Fechar" 
+            largura="max-w-[95%] sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-2xl" 
+            corFundo="#BE2920" 
+            corTitulo="#B42C24" 
+            corBotao="#B42C24"
+            className="font-semibold"
+        >
+            <p className="text-lg md:text-xl lg:text-2xl">
+                O acesso às abas do site é <span className="text-[#C83D3D] font-bold">restrito</span> a usuários autenticados.
+            </p>
+
+            <p className="mt-4 text-lg md:text-xl lg:text-2xl">
+                Caso ainda não possua cadastro, convidamos você a se registrar e se tornar mebro da AAPM.
+            </p>
+        </LayoutAviso>
+
             <div
                 className={`absolute w-full flex justify-center z-50 transition-all duration-300 ${
                     isOpen
@@ -121,6 +155,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                         <Link
                             className={navLink}
                             to={isAdmin ? "/admin" : "/home"}
+                            onClick={verificarAcesso}
                         >
                             Home
                         </Link>
@@ -141,6 +176,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                                     ? "/admin/novidades"
                                     : "/novidades"
                             }
+                            onClick={verificarAcesso}
                         >
                             Novidades
                         </Link>
@@ -152,6 +188,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                                     ? "/admin/pagamento"
                                     : "/pagamento"
                             }
+                            onClick={verificarAcesso}
                         >
                             Pagamento
                         </Link>
