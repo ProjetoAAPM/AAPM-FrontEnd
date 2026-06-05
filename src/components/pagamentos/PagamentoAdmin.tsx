@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import CardPagamento from "./CardPagamento";
 import CardComprovante from "./CardComprovante";
+import Alert from "../../alerts/Alert";
 import "../Scrollbar/scrollbar.css";
 import filtroIcon from "../../assets/icons/icone_filtro.svg";
 import {
@@ -18,6 +19,17 @@ const PagamentoAdmin = () => {
     const [error, setError] = useState<string | null>(null);
     const [isApproving, setIsApproving] = useState(false);
     const [isRejecting, setIsRejecting] = useState(false);
+
+    const [alerta, setAlerta] = useState({
+        aberto: false,
+        tipo: "sucesso" as "sucesso" | "erro",
+        titulo: "",
+        descricao: "",
+    });
+
+    const dispararAlerta = (tipoAlerta: "sucesso" | "erro", titulo: string, descricao: string) => {
+        setAlerta({ aberto: true, tipo: tipoAlerta, titulo, descricao });
+    };
 
     const carregarPagamentos = async () => {
         setLoading(true);
@@ -45,8 +57,10 @@ const PagamentoAdmin = () => {
                 await verificarAdminHome();
                 await carregarPagamentos();
             } catch {
-                alert("Acesso negado");
-                window.location.href = "/login";
+                dispararAlerta("erro", "Acesso Negado", "Você não tem permissão para acessar esta página.");
+                setTimeout(() => {
+                    window.location.href = "/login";
+                }, 2500);
             }
         }
         iniciarPagina();
@@ -67,10 +81,11 @@ const PagamentoAdmin = () => {
         setIsApproving(true);
         try {
             await pagamentoAdminService.aprovarPagamento(id);
-            await carregarPagamentos();
             setItemParaModal(null);
+            await carregarPagamentos();
+            dispararAlerta("sucesso", "Sucesso!", "O pagamento foi aprovado com sucesso.");
         } catch (err: any) {
-            alert(err.message || "Erro ao aprovar pagamento");
+            dispararAlerta("erro", "Falha na Aprovação", err.message || "Erro ao aprovar pagamento");
         } finally {
             setIsApproving(false);
         }
@@ -80,157 +95,168 @@ const PagamentoAdmin = () => {
         setIsRejecting(true);
         try {
             await pagamentoAdminService.reprovarPagamento(id);
-            await carregarPagamentos();
             setItemParaModal(null);
+            await carregarPagamentos();
+            dispararAlerta("sucesso", "Sucesso!", "O pagamento foi reprovado.");
         } catch (err: any) {
-            alert(err.message || "Erro ao reprovar pagamento");
+            dispararAlerta("erro", "Falha na Reprovação", err.message || "Erro ao reprovar pagamento");
         } finally {
             setIsRejecting(false);
         }
     };
 
     return (
-        <div className="bg-[#101625] min-h-screen flex flex-col pt-24 md:pt-28 px-3 md:px-6 min-[1330px]:h-screen min-[1330px]:w-screen min-[1330px]:pt-20 min-[1330px]:overflow-hidden min-[1330px]:px-0">
-            
-            <div className="w-full flex flex-col gap-6 flex-1 pb-6 min-[1330px]:flex-row min-[1330px]:gap-8 min-[1330px]:min-h-0 min-[1330px]:h-full min-[1330px]:h-[calc(100vh-140px)] min-[1330px]:pb-4">
+        <>
+            <Alert
+                aberto={alerta.aberto}
+                tipo={alerta.tipo}
+                titulo={alerta.titulo}
+                descricao={alerta.descricao}
+                fechar={() => setAlerta((prev) => ({ ...prev, aberto: false }))}
+            />
 
-                <aside className="w-full bg-white rounded-[15px] p-4 md:p-6 shadow-xl flex flex-col min-[1330px]:w-[415px] min-[1330px]:rounded-none min-[1330px]:rounded-r-[5px] min-[1330px]:p-10 min-[1330px]:h-full min-[1330px]:mb-2">
+            <div className="bg-[#101625] min-h-screen flex flex-col pt-24 md:pt-28 px-3 md:px-6 min-[1330px]:h-screen min-[1330px]:w-screen min-[1330px]:pt-20 min-[1330px]:overflow-hidden min-[1330px]:px-0">
+                
+                <div className="w-full flex flex-col gap-6 flex-1 pb-6 min-[1330px]:flex-row min-[1330px]:gap-8 min-[1330px]:min-h-0 min-[1330px]:h-full min-[1330px]:h-[calc(100vh-140px)] min-[1330px]:pb-4">
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 min-[1330px]:flex min-[1330px]:flex-col min-[1330px]:justify-end min-[1330px]:gap-10.5 min-[1330px]:lg:mt-9.5">
+                    <aside className="w-full bg-white rounded-[15px] p-4 md:p-6 shadow-xl flex flex-col min-[1330px]:w-[415px] min-[1330px]:rounded-none min-[1330px]:rounded-r-[5px] min-[1330px]:p-10 min-[1330px]:h-full min-[1330px]:mb-2">
 
-                        {Object.entries(stats).map(([key, value]) => (
-                            <div
-                                key={key}
-                                className="bg-[#101625] text-white rounded-[15px] flex items-center justify-center gap-2 h-16 md:h-20 lg:h-35 min-[1330px]:rounded-[20px] min-[1330px]:min-h-[100px] min-[1330px]:px-3 text-center min-[1330px]:w-[368px]"
-                            >
-                                <span className="text-[1rem] md:text-[1.1rem] min-[1330px]:text-[1.3rem] font-bold capitalize">
-                                    {key}: {value}
-                                </span>
-                            </div>
-                        ))}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 min-[1330px]:flex min-[1330px]:flex-col min-[1330px]:justify-end min-[1330px]:gap-10.5 min-[1330px]:lg:mt-9.5">
 
-                    </div>
-                </aside>
-
-                <main className="flex-1 flex flex-col min-[1330px]:min-h-0 min-[1330px]:overflow-hidden min-[1330px]:px-0 min-[1330px]:lg:pr-10">
-
-                    <div className="flex flex-col gap-4 flex-shrink-0 relative mb-3 min-[1330px]:mb-0">
-                        <div className="flex items-center justify-between gap-4">
-                            <div className="flex flex-row items-center gap-2 relative z-40">
-                                <button
-                                    onClick={() => setShowDropdown(!showDropdown)}
-                                    className="w-12 h-12 md:w-12 md:h-12 cursor-pointer min-[1330px]:w-16 min-[1330px]:h-16 min-[1330px]:lg:mt-3"
-                                    aria-label="Filtro"
+                            {Object.entries(stats).map(([key, value]) => (
+                                <div
+                                    key={key}
+                                    className="bg-[#101625] text-white rounded-[15px] flex items-center justify-center gap-2 h-16 md:h-20 lg:h-35 min-[1330px]:rounded-[20px] min-[1330px]:min-h-[100px] min-[1330px]:px-3 text-center min-[1330px]:w-[368px]"
                                 >
-                                    <img
-                                        src={filtroIcon}
-                                        alt="ícone filtro"
-                                        className="w-full h-full transform object-contain"
-                                    />
-                                </button>
-
-                                <span className="text-white font-bold text-[1rem] md:text-xl min-[1330px]:text-xl min-[1330px]:lg:mt-3">
-                                    {filtro}
-                                </span>
-                            </div>
-                        </div>
-
-                        {showDropdown && (
-                            <div className="absolute top-12 md:top-14 left-0 bg-white rounded-xl shadow-2xl py-2 z-50 w-40 md:w-48 min-[1330px]:top-15 md:translate-y-3">
-                                {["Todos", "Pendentes", "Aprovados", "Reprovados"].map((opt) => (
-                                    <button
-                                        key={opt}
-                                        onClick={() => {
-                                            setFiltro(opt as any);
-                                            setShowDropdown(false);
-                                        }}
-                                        className="w-full text-left px-4 md:px-5 py-2 md:py-3 hover:bg-gray-100 font-bold text-[#101625] text-[0.9rem] md:text-[1rem]"
-                                    >
-                                        {opt}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="flex-1 bg-[#1B263B] rounded-[12px] shadow-inner overflow-hidden flex flex-col min-h-[400px] min-[1330px]:min-h-0">
-
-                        <div className="flex justify-end px-4 pt-4 pb-3 flex-shrink-0">
-                            <button
-                                onClick={handleAtualizar}
-                                disabled={loading}
-                                className="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-lg text-[#1B263B] hover:bg-gray-100 active:scale-95 transition-all duration-200 disabled:opacity-50"
-                                title="Atualizar pagamentos"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={2.5}
-                                    stroke="currentColor"
-                                    className={`w-5 h-5 sm:w-6 sm:h-6 ${loading ? "animate-spin" : ""}`}
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
-
-                        <div className="flex-1 min-h-0 overflow-y-auto scroll-modern px-4 md:px-5 pb-4">
-                            {loading && lista.length === 0 ? (
-                                <div className="text-center py-20 text-gray-300">
-                                    Carregando pagamentos...
+                                    <span className="text-[1rem] md:text-[1.1rem] min-[1330px]:text-[1.3rem] font-bold capitalize">
+                                        {key}: {value}
+                                    </span>
                                 </div>
-                            ) : error ? (
-                                <div className="flex flex-col items-center justify-center py-20 text-center h-full">
-                                    <p className="text-red-300 mb-4 text-lg">
-                                        {error}
-                                    </p>
+                            ))}
 
+                        </div>
+                    </aside>
+
+                    <main className="flex-1 flex flex-col min-[1330px]:min-h-0 min-[1330px]:overflow-hidden min-[1330px]:px-0 min-[1330px]:lg:pr-10">
+
+                        <div className="flex flex-col gap-4 flex-shrink-0 relative mb-3 min-[1330px]:mb-0">
+                            <div className="flex items-center justify-between gap-4">
+                                <div className="flex flex-row items-center gap-2 relative z-40">
                                     <button
-                                        onClick={handleAtualizar}
-                                        className="bg-white text-[#1B263B] px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition"
+                                        onClick={() => setShowDropdown(!showDropdown)}
+                                        className="w-12 h-12 md:w-12 md:h-12 cursor-pointer min-[1330px]:w-16 min-[1330px]:h-16 min-[1330px]:lg:mt-3"
+                                        aria-label="Filtro"
                                     >
-                                        Tentar novamente
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="flex flex-col gap-3 md:gap-5 pb-4">
-                                    {lista.map((p) => (
-                                        <CardPagamento
-                                            key={p.id}
-                                            data={p}
-                                            onOpenComprovante={() => setItemParaModal(p)}
+                                        <img
+                                            src={filtroIcon}
+                                            alt="ícone filtro"
+                                            className="w-full h-full transform object-contain"
                                         />
-                                    ))}
+                                    </button>
 
-                                    {lista.length === 0 && (
-                                        <div className="text-center py-20 text-gray-300 font-bold uppercase text-[1rem]">
-                                            Nenhum registro encontrado.
-                                        </div>
-                                    )}
+                                    <span className="text-white font-bold text-[1rem] md:text-xl min-[1330px]:text-xl min-[1330px]:lg:mt-3">
+                                        {filtro}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {showDropdown && (
+                                <div className="absolute top-12 md:top-14 left-0 bg-white rounded-xl shadow-2xl py-2 z-50 w-40 md:w-48 min-[1330px]:top-15 md:translate-y-3">
+                                    {["Todos", "Pendentes", "Aprovados", "Reprovados"].map((opt) => (
+                                        <button
+                                            key={opt}
+                                            onClick={() => {
+                                                setFiltro(opt as any);
+                                                setShowDropdown(false);
+                                            }}
+                                            className="w-full text-left px-4 md:px-5 py-2 md:py-3 hover:bg-gray-100 font-bold text-[#101625] text-[0.9rem] md:text-[1rem]"
+                                        >
+                                            {opt}
+                                        </button>
+                                    ))}
                                 </div>
                             )}
                         </div>
-                    </div>
-                </main>
-            </div>
 
-            {itemParaModal && (
-                <CardComprovante
-                    data={itemParaModal}
-                    onClose={() => setItemParaModal(null)}
-                    onApprove={handleApprove}
-                    onReject={handleReject}
-                    isApproving={isApproving}
-                    isRejecting={isRejecting}
-                    isLoading={isApproving || isRejecting}
-                />
-            )}
-        </div>
+                        <div className="flex-1 bg-[#1B263B] rounded-[12px] shadow-inner overflow-hidden flex flex-col min-h-[400px] min-[1330px]:min-h-0">
+
+                            <div className="flex justify-end px-4 pt-4 pb-3 flex-shrink-0">
+                                <button
+                                    onClick={handleAtualizar}
+                                    disabled={loading}
+                                    className="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-lg text-[#1B263B] hover:bg-gray-100 active:scale-95 transition-all duration-200 disabled:opacity-50"
+                                    title="Atualizar pagamentos"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={2.5}
+                                        stroke="currentColor"
+                                        className={`w-5 h-5 sm:w-6 sm:h-6 ${loading ? "animate-spin" : ""}`}
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div className="flex-1 min-h-0 overflow-y-auto scroll-modern px-4 md:px-5 pb-4">
+                                {loading && lista.length === 0 ? (
+                                    <div className="text-center py-20 text-gray-300">
+                                        Carregando pagamentos...
+                                    </div>
+                                ) : error ? (
+                                    <div className="flex flex-col items-center justify-center py-20 text-center h-full">
+                                        <p className="text-red-300 mb-4 text-lg">
+                                            {error}
+                                        </p>
+
+                                        <button
+                                            onClick={handleAtualizar}
+                                            className="bg-white text-[#1B263B] px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition"
+                                        >
+                                            Tentar novamente
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col gap-3 md:gap-5 pb-4">
+                                        {lista.map((p) => (
+                                            <CardPagamento
+                                                key={p.id}
+                                                data={p}
+                                                onOpenComprovante={() => setItemParaModal(p)}
+                                            />
+                                        ))}
+
+                                        {lista.length === 0 && (
+                                            <div className="text-center py-20 text-gray-300 font-bold uppercase text-[1rem]">
+                                                Nenhum registro encontrado.
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </main>
+                </div>
+
+                {itemParaModal && (
+                    <CardComprovante
+                        data={itemParaModal}
+                        onClose={() => setItemParaModal(null)}
+                        onApprove={handleApprove}
+                        onReject={handleReject}
+                        isApproving={isApproving}
+                        isRejecting={isRejecting}
+                        isLoading={isApproving || isRejecting}
+                    />
+                )}
+            </div>
+        </>
     );
 };
 
