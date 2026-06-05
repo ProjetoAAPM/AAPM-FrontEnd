@@ -154,7 +154,7 @@ function PopupPagamento({ isOpen, onClose, planoSelecionado }: PopupProps) {
               accept="image/*,application/pdf"
               onChange={(e) => setComprovante(e.target.files?.[0] || null)}
             />
-            <p className="text-xs md:text-sm lg:text-base font-semibold text-gray-500 max-w-[240px] md:max-w-[280px] truncate">
+            <p className="text-xs md:text-sm lg:text-base font-semibold text-gray-500 max-w-[240px] md:max-w-[280px] break-words">
               {comprovante ? comprovante.name : "Arraste ou clique para anexar o comprovante"}
             </p>
           </label>
