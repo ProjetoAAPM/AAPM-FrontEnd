@@ -4,6 +4,7 @@ import CardPlano from "../components/CardPlano";
 import Copiador from "../alerts/Copiador";
 import { Copy, ArrowLeft } from "lucide-react";
 import ConfirmarPagamento from "../alerts/ConfirmarPagamento";
+import Alert from "../alerts/Alert";
 
 function EscolhaPlano() {
     const navigate = useNavigate();
@@ -13,9 +14,20 @@ function EscolhaPlano() {
     const [loading, setLoading] = useState(false);
     const [planoSelecionado, setPlanoSelecionado] = useState<"comum" | "premium" | null>(null);
 
+    const [alerta, setAlerta] = useState({
+        aberto: false,
+        tipo: "sucesso" as "sucesso" | "erro",
+        titulo: "",
+        descricao: "",
+    });
+
+    const dispararAlerta = (tipoAlerta: "sucesso" | "erro", titulo: string, descricao: string) => {
+        setAlerta({ aberto: true, tipo: tipoAlerta, titulo, descricao });
+    }
+
     const handlPrepararEnvio = (plano: "comum" | "premium", comprovante: File | null) => {
         if (!comprovante) {
-            alert("Coloque o comprovante primeiro!");
+            dispararAlerta("erro", "Arquivo Ausente", "Por favor, adicione o comprovante do Pix primeiro!");
             return;
         }
         setPlanoSelecionado(plano);
@@ -25,12 +37,12 @@ function EscolhaPlano() {
     const handleConfirmarEnvio = async () => {
         const comprovante = planoSelecionado === "premium" ? comprovantePremium : comprovanteComum;
         if (!comprovante) {
-            alert("Por favor, selecione um arquivo de comprovante primeiro.");
+            dispararAlerta("erro", "Arquivo Ausente", "Por favor, selecione um arquivo de comprovante primeiro.");
             return;
         }
         const idUsuarioSalvo = localStorage.getItem("usuario_id");
         if (!idUsuarioSalvo) {
-            alert("Erro crítico: O ID do usuário não foi encontrado!");
+            dispararAlerta("erro", "Erro Crítico", "O ID do usuário não foi encontrado!");
             return;
         }
         const dadosPagamento = {
@@ -51,7 +63,7 @@ function EscolhaPlano() {
             const resultadoEtapa1 = await respostaEtapa1.json();
             if (!respostaEtapa1.ok) {
                 const mensagemErro = resultadoEtapa1.erro || resultadoEtapa1.mensagem || "Falha na operação.";
-                alert(`Erro: ${mensagemErro}`);
+                dispararAlerta("erro", "Erro na Geração", mensagemErro);
                 setModalAberto(false);
                 setPlanoSelecionado(null);
                 return;
@@ -83,19 +95,20 @@ function EscolhaPlano() {
                     setComprovanteComum(null);
                 }
 
+                dispararAlerta("sucesso", "Sucesso!", resultadoEtapa2.mensagem || "Comprovante enviado com sucesso! Aguarde a validação.");
+
                 setTimeout(() => {
-                    alert(resultadoEtapa2.mensagem || "Comprovante enviado com sucesso!");
                     navigate("/login");
-                }, 100);
+                }, 2500);
             } else {
                 const mensagemErro = resultadoEtapa2.erro || resultadoEtapa2.mensagem || "Falha na operação.";
-                alert(`Erro: ${mensagemErro}`);
+                dispararAlerta("erro", "Erro no Envio", mensagemErro);
                 setModalAberto(false);
                 setPlanoSelecionado(null);
             }
         } catch (erro) {
             console.error("Erro na requisição de pagamento:", erro);
-            alert("Não foi possível conectar ao servidor.");
+            dispararAlerta("erro", "Falha de Conexão", "Não foi possível conectar ao servidor.");
             setModalAberto(false);
             setPlanoSelecionado(null);
         } finally {
@@ -112,6 +125,15 @@ function EscolhaPlano() {
 
     return (
         <div className="min-h-[100vh] bg-[#101625] flex flex-col items-center py-5">
+
+            <Alert
+                aberto={alerta.aberto}
+                tipo={alerta.tipo}
+                titulo={alerta.titulo}
+                descricao={alerta.descricao}
+                fechar={() => setAlerta((prev) => ({ ...prev, aberto: false }))}
+            />
+
             {modalAberto && planoSelecionado && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
                     <ConfirmarPagamento 
