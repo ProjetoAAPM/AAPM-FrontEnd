@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import React, { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import MenuMobile from "./MenuMobile";
@@ -40,18 +40,22 @@ function Header({ usuario, setUsuario }: HeaderProps) {
         });
 
         setIsOpen(false);
-
         navigate("/");
     }
 
-    function verificarAcesso(e: React.MouseEvent<HTMLAnchorElement>) {
+    // CORREÇÃO: Função adaptada para navegar via código no Desktop e garantir o bloqueio
+    function lidarComNavegacao(e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>, rota: string) {
+        e.preventDefault(); // Garante o bloqueio do comportamento padrão de links
+
         if (isAdmin) {
+            navigate(rota);
             return;
         }
 
-        if (!usuario?.nome){
-            e.preventDefault();
+        if (!usuario || !usuario.nome || usuario.nome.trim() === "") {
             setModalAberto(true);
+        } else {
+            navigate(rota);
         }
     }
 
@@ -85,38 +89,36 @@ function Header({ usuario, setUsuario }: HeaderProps) {
         });
 
         setEditMode(false);
-
         window.location.reload();
     }
 
     const navLink =
-        "hover:text-[#FFD44B] transition-all duration-200";
+        "hover:text-[#FFD44B] transition-all duration-200 text-left bg-transparent border-none p-0 font-medium cursor-pointer";
 
     const botaoAdmin =
         "bg-[#C83D3D] hover:bg-[#b03535] transition-all text-white font-semibold rounded-full px-8 py-2 text-base min-w-[130px] text-center cursor-pointer";
 
     return (
         <>
+            <LayoutAviso 
+                aberto={modalAberto} 
+                fechar={() => setModalAberto(false)} 
+                titulo="ATENÇÃO!"
+                textoBotao="Fechar" 
+                largura="max-w-[95%] sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl" 
+                corFundo="#BE2920" 
+                corTitulo="#B42C24" 
+                corBotao="#B42C24"
+                className="font-semibold"
+            >
+                <p className="text-lg md:text-xl lg:text-2xl">
+                    O acesso às abas do site é <span className="text-[#C83D3D] font-bold">restrito</span> a usuários autenticados.
+                </p>
 
-        <LayoutAviso 
-            aberto={modalAberto} 
-            fechar={() => setModalAberto(false)} 
-            titulo="ATENÇÃO!"
-            textoBotao="Fechar" 
-            largura="max-w-[95%] sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl" 
-            corFundo="#BE2920" 
-            corTitulo="#B42C24" 
-            corBotao="#B42C24"
-            className="font-semibold"
-        >
-            <p className="text-lg md:text-xl lg:text-2xl">
-                O acesso às abas do site é <span className="text-[#C83D3D] font-bold">restrito</span> a usuários autenticados.
-            </p>
-
-            <p className="mt-4 text-lg md:text-xl lg:text-2xl">
-                Caso ainda não possua cadastro, convidamos você a se registrar e se tornar mebro da AAPM.
-            </p>
-        </LayoutAviso>
+                <p className="mt-4 text-lg md:text-xl lg:text-2xl">
+                    Caso ainda não possua cadastro, convidamos você a se registrar e se tornar membro da AAPM.
+                </p>
+            </LayoutAviso>
 
             <div
                 className={`absolute w-full flex justify-center z-50 transition-all duration-300 ${
@@ -128,11 +130,10 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                 <div
                     className={`w-full max-w-[1812px] h-[75px] flex items-center justify-between px-4 md:px-6 transition-all duration-300 ${
                         isOpen
-                        ? "fixed bg-[#FFD44B]"
-                        : "bg-[#211F1D]/80 backdrop-blur-lg min-[1330px]:rounded-full shadow-[0_0_25px_rgba(255,255,255,0.35)]"
+                            ? "fixed bg-[#FFD44B]"
+                            : "bg-[#211F1D]/80 backdrop-blur-lg min-[1330px]:rounded-full shadow-[0_0_25px_rgba(255,255,255,0.35)]"
                     }`}
-                    >
-
+                >
                     <Link to="/" className="flex items-center gap-2 md:gap-3">
                         <img
                             src={logoImg}
@@ -151,54 +152,42 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                         </p>
                     </Link>
 
+                    {/* DESKTOP NAV: Trocados por botões com controle manual para evitar bugs do Link */}
                     <div className="hidden min-[1330px]:flex gap-6 xl:gap-16 2xl:gap-28 text-white text-sm xl:text-base 2xl:text-lg font-medium">
-                        <Link
+                        <button
                             className={navLink}
-                            to={isAdmin ? "/admin" : "/home"}
-                            onClick={verificarAcesso}
+                            onClick={(e) => lidarComNavegacao(e, isAdmin ? "/admin" : "/home")}
                         >
                             Home
-                        </Link>
+                        </button>
 
                         {isAdmin && (
-                            <Link
+                            <button
                                 className={navLink}
-                                to="/admin/usuario"
+                                onClick={(e) => lidarComNavegacao(e, "/admin/usuario")}
                             >
                                 Usuário
-                            </Link>
+                            </button>
                         )}
 
-                        <Link
+                        <button
                             className={navLink}
-                            to={
-                                isAdmin
-                                    ? "/admin/novidades"
-                                    : "/novidades"
-                            }
-                            onClick={verificarAcesso}
+                            onClick={(e) => lidarComNavegacao(e, isAdmin ? "/admin/novidades" : "/novidades")}
                         >
                             Novidades
-                        </Link>
+                        </button>
 
-                        <Link
+                        <button
                             className={navLink}
-                            to={
-                                isAdmin
-                                    ? "/admin/pagamento"
-                                    : "/pagamento"
-                            }
-                            onClick={verificarAcesso}
+                            onClick={(e) => lidarComNavegacao(e, isAdmin ? "/admin/pagamento" : "/pagamento")}
                         >
                             Pagamento
-                        </Link>
+                        </button>
                     </div>
 
                     <div className="flex gap-2 md:gap-4 xl:gap-6 items-center">
-
                         {isAdmin ? (
                             <div className="hidden min-[1330px]:flex items-center gap-4">
-
                                 <button
                                     onClick={resetarPadrao}
                                     className={botaoAdmin}
@@ -213,14 +202,12 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                                         if (editMode) {
                                             alert("Salvo com sucesso!");
                                         }
-
                                         setEditMode(!editMode);
                                     }}
                                     className={botaoAdmin}
                                 >
                                     {editMode ? "Salvar" : "Editar"}
                                 </button>
-
                             </div>
                         ) : (
                             <>
@@ -232,6 +219,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                                         <img
                                             src={usuario.foto}
                                             className="w-11 h-11 rounded-full object-cover"
+                                            alt="Perfil"
                                         />
 
                                         <p
@@ -256,7 +244,6 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                                     </div>
                                 ) : (
                                     <div className="hidden min-[1330px]:flex items-center">
-
                                         <Link
                                             to="/login"
                                             className={botaoAdmin}
@@ -274,15 +261,13 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                                         >
                                             Cadastrar
                                         </Link>
-
                                     </div>
                                 )}
                             </>
                         )}
 
-                        {/* MOBILE */}
+                        {/* MOBILE CONTAINER */}
                         <div className="flex items-center gap-3 min-[1330px]:hidden">
-
                             {!isAdmin && usuario?.nome && (
                                 <button
                                     onClick={() => setPerfilOpen(true)}
@@ -290,6 +275,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                                     <img
                                         src={usuario.foto}
                                         className="w-10 h-10 rounded-full object-cover"
+                                        alt="Perfil"
                                     />
                                 </button>
                             )}
@@ -306,7 +292,6 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                                             : "bg-white"
                                     }`}
                                 />
-
                                 <span
                                     className={`h-0.5 w-6 transition-all duration-300 ${
                                         isOpen
@@ -314,7 +299,6 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                                             : "bg-white"
                                     }`}
                                 />
-
                                 <span
                                     className={`h-0.5 w-6 transition-all duration-300 ${
                                         isOpen
@@ -322,7 +306,6 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                                             : "bg-white"
                                     }`}
                                 />
-
                             </button>
                         </div>
                     </div>
@@ -334,6 +317,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                 onClose={() => setIsOpen(false)}
                 usuario={usuario}
                 logout={logout}
+                setModalAberto={setModalAberto} 
             />
 
             <ModalPerfil

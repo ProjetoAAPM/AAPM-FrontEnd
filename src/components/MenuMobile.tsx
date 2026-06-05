@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEditMode } from "../contexts/modo_editar";
 import { limparTodoConteudo } from "../Services/conteudoService";
 
@@ -7,13 +7,34 @@ type Props = {
   onClose: () => void;
   usuario: any;
   logout?: () => void;
+  setModalAberto: (aberto: boolean) => void; // Mudamos aqui para receber diretamente o controle do Modal
 };
 
-function MenuMobile({ isOpen, onClose, usuario, logout }: Props) {
+function MenuMobile({ isOpen, onClose, usuario, logout, setModalAberto }: Props) {
   const location = useLocation();
+  const navigate = useNavigate(); // Hook para navegar via código
   const { editMode, setEditMode } = useEditMode();
 
   const isAdmin = location.pathname.startsWith("/admin");
+
+  // Função que decide se navega ou se abre o modal
+  const navegarComVerificacao = (rota: string) => {
+    // Se for admin, passa direto
+    if (isAdmin) {
+      navigate(rota);
+      onClose();
+      return;
+    }
+
+    // Verifica se o usuário está realmente logado (nome preenchido e válido)
+    if (!usuario || !usuario.nome || usuario.nome.trim() === "") {
+      setModalAberto(true); // Abre o modal de aviso que está no Header
+      // Opcional: onClose(); // Descomente esta linha se quiser que o menu feche ao abrir o modal
+    } else {
+      navigate(rota);
+      onClose();
+    }
+  };
 
   const resetarPadrao = async () => {
     if (window.confirm("Deseja voltar ao texto e imagens padrão originais?")) {
@@ -58,39 +79,35 @@ function MenuMobile({ isOpen, onClose, usuario, logout }: Props) {
       >
         <nav className="flex flex-col px-10 pt-12 pb-10">
           <div className="flex flex-col gap-6">
-            <Link
-              to={isAdmin ? "/admin" : "/home"}
-              onClick={onClose}
-              className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2"
+            <button
+              onClick={() => navegarComVerificacao(isAdmin ? "/admin" : "/home")}
+              className="text-left text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2 cursor-pointer"
             >
               Home
-            </Link>
+            </button>
 
             {isAdmin && (
-              <Link
-                to="/admin/usuario"
-                onClick={onClose}
-                className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2"
+              <button
+                onClick={() => navegarComVerificacao("/admin/usuario")}
+                className="text-left text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2 cursor-pointer"
               >
                 Usuário
-              </Link>
+              </button>
             )}
 
-            <Link
-              to={isAdmin ? "/admin/novidades" : "/novidades"}
-              onClick={onClose}
-              className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2"
+            <button
+              onClick={() => navegarComVerificacao(isAdmin ? "/admin/novidades" : "/novidades")}
+              className="text-left text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2 cursor-pointer"
             >
               Novidades
-            </Link>
+            </button>
 
-            <Link
-              to={isAdmin ? "/admin/pagamento" : "/pagamento"}
-              onClick={onClose}
-              className="text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2"
+            <button
+              onClick={() => navegarComVerificacao(isAdmin ? "/admin/pagamento" : "/pagamento")}
+              className="text-left text-[#CACACA] text-lg font-semibold border-b-2 border-[#FFF4C9] pb-2 cursor-pointer"
             >
               Pagamentos
-            </Link>
+            </button>
           </div>
 
           {!isAdmin && usuario?.nome && (
@@ -153,21 +170,19 @@ function MenuMobile({ isOpen, onClose, usuario, logout }: Props) {
                   </button>
                 ) : (
                   <>
-                    <Link
-                      to="/login"
-                      onClick={onClose}
-                      className="w-full h-[45px] flex items-center justify-center rounded-full border border-white/30 text-[#CACACA] text-lg font-bold bg-[#171717]"
+                    <button
+                      onClick={() => { navigate("/login"); onClose(); }}
+                      className="w-full h-[45px] flex items-center justify-center rounded-full border border-white/30 text-[#CACACA] text-lg font-bold bg-[#171717] cursor-pointer"
                     >
                       Entrar
-                    </Link>
+                    </button>
 
-                    <Link
-                      to="/cadastro"
-                      onClick={onClose}
-                      className="w-full h-[45px] flex items-center justify-center rounded-full bg-[#FFD44B] text-[#171717] text-lg font-bold shadow-lg"
+                    <button
+                      onClick={() => { navigate("/cadastro"); onClose(); }}
+                      className="w-full h-[45px] flex items-center justify-center rounded-full bg-[#FFD44B] text-[#171717] text-lg font-bold shadow-lg cursor-pointer"
                     >
                       Cadastrar
-                    </Link>
+                    </button>
                   </>
                 )}
               </>
