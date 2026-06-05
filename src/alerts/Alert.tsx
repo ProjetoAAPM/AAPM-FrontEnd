@@ -60,7 +60,7 @@ export default function Alert({
           xl:w-[330px] xl:rounded-[32px] xl:p-7
         `}
       >
-        <div className={`w-10 h-10 md:w-12 md:h-12 xl:w-14 xl:h-14 rounded-full ${estilo.iconeBg} flex items-center justify-center border-3 ${estilo.iconeCor} mb-4 xl:mb-5`}>
+        <div className={`w-8 h-8 md:w-10 md:h-10 xl:w-12 xl:h-12 rounded-full ${estilo.iconeBg} flex items-center justify-center border-2 xl:border-3 ${estilo.iconeCor} mb-4 xl:mb-5`}>
           <span className="text-xl md:text-2xl xl:text-3xl font-bold leading-none select-none">
             {estilo.simbolo}
           </span>
