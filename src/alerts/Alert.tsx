@@ -51,22 +51,22 @@ export default function Alert({
   const estilo = configuracao[tipo];
 
   return (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/20 backdrop-blur-[2px] px-4 animate-fade-in">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/20 backdrop-blur-[2px] p-4 animate-fade-in">
       
       <div
-        className={`w-full max-w-[400px] bg-white rounded-[32px] border-[3px] ${estilo.borda} p-6 shadow-xl flex flex-col items-center justify-center text-center transition-all scale-100`}
+        className={`w-[90%] sm:w-full max-w-[400px] bg-white rounded-[24px] sm:rounded-[32px] border-[3px] ${estilo.borda} p-5 sm:p-6 shadow-xl flex flex-col items-center justify-center text-center transition-all scale-100`}
       >
-        <div className={`w-16 h-16 rounded-full ${estilo.iconeBg} flex items-center justify-center border border-3 ${estilo.iconeCor} mb-5`}>
-          <span className="text-3xl font-bold leading-none select-none">
+        <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-full ${estilo.iconeBg} flex items-center justify-center border-3 ${estilo.iconeCor} mb-4 sm:mb-5`}>
+          <span className="text-2xl sm:text-3xl font-bold leading-none select-none">
             {estilo.simbolo}
           </span>
         </div>
 
-        <h2 className={`text-2xl font-bold ${estilo.corTitulo} tracking-tight`}>
+        <h2 className={`text-xl sm:text-2xl font-bold ${estilo.corTitulo} tracking-tight`}>
           {titulo}
         </h2>
 
-        <p className="mt-2 text-sm md:text-base lg:text-lg font-normal text-slate-500 leading-relaxed">
+        <p className="mt-2 text-xs sm:text-sm md:text-base font-normal text-slate-500 leading-relaxed max-w-xs">
           {descricao}
         </p>
       </div>
