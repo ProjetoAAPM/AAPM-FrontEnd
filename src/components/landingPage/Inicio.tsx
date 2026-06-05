@@ -65,14 +65,14 @@ function Inicio() {
 
       <div className="max-w-[1650px] w-full mx-auto px-10 md:px-20 pt-32 md:pt-[140px] lg:pt-[280px] pb-10 lg:pb-20">
 
-        <div className="flex flex-col items-center md:items-start relative">
+        <div className="flex flex-col items-center md:items-start relative w-full max-w-full md:max-w-3xl">
 
           {editMode ? (
             <div className="w-full border-dashed border-white/30 relative">
 
               <BlocoEditavel
                 id={1} 
-                className="text-white"
+                className="text-white w-full"
                 content={conteudoSalvo || conteudoPadrao}
               />
 
@@ -87,7 +87,7 @@ function Inicio() {
             </div>
           ) : (
             <div
-              className="text-white ProseMirror-static"
+              className="text-white ProseMirror-static w-full break-words [&_h1]:text-balance [&_p]:text-balance"
               dangerouslySetInnerHTML={{
                 __html: conteudoSalvo || conteudoPadrao
               }}
