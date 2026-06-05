@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/admin/AuthContext";
 import type { ChangeEvent, SyntheticEvent } from "react";
 import { ChevronDown } from "lucide-react";
 import perfil1 from "../assets/perfis/user1.png";
+import Alert from "../alerts/Alert";
 
 function Formulario({ tipo, setUsuario }: any) {
   const [dados, setDados] = useState({
@@ -17,6 +18,17 @@ function Formulario({ tipo, setUsuario }: any) {
     fim_curso: "",
     tipo_usuario: "aluno",
   });
+
+  const [alerta, setAlerta] = useState({
+    aberto: false,
+    tipo: "sucesso" as "sucesso" | "erro",
+    titulo: "",
+    descricao: "",
+  })
+
+  const dispararAlerta = (tipoAlerta: "sucesso" | "erro", titulo: string, descricao: string) => {
+    setAlerta({ aberto: true, tipo: tipoAlerta, titulo, descricao });
+  };
 
   const navigate = useNavigate();
 
@@ -140,23 +152,17 @@ function Formulario({ tipo, setUsuario }: any) {
 
     if (tipo === "cadastro") {
       if (dados.senha !== dados.confirmar_senha) {
-        alert("Senhas diferentes!");
+        dispararAlerta("erro", "Atenção!", "As senhas preenchidas não são iguais.");
         return;
       }
 
-      if (
-        dados.tipo_usuario === "aluno" &&
-        !dados.curso
-      ) {
-        alert("Informe o seu curso!");
+      if (dados.tipo_usuario === "aluno" && !dados.curso) {
+        dispararAlerta("erro", "Campo Obrigatório", "Por favor, informe o seu curso.");
         return;
       }
 
-      if (
-        dados.tipo_usuario === "docente" &&
-        !dados.especialidade
-      ) {
-        alert("Informe sua especialidade!");
+      if (dados.tipo_usuario === "docente" && !dados.especialidade) {
+        dispararAlerta("erro", "Campo Obrigatório", "Por favor, informe sua especialidade.");
         return;
       }
     }
@@ -167,13 +173,10 @@ function Formulario({ tipo, setUsuario }: any) {
           "http://localhost:5000/login",
           {
             method: "POST",
-
             headers: {
               "Content-Type": "application/json",
             },
-
             credentials: "include",
-
             body: JSON.stringify({
               email: dados.email,
               senha: dados.senha,
@@ -189,102 +192,61 @@ function Formulario({ tipo, setUsuario }: any) {
             resultado.usuario?.tipo_usuario;
 
           if (tipoUsuario === "administrador") {
-            console.log(
-              "Login de ADMINISTRADOR confirmado pelo backend"
-            );
-
-            await loginAdmin(
-              dados.email,
-              dados.senha
-            );
-
-            alert(
-              resultado.mensagem ||
-                "Login de Administrador realizado com sucesso!"
-            );
-
-            navigate("/admin");
-
+            console.log("Login de ADMINISTRADOR confirmed pelo backend");
+            await loginAdmin(dados.email, dados.senha);
+            dispararAlerta("sucesso", "Sucesso!", resultado.mensagem || "Login de Administrador realizado com sucesso!");
+            
+            setTimeout(() => {
+              navigate("/admin");
+            }, 2500);
             return;
           }
 
-          if (
-            resultado.status_usuario === "INATIVO"
-          ) {
-            localStorage.setItem(
-              "usuario_id",
-              resultado.usuario_id
-            );
-
-            localStorage.setItem(
-              "status_usuario",
-              "INATIVO"
-            );
-
-            alert(resultado.mensagem);
-
-            navigate("/escolhaplano");
-
+          if (resultado.status_usuario === "INATIVO") {
+            localStorage.setItem("usuario_id", resultado.usuario_id);
+            localStorage.setItem("status_usuario", "INATIVO");
+             dispararAlerta("erro", "Conta Inativa", "Seu acesso está inativo porque o pagamento está pendente ou em análise.");
+            
+            setTimeout(() => {
+              navigate("/escolhaplano");
+            }, 3000);
             return;
           }
 
           localStorage.setItem(
             "usuario_id",
-            resultado.usuario?.id ||
-              resultado.usuario_id
+            resultado.usuario?.id || resultado.usuario_id
           );
-
-          localStorage.setItem(
-            "status_usuario",
-            "ATIVO"
-          );
+          localStorage.setItem("status_usuario", "ATIVO");
 
           setUsuario?.({
             nome: resultado.usuario?.usuario_nome,
-            tipo_usuario:
-              resultado.usuario?.tipo_usuario,
+            tipo_usuario: resultado.usuario?.tipo_usuario,
             foto: perfil1,
-            premium:
-              resultado.usuario?.premium,
+            premium: resultado.usuario?.premium,
           });
 
-          alert(
-            resultado.mensagem ||
-              "Login realizado com sucesso!"
-          );
-
-          navigate("/home");
+          dispararAlerta("sucesso", "Sucesso!", resultado.mensagem || "Login realizado com sucesso!");
 
           setTimeout(() => {
+            navigate("/home");
             window.location.reload();
-          }, 100);
+          }, 2500);
 
           return;
         }
 
         if (resposta.status === 403) {
-          alert(
-            "Seu acesso está inativo porque o pagamento está pendente ou em análise. Redirecionando para regularização..."
-          );
-
-          navigate("/escolhaplano");
-
+          dispararAlerta("erro", "Pagamento Pendente", "Seu acesso está inativo porque o pagamento está pendente ou em análise.");
+          setTimeout(() => {
+            navigate("/escolhaplano");
+          }, 2500);
           return;
         }
 
-        alert(
-          resultado.mensagem ||
-            "Email ou senha incorretos!"
-        );
+        dispararAlerta("erro", "Falha no Login", resultado.mensagem || "Email ou senha incorretos!");
       } catch (erro) {
-        console.error(
-          "Erro na requisição:",
-          erro
-        );
-
-        alert(
-          "Não foi possível conectar ao servidor."
-        );
+        dispararAlerta("erro", "Erro na requisição", "Não foi possível conectar ao servidor.");
       }
 
       return;
@@ -300,13 +262,10 @@ function Formulario({ tipo, setUsuario }: any) {
         `http://localhost:5000${rota}`,
         {
           method: "POST",
-
           headers: {
             "Content-Type": "application/json",
           },
-
           credentials: "include",
-
           body: JSON.stringify(dados),
         }
       );
@@ -314,47 +273,30 @@ function Formulario({ tipo, setUsuario }: any) {
       const resultado = await resposta.json();
 
       if (resposta.ok) {
-        if (
-          resultado.status_usuario === "INATIVO"
-        ) {
-          localStorage.setItem(
-            "usuario_id",
-            resultado.usuario_id
-          );
+        if (resultado.status_usuario === "INATIVO") {
+          localStorage.setItem("usuario_id", resultado.usuario_id);
+          localStorage.setItem("status_usuario", "INATIVO");
 
-          localStorage.setItem(
-            "status_usuario",
-            "INATIVO"
-          );
+          dispararAlerta("sucesso", "Aviso", resultado.mensagem || "Cadastro realizado!");
 
-          alert(resultado.mensagem);
-
-          navigate("/escolhaplano");
-
+          setTimeout(() => {
+            navigate("/escolhaplano");
+          }, 2500);
           return;
         }
 
         localStorage.setItem(
           "usuario_id",
-          resultado.usuario_id ||
-            resultado.usuario?.id
+          resultado.usuario_id || resultado.usuario?.id
         );
+        localStorage.setItem("status_usuario", "ATIVO");
 
-        localStorage.setItem(
-          "status_usuario",
-          "ATIVO"
-        );
-
-        alert(
-          resultado.mensagem ||
-            "Cadastro realizado com sucesso!"
-        );
-
-        navigate("/escolhaplano");
+        dispararAlerta("sucesso", "Sucesso!", resultado.mensagem || "Cadastro realizado com sucesso!");
 
         setTimeout(() => {
-          window.location.reload();
-        }, 100);
+          navigate("/escolhaplano");
+        }, 2500);
+
       } else {
         const mensagemErro =
           resultado.erro_validacao ||
@@ -363,22 +305,25 @@ function Formulario({ tipo, setUsuario }: any) {
           resultado.mensagem ||
           "Falha no cadastro.";
 
-        alert(`Erro: ${mensagemErro}`);
+        dispararAlerta("erro", "Erro no Cadastro", mensagemErro);
       }
     } catch (erro) {
-      console.error(
-        "Erro na requisição:",
-        erro
-      );
-
-      alert(
-        "Não foi possível conectar ao servidor."
-      );
+      console.error("Erro na requisição:", erro);
+      dispararAlerta("erro", "Erro", "Não foi possível conectar ao servidor.");
     }
   };
 
   return (
     <div className="w-full flex justify-center py-20">
+      
+      <Alert
+        aberto={alerta.aberto}
+        tipo={alerta.tipo}
+        titulo={alerta.titulo}
+        descricao={alerta.descricao}
+        fechar={() => setAlerta((prev) => ({ ...prev, aberto: false }))}
+      />
+
       <form
         onSubmit={enviar}
         className={`
