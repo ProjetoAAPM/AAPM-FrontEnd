@@ -1,14 +1,15 @@
 import Formulario from "../components/Formulario";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import detalheEstilo from "../assets/detalheEstilo.png"
 
 function Login({ setUsuario }: any) {
     const navigate = useNavigate();
 
     return (
         <div className="bg-[#101625] min-h-screen flex flex-col items-center relative">
-            <img src="src/assets/detalheEstilo.png" alt="bolinhas" className="absolute top-0 left-0 z-0 opacity-80 w-[210px] md:w-[225px] lg:w-[350px]" />
-            <img src="src/assets/detalheEstilo.png" alt="bolinhas" className="absolute bottom-0 right-0 z-0 opacity-80 w-[190px] md:w-[210px] lg:w-[300px] -scale-x-100 -scale-y-100" />
+            <img src={detalheEstilo} alt="bolinhas" className="absolute top-0 left-0 z-0 opacity-80 w-[210px] md:w-[225px] lg:w-[350px]" />
+            <img src={detalheEstilo} alt="bolinhas" className="absolute bottom-0 right-0 z-0 opacity-80 w-[190px] md:w-[210px] lg:w-[300px] -scale-x-100 -scale-y-100" />
 
             <button
                 onClick={() => navigate('/')}

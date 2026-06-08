@@ -5,6 +5,8 @@ import Copiador from "../alerts/Copiador";
 import { Copy, ArrowLeft } from "lucide-react";
 import ConfirmarPagamento from "../alerts/ConfirmarPagamento";
 import Alert from "../alerts/Alert";
+import logo48 from "../assets/icons/Logo48.svg"
+import qrcode from "../assets/images/qrcode.png"
 
 function EscolhaPlano() {
     const navigate = useNavigate();
@@ -53,7 +55,7 @@ function EscolhaPlano() {
 
         try {
             setLoading(true);
-            const respostaEtapa1 = await fetch("http://localhost:5000/pagamento/gerar", {
+            const respostaEtapa1 = await fetch("https://aapm-api.onrender.com/pagamento/gerar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -75,7 +77,7 @@ function EscolhaPlano() {
             formData.append("comprovante", comprovante);
 
             const respostaEtapa2 = await fetch(
-                "http://localhost:5000/pagamento/enviar-comprovante",
+                "https://aapm-api.onrender.com/pagamento/enviar-comprovante",
                 {
                     method: "POST",
                     credentials: "include",
@@ -146,7 +148,7 @@ function EscolhaPlano() {
             )}
             <div className="w-full max-w-5xl mb-5">
                 <div className="flex justify-center mb-30">
-                    <img src="src/assets/icons/Logo48.svg" alt="logo" className="absolute lg:-mt-0.5 h-[70px] md:h-[80px] lg:h-[100px] w-auto drop-shadow-md" />
+                    <img src={logo48} alt="logo" className="absolute lg:-mt-0.5 h-[70px] md:h-[80px] lg:h-[100px] w-auto drop-shadow-md" />
                 </div>
 
                 <button
@@ -170,7 +172,7 @@ function EscolhaPlano() {
                     corBtn="bg-[#373737] text-white"
                     onClick={() => handlPrepararEnvio("comum", comprovanteComum)}
                 >
-                    <img src="src/assets/images/qrcode.png" alt="qrcode" className="w-[110px] h-[110px] md:w-[150px] md:h-[150px] lg:w-[187px] lg:h-[187px] rounded-2xl" />
+                    <img src={qrcode} alt="qrcode" className="w-[110px] h-[110px] md:w-[150px] md:h-[150px] lg:w-[187px] lg:h-[187px] rounded-2xl" />
                     <Copiador textoParaCopiar="https://www.sp.senai.br/">
                         <div className="w-full max-w-[260px] md:max-w-[299px] h-[50px] bg-[#78C0E5] p-2 mt-3 rounded-lg flex items-center justify-between border-2 border-[#78C0E5] shadow-md cursor-pointer">
                             <div className="text-left overflow-hidden">
@@ -205,7 +207,7 @@ function EscolhaPlano() {
                     corBtn="bg-[#86D5FE]"
                     onClick={() => handlPrepararEnvio("premium", comprovantePremium)}
                 >
-                    <img src="src/assets/images/qrcode.png" alt="qrcode" className="w-[110px] h-[110px] md:w-[150px] md:h-[150px] lg:w-[187px] lg:h-[187px] rounded-2xl" />
+                    <img src={qrcode} alt="qrcode" className="w-[110px] h-[110px] md:w-[150px] md:h-[150px] lg:w-[187px] lg:h-[187px] rounded-2xl" />
                     <Copiador textoParaCopiar="https://www.sp.senai.br/">
                         <div className="w-full max-w-[260px] md:max-w-[299px] h-[50px] bg-[#424242] p-2 mt-3 rounded-lg flex items-center justify-between shadow-md cursor-pointer">
                             <div className="text-left overflow-hidden">

@@ -5,6 +5,7 @@ import { useEditMode } from "../../contexts/modo_editar";
 import iconeEditar from "../../assets/icons/icone_editar.png";
 import { buscarConteudo } from "../../Services/conteudoService";
 import { verificarAdminHome } from "../../Services/api";
+import videoJundiai from "../../assets/video/jundiai.mp4"
 
 function Inicio() {
   const { editMode } = useEditMode();
@@ -54,7 +55,7 @@ function Inicio() {
     <div className="relative min-h-screen flex flex-col items-center md:items-start overflow-x-hidden">
 
       <video
-        src="src/assets/video/jundiai.mp4"
+        src={videoJundiai}
         autoPlay
         loop
         muted

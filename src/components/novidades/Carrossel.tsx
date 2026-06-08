@@ -7,6 +7,7 @@ import img4 from "../../assets/images/quadraSenai.jpg";
 import img5 from "../../assets/images/DesafioIdeias.jpg";
 import img6 from "../../assets/images/auditorio.jpg";
 import img7 from "../../assets/images/carros.jpg";
+import iconeEditar from "../../assets/icons/Editar.svg"
 import { useEditMode } from "../../contexts/modo_editar";
 import { buscarImagem, salvarImagem } from "../../Services/conteudoService";
 
@@ -95,7 +96,7 @@ const Carrossel: React.FC = () => {
                 className="absolute inset-0 bg-black/50 flex items-center justify-center cursor-pointer border-2 border-dashed border-blue-400 hover:border-blue-300 transition-colors"
               >
                 <img
-                  src="/src/assets/icons/icone_editar.png"
+                  src={iconeEditar}
                   alt="Editar"
                   className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-10 lg:h-10 xl:w-12 xl:h-12"
                 />

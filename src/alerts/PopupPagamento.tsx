@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Copiador from "../alerts/Copiador";
 import { Copy, X, Loader2 } from "lucide-react";
 import Alert from "../alerts/Alert";
+import qrcode from "../assets/images/qrcode.png"
 
 interface PopupProps {
   isOpen: boolean;
@@ -52,7 +53,7 @@ function PopupPagamento({ isOpen, onClose, planoSelecionado }: PopupProps) {
       setLoading(true);
 
       const respostaEtapa1 = await fetch(
-        "http://localhost:5000/usuario/pagamento/gerar",
+        "https://aapm-api.onrender.com/usuario/pagamento/gerar",
         {
           method: "POST",
           headers: {
@@ -87,7 +88,7 @@ function PopupPagamento({ isOpen, onClose, planoSelecionado }: PopupProps) {
       formData.append("comprovante", comprovante);
 
       const respostaEtapa2 = await fetch(
-        "http://localhost:5000/pagamento/enviar-comprovante",
+        "https://aapm-api.onrender.com/pagamento/enviar-comprovante",
         {
           method: "POST",
           credentials: "include",
@@ -139,20 +140,20 @@ function PopupPagamento({ isOpen, onClose, planoSelecionado }: PopupProps) {
             
             <div className="w-full h-[55px] lg:h-[60px] bg-gradient-to-r from-[#86D5FE]/50 via-[#C83D3D]/50 to-[#EFC00B]/50" />
 
-            <button
-              onClick={onClose}
-              className="absolute top-3 right-4 text-white hover:text-gray-200 transition-colors cursor-pointer"
-              aria-label="Fechar"
-            >
-              <X size={28} strokeWidth={2.5} />
-            </button>
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-4 text-white hover:text-gray-200 transition-colors cursor-pointer"
+          aria-label="Fechar"
+        >
+          <X size={28} strokeWidth={2.5} />
+        </button>
 
-            <div className="p-6 md:p-8 flex flex-col items-center">
-              <img
-                src="src/assets/images/qrcode.png"
-                alt="Código QR para pagamento Pix"
-                className="w-[110px] h-[110px] md:w-[150px] md:h-[150px] lg:w-[187px] lg:h-[187px] rounded-2xl border-2 border-[#383636]/50 object-cover"
-              />
+        <div className="p-6 md:p-8 flex flex-col items-center">
+          <img
+            src={qrcode}
+            alt="Código QR para pagamento Pix"
+            className="w-[110px] h-[110px] md:w-[150px] md:h-[150px] lg:w-[187px] lg:h-[187px] rounded-2xl border-2 border-[#383636]/50 object-cover"
+          />
 
               <Copiador textoParaCopiar="https://www.sp.senai.br/">
                 <div className="w-full max-w-[260px] md:max-w-[280px] lg:max-w-[299px] h-[50px] bg-[#FFEBEB] p-2 mt-4 rounded-lg flex items-center justify-between border-2 border-[#EFD0D0] shadow-md cursor-pointer hover:bg-[#ffdada] transition-colors">

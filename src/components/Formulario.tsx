@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react"; 
+import { useNavigate, useLocation } from "react-router-dom"; 
 import { useAuth } from "../contexts/admin/AuthContext";
 import type { ChangeEvent, SyntheticEvent } from "react";
 import { ChevronDown } from "lucide-react";
 import perfil1 from "../assets/perfis/user1.png";
+import logo from "../assets/icons/Logo48.svg";
+import { useGoogleLogin } from '@react-oauth/google';
 import Alert from "../alerts/Alert";
 
 function Formulario({ tipo, setUsuario }: any) {
@@ -31,6 +33,20 @@ function Formulario({ tipo, setUsuario }: any) {
   };
 
   const navigate = useNavigate();
+  const location = useLocation(); 
+
+  const dadosGoogle = location.state as { nome?: string; email?: string; tipo_usuario?: "aluno" | "docente" } | null;
+
+  useEffect(() => {
+    if (tipo === "cadastro" && dadosGoogle) {
+      setDados((valoresAtuais) => ({
+        ...valoresAtuais,
+        nome: dadosGoogle.nome || "",
+        email: dadosGoogle.email || "",
+        tipo_usuario: dadosGoogle.tipo_usuario || "aluno"
+      }));
+    }
+  }, [dadosGoogle, tipo]);
 
   const { login: loginAdmin } = useAuth();
 
@@ -46,16 +62,80 @@ function Formulario({ tipo, setUsuario }: any) {
   const alternarUsuario = (
     selecao: "aluno" | "docente"
   ) => {
+    if (dadosGoogle?.tipo_usuario) return;
+
     setDados({
       ...dados,
       tipo_usuario: selecao,
     });
   };
 
-  const loginGoogle = () => {
-    window.location.href =
-      "http://localhost:5000/login/google";
-  };
+  const loginGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const resposta = await fetch("https://aapm-api.onrender.com/auth/google", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ token: tokenResponse.access_token }),
+        });
+
+        const resultado = await resposta.json();
+
+        if (resposta.ok) {
+          if (resultado.mensagem === "Usuário sem cadastro") {
+            alert("Conta Google validada! Continue o preenchimento do seu cadastro.");
+            
+            const tipoIdentificado = resultado.redirect.includes("docente") ? "docente" : "aluno";
+
+            navigate(resultado.redirect, {
+              state: {
+                nome: resultado.usuario_temporario?.temp_nome,
+                email: resultado.usuario_temporario?.temp_email,
+                tipo_usuario: tipoIdentificado
+              }
+            });
+            return;
+          }
+
+          if (resultado.redirect === "/tela_pagamento" || resultado.status === "INATIVO") {
+            localStorage.setItem("usuario_id", resultado.usuario?.usuario_id);
+            localStorage.setItem("status_usuario", "INATIVO");
+            alert(resultado.erro_validacao || "Realize o pagamento para ativar sua account.");
+            navigate("/escolhaplano");
+            return;
+          }
+
+          localStorage.setItem("usuario_id", resultado.usuario?.usuario_id);
+          localStorage.setItem("status_usuario", "ATIVO");
+
+          setUsuario?.({
+            nome: resultado.usuario?.usuario_nome,
+            tipo_usuario: resultado.usuario?.tipo_usuario,
+            foto: perfil1,
+            premium: true, 
+          });
+
+          alert(resultado.mensagem || "Login realizado com sucesso!");
+          navigate(resultado.redirect); 
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 100);
+        } else {
+          alert(resultado.mensagem || resultado.erro_usuario || "Erro ao autenticar com o Google.");
+        }
+      } catch (erro) {
+        console.error("Erro na requisição do Google:", erro);
+        alert("Não foi possível conectar ao servidor.");
+      }
+    },
+    onError: () => {
+      alert("Falha na autenticação com o Google. Tente novamente.");
+    }
+  });
 
   const cursos = [
     "Tec Administração",
@@ -69,6 +149,8 @@ function Formulario({ tipo, setUsuario }: any) {
     "CAI Eletricista de Manutenção Eletroeletrônica",
     "CAI Ferramenteiro de Moldes para Plásticos",
   ];
+
+  const estiloInputBloqueado = "disabled:opacity-60 disabled:cursor-not-allowed bg-gray-100 select-none";
 
   const especialidades = [
     "Gestão",
@@ -122,10 +204,9 @@ function Formulario({ tipo, setUsuario }: any) {
     lg:text-lg
     inset-shadow-sm
     inset-shadow-indigo-700/10
-    ${
-      tipo === "login"
-        ? "text-[#373737] font-bold"
-        : "text-[#FFFFFF] font-semibold lg:pl-20 md:pl-10 lg:-ml-18.5"
+    ${tipo === "login"
+      ? "text-[#373737] font-bold"
+      : "text-[#FFFFFF] font-semibold lg:pl-20 md:pl-10 lg:-ml-18.5"
     }
   `;
 
@@ -170,7 +251,7 @@ function Formulario({ tipo, setUsuario }: any) {
     if (tipo === "login") {
       try {
         const resposta = await fetch(
-          "http://localhost:5000/login",
+          "https://aapm-api.onrender.com/login",
           {
             method: "POST",
             headers: {
@@ -192,7 +273,7 @@ function Formulario({ tipo, setUsuario }: any) {
             resultado.usuario?.tipo_usuario;
 
           if (tipoUsuario === "administrador") {
-            console.log("Login de ADMINISTRADOR confirmed pelo backend");
+            console.log("Login de ADMINISTRADOR confirmado pelo backend");
             await loginAdmin(dados.email, dados.senha);
             dispararAlerta("sucesso", "Sucesso!", resultado.mensagem || "Login de Administrador realizado com sucesso!");
             
@@ -259,7 +340,7 @@ function Formulario({ tipo, setUsuario }: any) {
           : "/cadastro/docente";
 
       const resposta = await fetch(
-        `http://localhost:5000${rota}`,
+        `https://aapm-api.onrender.com${rota}`,
         {
           method: "POST",
           headers: {
@@ -343,7 +424,7 @@ function Formulario({ tipo, setUsuario }: any) {
         `}
       >
         <img
-          src="src/assets/icons/Logo48.svg"
+          src={logo}
           alt="logo"
           className="
             absolute
@@ -386,7 +467,8 @@ function Formulario({ tipo, setUsuario }: any) {
                 name="nome"
                 value={dados.nome}
                 onChange={guardar}
-                className={estiloInput}
+                disabled={!!dadosGoogle?.nome}
+                className={`${estiloInput} ${dadosGoogle?.nome ? estiloInputBloqueado : ""}`}
                 required
               />
             </div>
@@ -402,7 +484,8 @@ function Formulario({ tipo, setUsuario }: any) {
               name="email"
               value={dados.email}
               onChange={guardar}
-              className={`${estiloInput}`}
+              disabled={!!dadosGoogle?.email}
+              className={`${estiloInput} ml-5.5 md:ml-8.5 cursor-pointer ${dadosGoogle?.email ? estiloInputBloqueado : ""}`}
               required
             />
           </div>
@@ -420,6 +503,7 @@ function Formulario({ tipo, setUsuario }: any) {
                     onClick={() =>
                       alternarUsuario("aluno")
                     }
+                    disabled={!!dadosGoogle?.tipo_usuario}
                     className={`
                       w-[100px]
                       h-[40px]
@@ -430,12 +514,11 @@ function Formulario({ tipo, setUsuario }: any) {
                       lg:text-lg
                       font-bold
                       shadow-sm
-                      cursor-pointer
-                      ${
-                        dados.tipo_usuario ===
+                      ${dadosGoogle?.tipo_usuario ? "cursor-not-allowed opacity-60" : "cursor-pointer"}
+                      ${dados.tipo_usuario ===
                         "aluno"
-                          ? "bg-[#383636] text-white"
-                          : "bg-[#DDDDDD] text-black"
+                        ? "bg-[#383636] text-white"
+                        : "bg-[#DDDDDD] text-black"
                       }
                     `}
                   >
@@ -447,6 +530,7 @@ function Formulario({ tipo, setUsuario }: any) {
                     onClick={() =>
                       alternarUsuario("docente")
                     }
+                    disabled={!!dadosGoogle?.tipo_usuario}
                     className={`
                       w-[100px]
                       h-[40px]
@@ -457,12 +541,11 @@ function Formulario({ tipo, setUsuario }: any) {
                       lg:text-lg
                       font-bold
                       shadow-sm
-                      cursor-pointer
-                      ${
-                        dados.tipo_usuario ===
+                      ${dadosGoogle?.tipo_usuario ? "cursor-not-allowed opacity-60" : "cursor-pointer"}
+                      ${dados.tipo_usuario ===
                         "docente"
-                          ? "bg-[#383636] text-white"
-                          : "bg-[#DDDDDD] text-black"
+                        ? "bg-[#383636] text-white"
+                        : "bg-[#DDDDDD] text-black"
                       }
                     `}
                   >
@@ -472,7 +555,7 @@ function Formulario({ tipo, setUsuario }: any) {
               </div>
 
               {dados.tipo_usuario ===
-              "aluno" ? (
+                "aluno" ? (
                 <>
                   <div className="relative flex flex-col">
                     <label className={estiloLabel}>
@@ -502,7 +585,7 @@ function Formulario({ tipo, setUsuario }: any) {
                       required
                     >
                       <option value="">
-                        Selecione seu curso
+                        Seleccione seu curso
                       </option>
 
                       {cursos.map((item) => (
@@ -547,14 +630,14 @@ function Formulario({ tipo, setUsuario }: any) {
                             ).showPicker()
                           }
                           onFocus={(e) =>
-                            (e.target.style.color =
-                              "black")
+                          (e.target.style.color =
+                            "black")
                           }
                           onBlur={(e) =>
-                            (e.target.style.color =
-                              e.target.value
-                                ? "black"
-                                : "transparent")
+                          (e.target.style.color =
+                            e.target.value
+                              ? "black"
+                              : "transparent")
                           }
                           style={{
                             color:
@@ -578,14 +661,14 @@ function Formulario({ tipo, setUsuario }: any) {
                           value={dados.fim_curso}
                           onChange={guardar}
                           onFocus={(e) =>
-                            (e.target.style.color =
-                              "black")
+                          (e.target.style.color =
+                            "black")
                           }
                           onBlur={(e) =>
-                            (e.target.style.color =
-                              e.target.value
-                                ? "black"
-                                : "transparent")
+                          (e.target.style.color =
+                            e.target.value
+                              ? "black"
+                              : "transparent")
                           }
                           style={{
                             color:
@@ -716,10 +799,9 @@ function Formulario({ tipo, setUsuario }: any) {
               type="submit"
               className={`
                 ${tema.btn}
-                ${
-                  tipo === "login"
-                    ? "w-[120px] h-[40px] md:w-[150px] lg:w-[170px] lg:h-[50px] rounded-full text-[#373737]"
-                    : "w-[140px] h-[45px] lg:w-[170px] lg:h-[50px] rounded-2xl text-[#FFFFFF]"
+                ${tipo === "login"
+                  ? "w-[120px] h-[40px] md:w-[150px] lg:w-[170px] lg:h-[50px] rounded-full text-[#373737]"
+                  : "w-[140px] h-[45px] lg:w-[170px] lg:h-[50px] rounded-2xl text-[#FFFFFF]"
                 }
                 text-base
                 md:text-lg
@@ -737,7 +819,7 @@ function Formulario({ tipo, setUsuario }: any) {
             {tipo === "login" && (
               <button
                 type="button"
-                onClick={loginGoogle}
+                onClick={() => loginGoogle()}
                 className="
                   w-[120px]
                   h-[40px]

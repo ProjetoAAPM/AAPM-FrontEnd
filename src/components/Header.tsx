@@ -138,15 +138,17 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                         <img
                             src={logoImg}
                             alt="Logo"
-                            className="h-[40px] md:h-[45px] w-auto object-contain"
+                            className="h-[40px] md:h-[45px] w-auto object-contain cursor-pointer"
+                            onClick={()=>navigate("/")}
                         />
 
                         <p
-                            className={`text-sm md:text-xl font-semibold whitespace-nowrap transition-colors ${
+                            className={`text-sm md:text-xl font-semibold whitespace-nowrap transition-colors cursor-pointer ${
                                 isOpen
                                     ? "text-black"
                                     : "text-white"
                             }`}
+                            onClick={()=>navigate("/")}
                         >
                             AAPM Senai Leopoldina
                         </p>

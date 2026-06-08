@@ -52,10 +52,10 @@ function Home({ modoAdmin = false, usuario }: HomeProps) {
       setLoading(true);
 
       const [resProgresso, resExtrato] = await Promise.all([
-        fetch("http://localhost:5000/usuario/meu-progresso", {
+        fetch("https://aapm-api.onrender.com/usuario/meu-progresso", {
           credentials: "include",
         }),
-        fetch("http://localhost:5000/usuario/extrato-pontos", {
+        fetch("https://aapm-api.onrender.com/usuario/extrato-pontos", {
           credentials: "include",
         }),
       ]);
