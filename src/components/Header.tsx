@@ -7,6 +7,7 @@ import type { Usuario } from "../types/Usuario";
 import { useEditMode } from "../contexts/modo_editar";
 import logoImg from "/src/assets/icons/Logo48.svg";
 import { limparTodoConteudo } from "../Services/conteudoService";
+import { useAuth } from "../contexts/admin/AuthContext";
 
 interface HeaderProps {
     usuario: Usuario;
@@ -24,23 +25,27 @@ function Header({ usuario, setUsuario }: HeaderProps) {
 
     const isAdmin = location.pathname.startsWith("/admin");
 
-    function logout() {
-        localStorage.clear();
+    const { logout: logoutAdmin } = useAuth();
 
-        setUsuario({
-            nome: "",
-            foto: "",
-            tipo_usuario: "aluno",
-            curso: "",
-            dataInicio: "",
-            dataFinal: "",
-            premium: false
-        });
+function logout() {
+    logoutAdmin();
 
-        setIsOpen(false);
+    localStorage.removeItem("isAdmin");
 
-        navigate("/");
-    }
+    setEditMode(false);
+
+    setUsuario({
+        nome: "",
+        foto: "",
+        tipo_usuario: "aluno",
+        curso: "",
+        dataInicio: "",
+        dataFinal: "",
+        premium: false
+    });
+    setIsOpen(false);
+    window.location.href = "/";
+}
 
     async function resetarPadrao() {
         const confirmar = window.confirm(
@@ -99,7 +104,14 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                     }`}
                     >
 
-                    <div className="flex items-center gap-2 md:gap-3">
+                    {/* <div className="flex items-center gap-2 md:gap-3"> */}
+                    <div
+                        onClick={() => {
+                            if (isAdmin) {
+                                logout();
+                            }
+                        }}
+                        className={`flex items-center gap-2 md:gap-3 ${isAdmin ? "cursor-pointer" : ""}`}>
                         <img
                             src={logoImg}
                             alt="Logo"
@@ -162,14 +174,14 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                         {isAdmin ? (
                             <div className="hidden min-[1330px]:flex items-center gap-4">
 
-                                <button
+                                <button 
                                     onClick={resetarPadrao}
-                                    className={botaoAdmin}
+                                    className={`${botaoAdmin}`} 
                                 >
                                     Padrão
                                 </button>
 
-                                <div className="w-[2px] h-8 bg-gray-500/50" />
+                                <div className="w-[2px] h-8 bg-gray-500/50 m-1" />
 
                                 <button
                                     onClick={() => {
@@ -179,9 +191,19 @@ function Header({ usuario, setUsuario }: HeaderProps) {
 
                                         setEditMode(!editMode);
                                     }}
-                                    className={botaoAdmin}
+                                    className={`${botaoAdmin}`} 
                                 >
                                     {editMode ? "Salvar" : "Editar"}
+                                </button>
+
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        logout();
+                                    }}
+                                    className="text-white text-sm opacity-90 hover:opacity-200 transition-all cursor-pointer mr-2"
+                                >
+                                    sair
                                 </button>
 
                             </div>
@@ -206,7 +228,6 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                                         >
                                             {usuario.nome}
                                         </p>
-
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();

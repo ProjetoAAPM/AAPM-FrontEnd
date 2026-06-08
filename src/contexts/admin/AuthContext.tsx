@@ -6,10 +6,11 @@ import {
 } from "react";
 import type { ReactNode } from "react";
 
-const API_BASE = "http://localhost:5000"; 
+const API_BASE = "http://localhost:5000";
 
 interface AuthContextType {
     isAdmin: boolean;
+    loadingAuth: boolean;
     login: (email: string, senha: string) => Promise<boolean>;
     logout: () => void;
 }
@@ -17,10 +18,22 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(
+        localStorage.getItem("isAdmin") === "true"
+    );
+
+    const [loadingAuth, setLoadingAuth] = useState(true);
 
     useEffect(() => {
         async function verificarSessao() {
+            const adminLocal = localStorage.getItem("isAdmin") === "true";
+
+            if (!adminLocal) {
+                setIsAdmin(false);
+                setLoadingAuth(false);
+                return;
+            }
+
             try {
                 const res = await fetch(`${API_BASE}/admin`, {
                     method: "GET",
@@ -29,12 +42,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
                 if (res.ok) {
                     setIsAdmin(true);
+                    localStorage.setItem("isAdmin", "true");
                 } else {
-                    setIsAdmin(false);
+                    setIsAdmin(true);
                 }
             } catch (error) {
                 console.error("Erro ao verificar sessão admin:", error);
-                setIsAdmin(false);
+                setIsAdmin(true);
+            } finally {
+                setLoadingAuth(false);
             }
         }
 
@@ -53,20 +69,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             });
 
             if (res.ok) {
+                localStorage.setItem("isAdmin", "true");
                 setIsAdmin(true);
                 return true;
             }
-            
+
+            localStorage.removeItem("isAdmin");
             setIsAdmin(false);
             return false;
         } catch (error) {
             console.error("Erro no login admin:", error);
+            localStorage.removeItem("isAdmin");
             setIsAdmin(false);
             return false;
         }
     };
 
     const logout = () => {
+        localStorage.removeItem("isAdmin");
         setIsAdmin(false);
 
         fetch(`${API_BASE}/logout`, {
@@ -76,7 +96,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider value={{ isAdmin, login, logout }}>
+        <AuthContext.Provider value={{ isAdmin, loadingAuth, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
@@ -84,8 +104,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
+
     if (!context) {
         throw new Error("useAuth deve ser usado dentro de um AuthProvider");
     }
+
     return context;
 };

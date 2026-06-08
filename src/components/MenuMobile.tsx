@@ -138,6 +138,17 @@ function MenuMobile({ isOpen, onClose, usuario, logout }: Props) {
                 >
                   {editMode ? "Salvar" : "Editar"}
                 </button>
+
+                <button
+                  onClick={() => {
+                    if (logout) logout();
+                    setEditMode(false);
+                    onClose();
+                  }}
+                  className="w-full h-[45px] flex items-center justify-center rounded-full bg-[#363636] text-white text-lg font-bold shadow-lg cursor-pointer"
+                >
+                  Sair
+                </button>
               </>
             ) : (
               <>
