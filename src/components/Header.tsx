@@ -25,22 +25,39 @@ function Header({ usuario, setUsuario }: HeaderProps) {
     const isAdmin = location.pathname.startsWith("/admin");
     const { logout: logoutAdmin } = useAuth();
 
-function logout() {
-    logoutAdmin();
-    localStorage.removeItem("isAdmin");
-    setEditMode(false);
-    setUsuario({
-        nome: "",
-        foto: "",
-        tipo_usuario: "aluno",
-        curso: "",
-        dataInicio: "",
-        dataFinal: "",
-        premium: false
-    });
-    setIsOpen(false);
-    window.location.href = "/";
-}
+    async function logout() {
+        if (isAdmin) {
+            logoutAdmin();
+            localStorage.removeItem("isAdmin");
+        } else {
+            try {
+                await fetch("https://aapm-api.onrender.com/usuario/logout", {
+                    method: "GET",
+                    credentials: "include"
+                });
+            } catch (error) {
+                console.error("Erro ao sair do usuário:", error);
+            }
+
+            localStorage.removeItem("usuario_id");
+            localStorage.removeItem("status_usuario");
+        }
+
+        setEditMode(false);
+
+        setUsuario({
+            nome: "",
+            foto: "",
+            tipo_usuario: "aluno",
+            curso: "",
+            dataInicio: "",
+            dataFinal: "",
+            premium: false
+        });
+
+        setIsOpen(false);
+        navigate("/");
+    }
 
     function lidarComNavegacao(e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>, rota: string) {
         e.preventDefault();
@@ -137,7 +154,7 @@ function logout() {
                             src={logoImg}
                             alt="Logo"
                             className="h-[40px] md:h-[45px] w-auto object-contain cursor-pointer"
-                            onClick={()=>navigate("/")}
+                            onClick={() => navigate("/")}
                         />
 
                         <p
@@ -146,13 +163,12 @@ function logout() {
                                     ? "text-black"
                                     : "text-white"
                             }`}
-                            onClick={()=>navigate("/")}
+                            onClick={() => navigate("/")}
                         >
                             AAPM Senai Leopoldina
                         </p>
                     </Link>
 
-                    {/* DESKTOP NAV: Trocados por botões com controle manual para evitar bugs do Link */}
                     <div className="hidden min-[1330px]:flex gap-6 xl:gap-16 2xl:gap-28 text-white text-sm xl:text-base 2xl:text-lg font-medium">
                         <button
                             className={navLink}
@@ -215,7 +231,6 @@ function logout() {
                                 >
                                     sair
                                 </button>
-
                             </div>
                         ) : (
                             <>
