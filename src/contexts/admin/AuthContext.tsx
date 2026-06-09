@@ -11,6 +11,7 @@ const API_BASE = `https://aapm-api.onrender.com`;
 interface AuthContextType {
     isAdmin: boolean;
     loadingAuth: boolean;
+    logoutLoading: boolean;
     login: (email: string, senha: string) => Promise<boolean>;
     logout: () => void;
     ativarAdmin: () => void;
@@ -23,12 +24,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.getItem("isAdmin") === "true"
     );
 
-    const [loadingAuth, setLoadingAuth] = useState(true);
+    const [loadingAuth, setLoadingAuth] = useState(true); 
+    const [logoutLoading, setLogoutLoading] = useState(false);
 
     useEffect(() => {
         async function verificarSessao() {
             const adminLocal = localStorage.getItem("isAdmin") === "true";
-
 
             console.log("adminLocal:", adminLocal);
             console.log("URL verificação:", `${API_BASE}/admin`);
@@ -99,18 +100,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setIsAdmin(true);
     };
 
-    const logout = () => {
-        localStorage.removeItem("isAdmin");
-        setIsAdmin(false);
+    const logout = async () => {
+        setLogoutLoading(true);
 
-        fetch(`${API_BASE}/usuario/logout`, {
-            method: "GET",
-            credentials: "include"
-        }).catch(() => {});
+        try {
+            await fetch(`${API_BASE}/usuario/logout`, {
+                method: "GET",
+                credentials: "include"
+            });
+        } catch (error) {
+            console.error("Erro ao sair:", error);
+        } finally {
+            localStorage.removeItem("isAdmin");
+            setIsAdmin(false);
+            setLogoutLoading(false);
+        }
     };
 
     return (
-        <AuthContext.Provider value={{ isAdmin, loadingAuth, login, logout, ativarAdmin }}>
+        <AuthContext.Provider value={{ isAdmin, loadingAuth, logoutLoading, login, logout, ativarAdmin }}>
             {children}
         </AuthContext.Provider>
     );

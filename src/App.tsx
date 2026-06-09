@@ -1,3 +1,4 @@
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "./components/Header";
@@ -19,20 +20,18 @@ import { RotaProtegida } from "./components/RotaProtegida";
 
 function AdminRoute({ children }: { children: React.ReactElement }) {
     const { isAdmin, loadingAuth } = useAuth();
-
     console.log("AdminRoute =>", {
         isAdmin,
         loadingAuth
     });
-
     if (loadingAuth) {
-        return <div>Carregando...</div>;
+        return null;
     }
     return isAdmin ? children : <Navigate to="/login" replace />;
 }
 
 function AppContent() {
-    const { loadingAuth } = useAuth();
+    const { loadingAuth, logoutLoading } = useAuth();
     const location = useLocation();
     const esconderHeader = new Set([
         "/cadastro",
@@ -83,7 +82,7 @@ function AppContent() {
         carregarUsuario();
     }, [location.pathname]);
 
-    if (loadingAuth) {
+    if (loadingAuth || logoutLoading) {
         return (
             <div className="min-h-screen bg-[#101625]" />
         );
@@ -133,9 +132,11 @@ function AppContent() {
 
 function App() {
     return (
-        <AuthProvider>
-            <AppContent />
-        </AuthProvider>
+        <GoogleOAuthProvider clientId="832032152359-3njip8902sedk03lvg7jicqebq7hcerq.apps.googleusercontent.com">
+            <AuthProvider>
+                <AppContent />
+            </AuthProvider>
+        </GoogleOAuthProvider>
     );
 }
 
