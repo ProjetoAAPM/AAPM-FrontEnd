@@ -6,7 +6,7 @@ import {
 } from "react";
 import type { ReactNode } from "react";
 
-const API_BASE = `https://aapm-api.onrender.com`;
+const API_BASE = "https://aapm-api.onrender.com";
 
 interface AuthContextType {
     isAdmin: boolean;
@@ -24,18 +24,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.getItem("isAdmin") === "true"
     );
 
-    const [loadingAuth, setLoadingAuth] = useState(true); 
+    const [loadingAuth, setLoadingAuth] = useState(true);
     const [logoutLoading, setLogoutLoading] = useState(false);
 
     useEffect(() => {
         async function verificarSessao() {
             const adminLocal = localStorage.getItem("isAdmin") === "true";
+            const estaNaRotaAdmin = window.location.pathname.startsWith("/admin");
 
             console.log("adminLocal:", adminLocal);
-            console.log("URL verificação:", `${API_BASE}/admin`);
+            console.log("estaNaRotaAdmin:", estaNaRotaAdmin);
+            console.log("URL verificação:", `${API_BASE}/admin/home`);
 
-
-            if (!adminLocal) {
+            if (!adminLocal && !estaNaRotaAdmin) {
                 setIsAdmin(false);
                 setLoadingAuth(false);
                 return;
@@ -45,19 +46,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 const res = await fetch(`${API_BASE}/admin/home`, {
                     method: "GET",
                     credentials: "include"
-                    });
+                });
 
-                    if (res.ok) {
+                if (res.ok) {
                     setIsAdmin(true);
                     localStorage.setItem("isAdmin", "true");
-                    } else {
-                    setIsAdmin(false);
-                    localStorage.removeItem("isAdmin");
-                    }
-            } catch (error) {
-                console.error("Erro ao verificar sessão admin:", error);
+                    return;
+                }
+
+                const tentativa2 = await fetch(`${API_BASE}/admin/home`, {
+                    method: "GET",
+                    credentials: "include"
+                });
+
+                if (tentativa2.ok) {
+                    setIsAdmin(true);
+                    localStorage.setItem("isAdmin", "true");
+                    return;
+                }
+
                 setIsAdmin(false);
                 localStorage.removeItem("isAdmin");
+            } catch (error) {
+                console.error("Erro ao verificar sessão admin:", error);
+
+                if (estaNaRotaAdmin) {
+                    setIsAdmin(true);
+                } else {
+                    setIsAdmin(false);
+                    localStorage.removeItem("isAdmin");
+                }
             } finally {
                 setLoadingAuth(false);
             }
@@ -68,7 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const login = async (email: string, senha: string): Promise<boolean> => {
         try {
-            const res = await fetch("https://aapm-api.onrender.com/login", {
+            const res = await fetch(`${API_BASE}/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, senha }),
@@ -78,15 +96,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             console.log("Status login admin:", res.status);
 
             if (res.ok) {
-                console.log("Status login admin:", res.status);
                 localStorage.setItem("isAdmin", "true");
                 setIsAdmin(true);
                 return true;
-            } else {
-                localStorage.removeItem("isAdmin");
-                setIsAdmin(false);
-                return false;
             }
+
+            localStorage.removeItem("isAdmin");
+            setIsAdmin(false);
+            return false;
         } catch (error) {
             console.error("Erro no login admin:", error);
             localStorage.removeItem("isAdmin");
@@ -118,7 +135,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider value={{ isAdmin, loadingAuth, logoutLoading, login, logout, ativarAdmin }}>
+        <AuthContext.Provider
+            value={{
+                isAdmin,
+                loadingAuth,
+                logoutLoading,
+                login,
+                logout,
+                ativarAdmin
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );
