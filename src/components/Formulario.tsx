@@ -105,8 +105,8 @@ function Formulario({ tipo, setUsuario }: any) {
             localStorage.setItem("status_usuario", "INATIVO");
             dispararAlerta("erro", "Erro", resultado.erro_validacao || "Realize o pagamento para ativar sua conta.");
             setTimeout(() => {
-              navigate("/escolhaplano");
-            }, 2500);
+            navigate("/escolhaplano");
+          }, 2500);
             return;
           }
 
@@ -122,12 +122,14 @@ function Formulario({ tipo, setUsuario }: any) {
 
           dispararAlerta("sucesso","Sucesso!", resultado.mensagem || "Login realizado com sucesso!");
           setTimeout(() => {
-            navigate(resultado.redirect);
-          }, 2500);
-
+          navigate(resultado.redirect);
+          
           setTimeout(() => {
             window.location.reload();
           }, 100);
+
+        }, 3000);
+        
         } else {
           dispararAlerta("erro", "Erro", resultado.mensagem || resultado.erro_usuario || "Erro ao autenticar com o Google.");
         }
