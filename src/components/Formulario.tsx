@@ -128,8 +128,8 @@ function Formulario({ tipo, setUsuario }: any) {
             window.location.reload();
           }, 100);
 
-        }, 3000);
-        
+        }, 2500);
+
         } else {
           dispararAlerta("erro", "Erro", resultado.mensagem || resultado.erro_usuario || "Erro ao autenticar com o Google.");
         }
