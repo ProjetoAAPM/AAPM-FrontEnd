@@ -104,7 +104,9 @@ function Formulario({ tipo, setUsuario }: any) {
             localStorage.setItem("usuario_id", resultado.usuario?.usuario_id);
             localStorage.setItem("status_usuario", "INATIVO");
             dispararAlerta("erro", "Erro", resultado.erro_validacao || "Realize o pagamento para ativar sua conta.");
-            navigate("/escolhaplano");
+            setTimeout(() => {
+              navigate("/escolhaplano");
+            }, 2500);
             return;
           }
 
@@ -119,7 +121,9 @@ function Formulario({ tipo, setUsuario }: any) {
           });
 
           dispararAlerta("sucesso","Sucesso!", resultado.mensagem || "Login realizado com sucesso!");
-          navigate(resultado.redirect); 
+          setTimeout(() => {
+            navigate(resultado.redirect);
+          }, 2500);
 
           setTimeout(() => {
             window.location.reload();
