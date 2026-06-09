@@ -1,5 +1,5 @@
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate, Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -92,40 +92,50 @@ function AppContent() {
         <EditModeProvider>
             <GlobalClickHandler />
 
-            {!esconderHeader && (
-                <Header usuario={usuario} setUsuario={setUsuario} />
-            )}
-
             <Routes>
-                <Route path="/" element={<LandingPage />} />
+                <Route path="*" element={<p>Página não encontrada</p>} />
+
                 <Route path="/login" element={<Login setUsuario={setUsuario} />} />
                 <Route path="/cadastro" element={<Cadastro setUsuario={setUsuario} />} />
                 <Route path="/escolhaplano" element={<EscolhaPlano />} />
 
-                <Route element={<RotaProtegida />}>
-                    <Route path="/home" element={<Home usuario={usuario} />} />
-                    <Route path="/novidades" element={<Novidades />} />
-                    <Route path="/pagamento" element={<Pagamento />} />
-                </Route>
-
                 <Route
-                    path="/admin"
                     element={
-                        <AdminRoute>
-                            <Admin />
-                        </AdminRoute>
+                        <>
+                            <Header usuario={usuario} setUsuario={setUsuario} />
+                            <main><Outlet/></main>
+                            <Footer />
+                        </>
                     }
                 >
-                    <Route index element={<LandingPage />} />
-                    <Route path="home" element={<Home usuario={usuario} />} />
-                    <Route path="usuario" element={<Home usuario={usuario} modoAdmin />} />
-                    <Route path="novidades" element={<Novidades modoAdmin />} />
-                    <Route path="pagamento" element={<Pagamento isAdmin />} />
+                    <Route path="/" element={<LandingPage/>}/>
+
+                    <Route element={<RotaProtegida />}>
+                        <Route path="/home" element={<Home usuario={usuario} />} />
+                        <Route path="/novidades" element={<Novidades />} />
+                        <Route path="/pagamento" element={<Pagamento />} />
+                    </Route>
+
+                    <Route
+                        path="/admin"
+                        element={
+                            <AdminRoute>
+                                <Admin />
+                            </AdminRoute>
+                        }
+                    >
+                        <Route index element={<LandingPage />} />
+                        <Route path="home" element={<Home usuario={usuario} />} />
+                        <Route path="usuario" element={<Home usuario={usuario} modoAdmin />} />
+                        <Route path="novidades" element={<Novidades modoAdmin />} />
+                        <Route path="pagamento" element={<Pagamento isAdmin />} />
+                    </Route>
+
+
                 </Route>
 
-                <Route path="*" element={<p>Página não encontrada</p>} />
+                
             </Routes>
-            <Footer />
         </EditModeProvider>
     );
 }
