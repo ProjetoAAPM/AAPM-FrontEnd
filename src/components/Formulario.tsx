@@ -496,7 +496,7 @@ function Formulario({ tipo, setUsuario }: any) {
               value={dados.email}
               onChange={guardar}
               disabled={!!dadosGoogle?.email}
-              className={`${estiloInput} ml-5.5 md:ml-8.5 cursor-pointer ${dadosGoogle?.email ? estiloInputBloqueado : ""}`}
+              className={`${estiloInput} ml-5.5 md:ml-8.5 ${dadosGoogle?.email ? estiloInputBloqueado : ""}`}
               required
             />
           </div>
