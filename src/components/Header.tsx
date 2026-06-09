@@ -8,6 +8,7 @@ import { useEditMode } from "../contexts/modo_editar";
 import logoImg from "/src/assets/icons/Logo48.svg";
 import { limparTodoConteudo } from "../Services/conteudoService";
 import LayoutAviso from "../alerts/LayoutAviso";
+import { useAuth } from "../contexts/admin/AuthContext";
 
 interface HeaderProps {
     usuario: Usuario;
@@ -18,34 +19,31 @@ function Header({ usuario, setUsuario }: HeaderProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [perfilOpen, setPerfilOpen] = useState(false);
     const [modalAberto, setModalAberto] = useState(false);
-
     const { editMode, setEditMode } = useEditMode();
-
     const location = useLocation();
     const navigate = useNavigate();
-
     const isAdmin = location.pathname.startsWith("/admin");
+    const { logout: logoutAdmin } = useAuth();
 
-    function logout() {
-        localStorage.clear();
+function logout() {
+    logoutAdmin();
+    localStorage.removeItem("isAdmin");
+    setEditMode(false);
+    setUsuario({
+        nome: "",
+        foto: "",
+        tipo_usuario: "aluno",
+        curso: "",
+        dataInicio: "",
+        dataFinal: "",
+        premium: false
+    });
+    setIsOpen(false);
+    window.location.href = "/";
+}
 
-        setUsuario({
-            nome: "",
-            foto: "",
-            tipo_usuario: "aluno",
-            curso: "",
-            dataInicio: "",
-            dataFinal: "",
-            premium: false
-        });
-
-        setIsOpen(false);
-        navigate("/");
-    }
-
-    // CORREÇÃO: Função adaptada para navegar via código no Desktop e garantir o bloqueio
     function lidarComNavegacao(e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>, rota: string) {
-        e.preventDefault(); // Garante o bloqueio do comportamento padrão de links
+        e.preventDefault();
 
         if (isAdmin) {
             navigate(rota);
@@ -190,15 +188,13 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                     <div className="flex gap-2 md:gap-4 xl:gap-6 items-center">
                         {isAdmin ? (
                             <div className="hidden min-[1330px]:flex items-center gap-4">
-                                <button
+                                <button 
                                     onClick={resetarPadrao}
-                                    className={botaoAdmin}
+                                    className={`${botaoAdmin}`} 
                                 >
                                     Padrão
                                 </button>
-
-                                <div className="w-[2px] h-8 bg-gray-500/50" />
-
+                                <div className="w-[2px] h-8 bg-gray-500/50 m-1" />
                                 <button
                                     onClick={() => {
                                         if (editMode) {
@@ -206,10 +202,20 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                                         }
                                         setEditMode(!editMode);
                                     }}
-                                    className={botaoAdmin}
+                                    className={`${botaoAdmin}`} 
                                 >
                                     {editMode ? "Salvar" : "Editar"}
                                 </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        logout();
+                                    }}
+                                    className="text-white text-sm opacity-90 hover:opacity-200 transition-all cursor-pointer mr-2"
+                                >
+                                    sair
+                                </button>
+
                             </div>
                         ) : (
                             <>
@@ -268,7 +274,6 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                             </>
                         )}
 
-                        {/* MOBILE CONTAINER */}
                         <div className="flex items-center gap-3 min-[1330px]:hidden">
                             {!isAdmin && usuario?.nome && (
                                 <button

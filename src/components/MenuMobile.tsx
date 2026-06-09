@@ -7,29 +7,25 @@ type Props = {
   onClose: () => void;
   usuario: any;
   logout?: () => void;
-  setModalAberto: (aberto: boolean) => void; // Mudamos aqui para receber diretamente o controle do Modal
+  setModalAberto: (aberto: boolean) => void; 
 };
 
 function MenuMobile({ isOpen, onClose, usuario, logout, setModalAberto }: Props) {
   const location = useLocation();
-  const navigate = useNavigate(); // Hook para navegar via código
+  const navigate = useNavigate(); 
   const { editMode, setEditMode } = useEditMode();
 
   const isAdmin = location.pathname.startsWith("/admin");
 
-  // Função que decide se navega ou se abre o modal
   const navegarComVerificacao = (rota: string) => {
-    // Se for admin, passa direto
     if (isAdmin) {
       navigate(rota);
       onClose();
       return;
     }
 
-    // Verifica se o usuário está realmente logado (nome preenchido e válido)
     if (!usuario || !usuario.nome || usuario.nome.trim() === "") {
-      setModalAberto(true); // Abre o modal de aviso que está no Header
-      // Opcional: onClose(); // Descomente esta linha se quiser que o menu feche ao abrir o modal
+      setModalAberto(true); 
     } else {
       navigate(rota);
       onClose();
@@ -154,6 +150,17 @@ function MenuMobile({ isOpen, onClose, usuario, logout, setModalAberto }: Props)
                   className="w-full h-[45px] flex items-center justify-center rounded-full bg-[#FFD44B] text-[#171717] text-lg font-bold shadow-lg"
                 >
                   {editMode ? "Salvar" : "Editar"}
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (logout) logout();
+                    setEditMode(false);
+                    onClose();
+                  }}
+                  className="w-full h-[45px] flex items-center justify-center rounded-full bg-[#363636] text-white text-lg font-bold shadow-lg cursor-pointer"
+                >
+                  Sair
                 </button>
               </>
             ) : (

@@ -48,7 +48,7 @@ function Formulario({ tipo, setUsuario }: any) {
     }
   }, [dadosGoogle, tipo]);
 
-  const { login: loginAdmin } = useAuth();
+  const { ativarAdmin } = useAuth();
 
   const guardar = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -266,22 +266,33 @@ function Formulario({ tipo, setUsuario }: any) {
         );
 
         const resultado = await resposta.json();
+        console.log("RESULTADO LOGIN:");
+        console.log(resultado);
+        console.log("status:", resposta.status);
 
         if (resposta.ok) {
           const tipoUsuario =
             resultado.tipo_usuario ||
             resultado.usuario?.tipo_usuario;
 
+          console.log("tipoUsuario:", tipoUsuario);
+
           if (tipoUsuario === "administrador") {
-            console.log("Login de ADMINISTRADOR confirmado pelo backend");
-            await loginAdmin(dados.email, dados.senha);
-            dispararAlerta("sucesso", "Sucesso!", resultado.mensagem || "Login de Administrador realizado com sucesso!");
-            
+            ativarAdmin();
+
+            dispararAlerta(
+              "sucesso",
+              "Sucesso!",
+              "Login de Administrador realizado com sucesso!"
+            );
+
             setTimeout(() => {
-              navigate("/admin");
-            }, 2500);
+              navigate("/admin", { replace: true });
+            }, 1500);
+
             return;
           }
+
 
           if (resultado.status_usuario === "INATIVO") {
             localStorage.setItem("usuario_id", resultado.usuario_id);
