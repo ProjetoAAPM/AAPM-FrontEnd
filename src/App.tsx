@@ -1,3 +1,4 @@
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "./components/Header";
@@ -19,19 +20,19 @@ import { RotaProtegida } from "./components/RotaProtegida";
 
 function AdminRoute({ children }: { children: React.ReactElement }) {
     const { isAdmin, loadingAuth } = useAuth();
-
+    console.log("AdminRoute =>", {
+        isAdmin,
+        loadingAuth
+    });
     if (loadingAuth) {
         return null;
     }
-
     return isAdmin ? children : <Navigate to="/login" replace />;
 }
 
 function AppContent() {
-    const { loadingAuth } = useAuth();
-
+    const { loadingAuth, logoutLoading } = useAuth();
     const location = useLocation();
-
     const esconderHeader = new Set([
         "/cadastro",
         "/login",
@@ -51,7 +52,7 @@ function AppContent() {
     async function carregarUsuario() {
         try {
             const resposta = await fetch(
-                "http://localhost:5000/usuario/home-logada",
+                "https://aapm-api.onrender.com/usuario/home-logada",
                 { credentials: "include" }
             );
 
@@ -76,12 +77,15 @@ function AppContent() {
 
     useEffect(() => {
         if (esconderHeader) return;
+        if (location.pathname.startsWith("/admin")) return;
 
         carregarUsuario();
     }, [location.pathname]);
 
-    if (loadingAuth) {
-        return null;
+    if (loadingAuth || logoutLoading) {
+        return (
+            <div className="min-h-screen bg-[#101625]" />
+        );
     }
 
     return (
@@ -121,7 +125,6 @@ function AppContent() {
 
                 <Route path="*" element={<p>Página não encontrada</p>} />
             </Routes>
-
             <Footer />
         </EditModeProvider>
     );
@@ -129,9 +132,11 @@ function AppContent() {
 
 function App() {
     return (
-        <AuthProvider>
-            <AppContent />
-        </AuthProvider>
+        <GoogleOAuthProvider clientId="832032152359-3njip8902sedk03lvg7jicqebq7hcerq.apps.googleusercontent.com">
+            <AuthProvider>
+                <AppContent />
+            </AuthProvider>
+        </GoogleOAuthProvider>
     );
 }
 

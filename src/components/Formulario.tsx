@@ -1,9 +1,12 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react"; 
+import { useNavigate, useLocation } from "react-router-dom"; 
 import { useAuth } from "../contexts/admin/AuthContext";
 import type { ChangeEvent, SyntheticEvent } from "react";
 import { ChevronDown } from "lucide-react";
 import perfil1 from "../assets/perfis/user1.png";
+import logo from "../assets/icons/Logo48.svg";
+import { useGoogleLogin } from '@react-oauth/google';
+import Alert from "../alerts/Alert";
 
 function Formulario({ tipo, setUsuario }: any) {
   const [dados, setDados] = useState({
@@ -18,9 +21,34 @@ function Formulario({ tipo, setUsuario }: any) {
     tipo_usuario: "aluno",
   });
 
-  const navigate = useNavigate();
+  const [alerta, setAlerta] = useState({
+    aberto: false,
+    tipo: "sucesso" as "sucesso" | "erro",
+    titulo: "",
+    descricao: "",
+  })
 
-  const { login: loginAdmin } = useAuth();
+  const dispararAlerta = (tipoAlerta: "sucesso" | "erro", titulo: string, descricao: string) => {
+    setAlerta({ aberto: true, tipo: tipoAlerta, titulo, descricao });
+  };
+
+  const navigate = useNavigate();
+  const location = useLocation(); 
+
+  const dadosGoogle = location.state as { nome?: string; email?: string; tipo_usuario?: "aluno" | "docente" } | null;
+
+  useEffect(() => {
+    if (tipo === "cadastro" && dadosGoogle) {
+      setDados((valoresAtuais) => ({
+        ...valoresAtuais,
+        nome: dadosGoogle.nome || "",
+        email: dadosGoogle.email || "",
+        tipo_usuario: dadosGoogle.tipo_usuario || "aluno"
+      }));
+    }
+  }, [dadosGoogle, tipo]);
+
+  const { ativarAdmin } = useAuth();
 
   const guardar = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -34,16 +62,80 @@ function Formulario({ tipo, setUsuario }: any) {
   const alternarUsuario = (
     selecao: "aluno" | "docente"
   ) => {
+    if (dadosGoogle?.tipo_usuario) return;
+
     setDados({
       ...dados,
       tipo_usuario: selecao,
     });
   };
 
-  const loginGoogle = () => {
-    window.location.href =
-      "http://localhost:5000/login/google";
-  };
+  const loginGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const resposta = await fetch("https://aapm-api.onrender.com/auth/google", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ token: tokenResponse.access_token }),
+        });
+
+        const resultado = await resposta.json();
+
+        if (resposta.ok) {
+          if (resultado.mensagem === "Usuário sem cadastro") {
+            alert("Conta Google validada! Continue o preenchimento do seu cadastro.");
+            
+            const tipoIdentificado = resultado.redirect.includes("docente") ? "docente" : "aluno";
+
+            navigate(resultado.redirect, {
+              state: {
+                nome: resultado.usuario_temporario?.temp_nome,
+                email: resultado.usuario_temporario?.temp_email,
+                tipo_usuario: tipoIdentificado
+              }
+            });
+            return;
+          }
+
+          if (resultado.redirect === "/tela_pagamento" || resultado.status === "INATIVO") {
+            localStorage.setItem("usuario_id", resultado.usuario?.usuario_id);
+            localStorage.setItem("status_usuario", "INATIVO");
+            alert(resultado.erro_validacao || "Realize o pagamento para ativar sua account.");
+            navigate("/escolhaplano");
+            return;
+          }
+
+          localStorage.setItem("usuario_id", resultado.usuario?.usuario_id);
+          localStorage.setItem("status_usuario", "ATIVO");
+
+          setUsuario?.({
+            nome: resultado.usuario?.usuario_nome,
+            tipo_usuario: resultado.usuario?.tipo_usuario,
+            foto: perfil1,
+            premium: true, 
+          });
+
+          alert(resultado.mensagem || "Login realizado com sucesso!");
+          navigate(resultado.redirect); 
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 100);
+        } else {
+          alert(resultado.mensagem || resultado.erro_usuario || "Erro ao autenticar com o Google.");
+        }
+      } catch (erro) {
+        console.error("Erro na requisição do Google:", erro);
+        alert("Não foi possível conectar ao servidor.");
+      }
+    },
+    onError: () => {
+      alert("Falha na autenticação com o Google. Tente novamente.");
+    }
+  });
 
   const cursos = [
     "Tec Administração",
@@ -57,6 +149,8 @@ function Formulario({ tipo, setUsuario }: any) {
     "CAI Eletricista de Manutenção Eletroeletrônica",
     "CAI Ferramenteiro de Moldes para Plásticos",
   ];
+
+  const estiloInputBloqueado = "disabled:opacity-60 disabled:cursor-not-allowed bg-gray-100 select-none";
 
   const especialidades = [
     "Gestão",
@@ -110,10 +204,9 @@ function Formulario({ tipo, setUsuario }: any) {
     lg:text-lg
     inset-shadow-sm
     inset-shadow-indigo-700/10
-    ${
-      tipo === "login"
-        ? "text-[#373737] font-bold"
-        : "text-[#FFFFFF] font-semibold lg:pl-20 md:pl-10 lg:-ml-18.5"
+    ${tipo === "login"
+      ? "text-[#373737] font-bold"
+      : "text-[#FFFFFF] font-semibold lg:pl-20 md:pl-10 lg:-ml-18.5"
     }
   `;
 
@@ -128,7 +221,7 @@ function Formulario({ tipo, setUsuario }: any) {
     md:text-base
     ${
       tipo === "login"
-        ? "w-[85%] lg:w-[85%] mx-15"
+        ? "w-[85%] lg:w-[85%] mx-15 ml-5.5 md:ml-8.5"
         : "mx-2 md:mx-10 lg:mx-0"
     }
   `;
@@ -140,23 +233,17 @@ function Formulario({ tipo, setUsuario }: any) {
 
     if (tipo === "cadastro") {
       if (dados.senha !== dados.confirmar_senha) {
-        alert("Senhas diferentes!");
+        dispararAlerta("erro", "Atenção!", "As senhas preenchidas não são iguais.");
         return;
       }
 
-      if (
-        dados.tipo_usuario === "aluno" &&
-        !dados.curso
-      ) {
-        alert("Informe o seu curso!");
+      if (dados.tipo_usuario === "aluno" && !dados.curso) {
+        dispararAlerta("erro", "Campo Obrigatório", "Por favor, informe o seu curso.");
         return;
       }
 
-      if (
-        dados.tipo_usuario === "docente" &&
-        !dados.especialidade
-      ) {
-        alert("Informe sua especialidade!");
+      if (dados.tipo_usuario === "docente" && !dados.especialidade) {
+        dispararAlerta("erro", "Campo Obrigatório", "Por favor, informe sua especialidade.");
         return;
       }
     }
@@ -164,16 +251,13 @@ function Formulario({ tipo, setUsuario }: any) {
     if (tipo === "login") {
       try {
         const resposta = await fetch(
-          "http://localhost:5000/login",
+          "https://aapm-api.onrender.com/login",
           {
             method: "POST",
-
             headers: {
               "Content-Type": "application/json",
             },
-
             credentials: "include",
-
             body: JSON.stringify({
               email: dados.email,
               senha: dados.senha,
@@ -182,109 +266,79 @@ function Formulario({ tipo, setUsuario }: any) {
         );
 
         const resultado = await resposta.json();
+        console.log("RESULTADO LOGIN:");
+        console.log(resultado);
+        console.log("status:", resposta.status);
 
         if (resposta.ok) {
           const tipoUsuario =
             resultado.tipo_usuario ||
             resultado.usuario?.tipo_usuario;
 
+          console.log("tipoUsuario:", tipoUsuario);
+
           if (tipoUsuario === "administrador") {
-            console.log(
-              "Login de ADMINISTRADOR confirmado pelo backend"
+            ativarAdmin();
+
+            dispararAlerta(
+              "sucesso",
+              "Sucesso!",
+              "Login de Administrador realizado com sucesso!"
             );
 
-            await loginAdmin(
-              dados.email,
-              dados.senha
-            );
-
-            alert(
-              resultado.mensagem ||
-                "Login de Administrador realizado com sucesso!"
-            );
-
-            navigate("/admin");
+            setTimeout(() => {
+              navigate("/admin", { replace: true });
+            }, 1500);
 
             return;
           }
 
-          if (
-            resultado.status_usuario === "INATIVO"
-          ) {
-            localStorage.setItem(
-              "usuario_id",
-              resultado.usuario_id
-            );
 
-            localStorage.setItem(
-              "status_usuario",
-              "INATIVO"
-            );
-
-            alert(resultado.mensagem);
-
-            navigate("/escolhaplano");
-
+          if (resultado.status_usuario === "INATIVO") {
+            localStorage.setItem("usuario_id", resultado.usuario_id);
+            localStorage.setItem("status_usuario", "INATIVO");
+             dispararAlerta("erro", "Conta Inativa", "Seu acesso está inativo porque o pagamento está pendente ou em análise.");
+            
+            setTimeout(() => {
+              navigate("/escolhaplano");
+            }, 3000);
             return;
           }
 
           localStorage.setItem(
             "usuario_id",
-            resultado.usuario?.id ||
-              resultado.usuario_id
+            resultado.usuario?.id || resultado.usuario_id
           );
-
-          localStorage.setItem(
-            "status_usuario",
-            "ATIVO"
-          );
+          localStorage.setItem("status_usuario", "ATIVO");
 
           setUsuario?.({
             nome: resultado.usuario?.usuario_nome,
-            tipo_usuario:
-              resultado.usuario?.tipo_usuario,
+            tipo_usuario: resultado.usuario?.tipo_usuario,
             foto: perfil1,
-            premium:
-              resultado.usuario?.premium,
+            premium: resultado.usuario?.premium,
           });
 
-          alert(
-            resultado.mensagem ||
-              "Login realizado com sucesso!"
-          );
-
-          navigate("/home");
+          dispararAlerta("sucesso", "Sucesso!", resultado.mensagem || "Login realizado com sucesso!");
 
           setTimeout(() => {
+            navigate("/home");
             window.location.reload();
-          }, 100);
+          }, 2500);
 
           return;
         }
 
         if (resposta.status === 403) {
-          alert(
-            "Seu acesso está inativo porque o pagamento está pendente ou em análise. Redirecionando para regularização..."
-          );
-
-          navigate("/escolhaplano");
-
+          dispararAlerta("erro", "Pagamento Pendente", "Seu acesso está inativo porque o pagamento está pendente ou em análise.");
+          setTimeout(() => {
+            navigate("/escolhaplano");
+          }, 2500);
           return;
         }
 
-        alert(
-          resultado.mensagem ||
-            "Email ou senha incorretos!"
-        );
+        dispararAlerta("erro", "Falha no Login", resultado.mensagem || "Email ou senha incorretos!");
       } catch (erro) {
-        console.error(
-          "Erro na requisição:",
-          erro
-        );
-
-        alert(
-          "Não foi possível conectar ao servidor."
-        );
+        dispararAlerta("erro", "Erro na requisição", "Não foi possível conectar ao servidor.");
       }
 
       return;
@@ -297,16 +351,13 @@ function Formulario({ tipo, setUsuario }: any) {
           : "/cadastro/docente";
 
       const resposta = await fetch(
-        `http://localhost:5000${rota}`,
+        `https://aapm-api.onrender.com${rota}`,
         {
           method: "POST",
-
           headers: {
             "Content-Type": "application/json",
           },
-
           credentials: "include",
-
           body: JSON.stringify(dados),
         }
       );
@@ -314,47 +365,30 @@ function Formulario({ tipo, setUsuario }: any) {
       const resultado = await resposta.json();
 
       if (resposta.ok) {
-        if (
-          resultado.status_usuario === "INATIVO"
-        ) {
-          localStorage.setItem(
-            "usuario_id",
-            resultado.usuario_id
-          );
+        if (resultado.status_usuario === "INATIVO") {
+          localStorage.setItem("usuario_id", resultado.usuario_id);
+          localStorage.setItem("status_usuario", "INATIVO");
 
-          localStorage.setItem(
-            "status_usuario",
-            "INATIVO"
-          );
+          dispararAlerta("sucesso", "Aviso", resultado.mensagem || "Cadastro realizado!");
 
-          alert(resultado.mensagem);
-
-          navigate("/escolhaplano");
-
+          setTimeout(() => {
+            navigate("/escolhaplano");
+          }, 2500);
           return;
         }
 
         localStorage.setItem(
           "usuario_id",
-          resultado.usuario_id ||
-            resultado.usuario?.id
+          resultado.usuario_id || resultado.usuario?.id
         );
+        localStorage.setItem("status_usuario", "ATIVO");
 
-        localStorage.setItem(
-          "status_usuario",
-          "ATIVO"
-        );
-
-        alert(
-          resultado.mensagem ||
-            "Cadastro realizado com sucesso!"
-        );
-
-        navigate("/escolhaplano");
+        dispararAlerta("sucesso", "Sucesso!", resultado.mensagem || "Cadastro realizado com sucesso!");
 
         setTimeout(() => {
-          window.location.reload();
-        }, 100);
+          navigate("/escolhaplano");
+        }, 2500);
+
       } else {
         const mensagemErro =
           resultado.erro_validacao ||
@@ -363,29 +397,32 @@ function Formulario({ tipo, setUsuario }: any) {
           resultado.mensagem ||
           "Falha no cadastro.";
 
-        alert(`Erro: ${mensagemErro}`);
+        dispararAlerta("erro", "Erro no Cadastro", mensagemErro);
       }
     } catch (erro) {
-      console.error(
-        "Erro na requisição:",
-        erro
-      );
-
-      alert(
-        "Não foi possível conectar ao servidor."
-      );
+      console.error("Erro na requisição:", erro);
+      dispararAlerta("erro", "Erro", "Não foi possível conectar ao servidor.");
     }
   };
 
   return (
     <div className="w-full flex justify-center py-20">
+      
+      <Alert
+        aberto={alerta.aberto}
+        tipo={alerta.tipo}
+        titulo={alerta.titulo}
+        descricao={alerta.descricao}
+        fechar={() => setAlerta((prev) => ({ ...prev, aberto: false }))}
+      />
+
       <form
         onSubmit={enviar}
         className={`
           ${tema.bg}
           ${
             tipo === "login"
-              ? "w-[320px] md:w-[450px] lg:w-[500px] mt-3 md:mt-5 lg:mt-12"
+              ? "w-[320px] md:w-[450px] lg:w-[500px] mt-20 md:mt-25 lg:mt-30"
               : "max-w-[330px] md:max-w-[600px] lg:max-w-[848px] w-full mt-10 lg:mt-20"
           }
           py-10
@@ -398,7 +435,7 @@ function Formulario({ tipo, setUsuario }: any) {
         `}
       >
         <img
-          src="src/assets/icons/Logo48.svg"
+          src={logo}
           alt="logo"
           className="
             absolute
@@ -441,7 +478,8 @@ function Formulario({ tipo, setUsuario }: any) {
                 name="nome"
                 value={dados.nome}
                 onChange={guardar}
-                className={estiloInput}
+                disabled={!!dadosGoogle?.nome}
+                className={`${estiloInput} ${dadosGoogle?.nome ? estiloInputBloqueado : ""}`}
                 required
               />
             </div>
@@ -457,7 +495,8 @@ function Formulario({ tipo, setUsuario }: any) {
               name="email"
               value={dados.email}
               onChange={guardar}
-              className={`${estiloInput} ml-5.5 md:ml-8.5 cursor-pointer`}
+              disabled={!!dadosGoogle?.email}
+              className={`${estiloInput} ml-5.5 md:ml-8.5 cursor-pointer ${dadosGoogle?.email ? estiloInputBloqueado : ""}`}
               required
             />
           </div>
@@ -475,6 +514,7 @@ function Formulario({ tipo, setUsuario }: any) {
                     onClick={() =>
                       alternarUsuario("aluno")
                     }
+                    disabled={!!dadosGoogle?.tipo_usuario}
                     className={`
                       w-[100px]
                       h-[40px]
@@ -485,12 +525,11 @@ function Formulario({ tipo, setUsuario }: any) {
                       lg:text-lg
                       font-bold
                       shadow-sm
-                      cursor-pointer
-                      ${
-                        dados.tipo_usuario ===
+                      ${dadosGoogle?.tipo_usuario ? "cursor-not-allowed opacity-60" : "cursor-pointer"}
+                      ${dados.tipo_usuario ===
                         "aluno"
-                          ? "bg-[#383636] text-white"
-                          : "bg-[#DDDDDD] text-black"
+                        ? "bg-[#383636] text-white"
+                        : "bg-[#DDDDDD] text-black"
                       }
                     `}
                   >
@@ -502,6 +541,7 @@ function Formulario({ tipo, setUsuario }: any) {
                     onClick={() =>
                       alternarUsuario("docente")
                     }
+                    disabled={!!dadosGoogle?.tipo_usuario}
                     className={`
                       w-[100px]
                       h-[40px]
@@ -512,12 +552,11 @@ function Formulario({ tipo, setUsuario }: any) {
                       lg:text-lg
                       font-bold
                       shadow-sm
-                      cursor-pointer
-                      ${
-                        dados.tipo_usuario ===
+                      ${dadosGoogle?.tipo_usuario ? "cursor-not-allowed opacity-60" : "cursor-pointer"}
+                      ${dados.tipo_usuario ===
                         "docente"
-                          ? "bg-[#383636] text-white"
-                          : "bg-[#DDDDDD] text-black"
+                        ? "bg-[#383636] text-white"
+                        : "bg-[#DDDDDD] text-black"
                       }
                     `}
                   >
@@ -527,7 +566,7 @@ function Formulario({ tipo, setUsuario }: any) {
               </div>
 
               {dados.tipo_usuario ===
-              "aluno" ? (
+                "aluno" ? (
                 <>
                   <div className="relative flex flex-col">
                     <label className={estiloLabel}>
@@ -557,7 +596,7 @@ function Formulario({ tipo, setUsuario }: any) {
                       required
                     >
                       <option value="">
-                        Selecione seu curso
+                        Seleccione seu curso
                       </option>
 
                       {cursos.map((item) => (
@@ -602,14 +641,14 @@ function Formulario({ tipo, setUsuario }: any) {
                             ).showPicker()
                           }
                           onFocus={(e) =>
-                            (e.target.style.color =
-                              "black")
+                          (e.target.style.color =
+                            "black")
                           }
                           onBlur={(e) =>
-                            (e.target.style.color =
-                              e.target.value
-                                ? "black"
-                                : "transparent")
+                          (e.target.style.color =
+                            e.target.value
+                              ? "black"
+                              : "transparent")
                           }
                           style={{
                             color:
@@ -633,14 +672,14 @@ function Formulario({ tipo, setUsuario }: any) {
                           value={dados.fim_curso}
                           onChange={guardar}
                           onFocus={(e) =>
-                            (e.target.style.color =
-                              "black")
+                          (e.target.style.color =
+                            "black")
                           }
                           onBlur={(e) =>
-                            (e.target.style.color =
-                              e.target.value
-                                ? "black"
-                                : "transparent")
+                          (e.target.style.color =
+                            e.target.value
+                              ? "black"
+                              : "transparent")
                           }
                           style={{
                             color:
@@ -666,16 +705,20 @@ function Formulario({ tipo, setUsuario }: any) {
                     value={dados.especialidade}
                     onChange={guardar}
                     className="
-                      h-[40px]
-                      p-2
-                      m-1.5
-                      md:mx-10
-                      bg-white
-                      rounded-md
-                      shadow-md
-                      appearance-none
-                      text-sm
-                      lg:text-base
+                      h-[35px]
+                        lg:h-[40px]
+                        p-1
+                        lg:p-2
+                        m-2
+                        lg:m-1.5
+                        md:mx-10
+                        lg:mx-0
+                        bg-white
+                        rounded-md
+                        shadow-md
+                        appearance-none
+                        text-sm
+                        lg:text-base
                     "
                     required
                   >
@@ -695,7 +738,7 @@ function Formulario({ tipo, setUsuario }: any) {
                     )}
                   </select>
 
-                  <div className="absolute right-3 top-20 -translate-y-1/2 pointer-events-none">
+                  <div className="absolute right-4 md:right-12 md:top-17.5 lg:right-3 top-16.5 lg:top-20 -translate-y-1/2 pointer-events-none">
                     <ChevronDown
                       size={20}
                       className="text-gray-500"
@@ -716,7 +759,7 @@ function Formulario({ tipo, setUsuario }: any) {
               name="senha"
               value={dados.senha}
               onChange={guardar}
-              className={`${estiloInput} ml-5.5 md:ml-8.5 cursor-pointer`}
+              className={`${estiloInput}`}
               required
             />
           </div>
@@ -767,10 +810,9 @@ function Formulario({ tipo, setUsuario }: any) {
               type="submit"
               className={`
                 ${tema.btn}
-                ${
-                  tipo === "login"
-                    ? "w-[120px] h-[40px] md:w-[150px] lg:w-[170px] lg:h-[50px] rounded-full text-[#373737]"
-                    : "w-[140px] h-[45px] lg:w-[170px] lg:h-[50px] rounded-2xl text-[#FFFFFF]"
+                ${tipo === "login"
+                  ? "w-[120px] h-[40px] md:w-[150px] lg:w-[170px] lg:h-[50px] rounded-full text-[#373737]"
+                  : "w-[140px] h-[45px] lg:w-[170px] lg:h-[50px] rounded-2xl text-[#FFFFFF]"
                 }
                 text-base
                 md:text-lg
@@ -788,7 +830,7 @@ function Formulario({ tipo, setUsuario }: any) {
             {tipo === "login" && (
               <button
                 type="button"
-                onClick={loginGoogle}
+                onClick={() => loginGoogle()}
                 className="
                   w-[120px]
                   h-[40px]
