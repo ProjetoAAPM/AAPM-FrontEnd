@@ -86,7 +86,7 @@ function Formulario({ tipo, setUsuario }: any) {
 
         if (resposta.ok) {
           if (resultado.mensagem === "Usuário sem cadastro") {
-            alert("Conta Google validada! Continue o preenchimento do seu cadastro.");
+            dispararAlerta("sucesso", "Sucesso!", "Conta Google validada! Continue o preenchimento do seu cadastro.");
             
             const tipoIdentificado = resultado.redirect.includes("docente") ? "docente" : "aluno";
 
@@ -103,7 +103,7 @@ function Formulario({ tipo, setUsuario }: any) {
           if (resultado.redirect === "/tela_pagamento" || resultado.status === "INATIVO") {
             localStorage.setItem("usuario_id", resultado.usuario?.usuario_id);
             localStorage.setItem("status_usuario", "INATIVO");
-            alert(resultado.erro_validacao || "Realize o pagamento para ativar sua account.");
+            dispararAlerta("erro", "Erro", resultado.erro_validacao || "Realize o pagamento para ativar sua conta.");
             navigate("/escolhaplano");
             return;
           }
@@ -118,22 +118,22 @@ function Formulario({ tipo, setUsuario }: any) {
             premium: true, 
           });
 
-          alert(resultado.mensagem || "Login realizado com sucesso!");
+          dispararAlerta("sucesso","Sucesso!", resultado.mensagem || "Login realizado com sucesso!");
           navigate(resultado.redirect); 
 
           setTimeout(() => {
             window.location.reload();
           }, 100);
         } else {
-          alert(resultado.mensagem || resultado.erro_usuario || "Erro ao autenticar com o Google.");
+          dispararAlerta("erro", "Erro", resultado.mensagem || resultado.erro_usuario || "Erro ao autenticar com o Google.");
         }
       } catch (erro) {
         console.error("Erro na requisição do Google:", erro);
-        alert("Não foi possível conectar ao servidor.");
+        dispararAlerta("erro", "Erro", "Não foi possível conectar ao servidor.");
       }
     },
     onError: () => {
-      alert("Falha na autenticação com o Google. Tente novamente.");
+      dispararAlerta("erro", "Erro", "Falha na autenticação com o Google. Tente novamente.");
     }
   });
 
