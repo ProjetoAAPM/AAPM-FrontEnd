@@ -73,7 +73,7 @@ function Formulario({ tipo, setUsuario }: any) {
   const loginGoogle = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
-        const resposta = await fetch("https://aapm-api.onrender.com/auth/google", {
+        const resposta = await fetch("https://portal-aapm-904312815750.southamerica-east1.run.app/auth/google", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -251,7 +251,7 @@ function Formulario({ tipo, setUsuario }: any) {
     if (tipo === "login") {
       try {
         const resposta = await fetch(
-          "https://aapm-api.onrender.com/login",
+          "https://portal-aapm-904312815750.southamerica-east1.run.app/login",
           {
             method: "POST",
             headers: {
@@ -340,7 +340,7 @@ function Formulario({ tipo, setUsuario }: any) {
           : "/cadastro/docente";
 
       const resposta = await fetch(
-        `https://aapm-api.onrender.com${rota}`,
+        `https://portal-aapm-904312815750.southamerica-east1.run.app${rota}`,
         {
           method: "POST",
           headers: {
