@@ -34,6 +34,8 @@ function Home({ modoAdmin = false, usuario }: HomeProps) {
   const [loading, setLoading] = useState(true);
 
   const [animarPorco, setAnimarPorco] = useState(false);
+  const [pontosAnterior, setPontosAnterior] = useState(0);
+  const [pontosAtual, setPontosAtual] = useState(0);  
   const [animacaoPendente, setAnimacaoPendente] = useState(false);
   const [progressoPendente, setProgressoPendente] =
     useState<Progresso | null>(null);
@@ -83,8 +85,12 @@ function Home({ modoAdmin = false, usuario }: HomeProps) {
 
         if (idUltimoGanho !== ultimoGanhoVisto) {
           if (usuarioEstaPresente()) {
+            setPontosAnterior(progresso.pontos);
+            setPontosAtual(novoProgresso.pontos);
+
             setProgresso(novoProgresso);
             setAnimarPorco(true);
+
             sessionStorage.setItem("ultimo_ganho_animado", idUltimoGanho);
           } else {
             setProgressoPendente(novoProgresso);
@@ -134,6 +140,9 @@ function Home({ modoAdmin = false, usuario }: HomeProps) {
       if (!usuarioEstaPresente()) return;
 
       if (animacaoPendente && progressoPendente) {
+        setPontosAnterior(progresso.pontos);
+        setPontosAtual(progressoPendente.pontos);
+
         setProgresso(progressoPendente);
         setAnimarPorco(true);
         setAnimacaoPendente(false);
@@ -172,6 +181,8 @@ function Home({ modoAdmin = false, usuario }: HomeProps) {
             loading={loading}
             usuario={usuario}
             animar={animarPorco}
+            pontosAnterior={pontosAnterior}
+            pontosAtual={pontosAtual}
             onPremiosCalculados={setPremiosDaBarra}
           />
         </section>
