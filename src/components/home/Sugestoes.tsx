@@ -38,6 +38,10 @@ export default function Sugestoes({ modoAdmin = false }: SugestoesProps) {
   };
 
   useEffect(() => {
+    carregarSugestoes();
+  }, []);
+
+  useEffect(() => {
     if (modoAdmin) {
       carregarSugestoes();
       const interval = setInterval(carregarSugestoes, 8000);

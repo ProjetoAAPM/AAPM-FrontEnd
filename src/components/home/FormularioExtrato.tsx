@@ -54,6 +54,10 @@ export default function FormularioExtrato({
     }
   };
 
+  useEffect(() => {
+    carregarFormularios();
+  }, []);
+
   const salvarFormulario = async (dados: FormularioData) => {
     try {
       await formularioService.criarFormulario(dados);
@@ -240,7 +244,7 @@ export default function FormularioExtrato({
                     ))}
 
                       {listaRenderizada.length === 0 && !mostrarFormulario && (
-                        <div className="absolute inset-0 flex items-center justify-center text-center px-4 text-gray-500 font-semibold text-sm sm:text-base translate-y-[10px] sm:translate-y-[15px] lg:-translate-y-[5px]">  
+                        <div className="absolute inset-0 pointer-events-none flex items-center justify-center text-center px-4 text-gray-500 font-semibold text-sm sm:text-base translate-y-[10px] sm:translate-y-[15px] lg:-translate-y-[5px]">
                         {modoAdmin
                           ? "Nenhum formulário cadastrado ainda."
                           : "Novos formulários aparecerão aqui quando forem publicados."}
