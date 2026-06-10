@@ -135,6 +135,25 @@ const FormularioCard = ({
                 </button>
               )}
 
+              {/* {!isEditing && !somenteVisualizacao && (
+                <div className="flex gap-3 sm:gap-5 md:gap-7 w-full sm:w-auto justify-end">
+                  <button
+                    onClick={handleEditar}
+                    className="w-[60px] sm:w-[80px] md:w-[92px] h-[38px] bg-[#C83D3D] rounded-[14px] shadow-md flex items-center justify-center hover:brightness-95 transition-all"
+                  >
+                    <img src={iconEditar} alt="Editar" className="w-5 sm:w-6" />
+                  </button>
+
+                  <button
+                    onClick={() => setPopupExcluirAberto(true)}
+                    className="w-[60px] sm:w-[80px] md:w-[92px] h-[38px] bg-[#C83D3D] rounded-[14px] shadow-md flex items-center justify-center hover:brightness-95 transition-all"
+                  >
+                    <img src={iconExcluir} alt="Excluir" className="w-5 sm:w-6" />
+                  </button>
+                </div>
+              )}
+            </div> */}
+            
               {!isEditing && !somenteVisualizacao && (
                 <div className="flex gap-3 sm:gap-5 md:gap-7 w-full sm:w-auto justify-end">
                   <button
@@ -153,6 +172,7 @@ const FormularioCard = ({
                 </div>
               )}
             </div>
+          
 
             <div className="flex flex-col gap-4 sm:gap-5">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
