@@ -53,6 +53,7 @@ export default function Pontuacao({
               <PorcoPorcentagem
                 progresso={progresso}
                 animar={animar}
+                isPremium={usuario?.premium}
               />
             </div>
 
