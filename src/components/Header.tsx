@@ -8,6 +8,7 @@ import { useEditMode } from "../contexts/modo_editar";
 import logoImg from "/src/assets/icons/Logo48.svg";
 import { limparTodoConteudo } from "../Services/conteudoService";
 import LayoutAviso from "../alerts/LayoutAviso";
+import { useAuth } from "../contexts/admin/AuthContext";
 
 interface HeaderProps {
     usuario: Usuario;
@@ -18,16 +19,31 @@ function Header({ usuario, setUsuario }: HeaderProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [perfilOpen, setPerfilOpen] = useState(false);
     const [modalAberto, setModalAberto] = useState(false);
-
     const { editMode, setEditMode } = useEditMode();
-
     const location = useLocation();
     const navigate = useNavigate();
-
     const isAdmin = location.pathname.startsWith("/admin");
+    const { logout: logoutAdmin } = useAuth();
 
-    function logout() {
-        localStorage.clear();
+    async function logout() {
+        if (isAdmin) {
+            logoutAdmin();
+            localStorage.removeItem("isAdmin");
+        } else {
+            try {
+                await fetch("https://aapm-api.onrender.com/usuario/logout", {
+                    method: "GET",
+                    credentials: "include"
+                });
+            } catch (error) {
+                console.error("Erro ao sair do usuário:", error);
+            }
+
+            localStorage.removeItem("usuario_id");
+            localStorage.removeItem("status_usuario");
+        }
+
+        setEditMode(false);
 
         setUsuario({
             nome: "",
@@ -43,9 +59,8 @@ function Header({ usuario, setUsuario }: HeaderProps) {
         navigate("/");
     }
 
-    // CORREÇÃO: Função adaptada para navegar via código no Desktop e garantir o bloqueio
     function lidarComNavegacao(e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>, rota: string) {
-        e.preventDefault(); // Garante o bloqueio do comportamento padrão de links
+        e.preventDefault();
 
         if (isAdmin) {
             navigate(rota);
@@ -139,7 +154,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                             src={logoImg}
                             alt="Logo"
                             className="h-[40px] md:h-[45px] w-auto object-contain cursor-pointer"
-                            onClick={()=>navigate("/")}
+                            onClick={() => navigate("/")}
                         />
 
                         <p
@@ -148,13 +163,12 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                                     ? "text-black"
                                     : "text-white"
                             }`}
-                            onClick={()=>navigate("/")}
+                            onClick={() => navigate("/")}
                         >
                             AAPM Senai Leopoldina
                         </p>
                     </Link>
 
-                    {/* DESKTOP NAV: Trocados por botões com controle manual para evitar bugs do Link */}
                     <div className="hidden min-[1330px]:flex gap-6 xl:gap-16 2xl:gap-28 text-white text-sm xl:text-base 2xl:text-lg font-medium">
                         <button
                             className={navLink}
@@ -190,15 +204,13 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                     <div className="flex gap-2 md:gap-4 xl:gap-6 items-center">
                         {isAdmin ? (
                             <div className="hidden min-[1330px]:flex items-center gap-4">
-                                <button
+                                <button 
                                     onClick={resetarPadrao}
-                                    className={botaoAdmin}
+                                    className={`${botaoAdmin}`} 
                                 >
                                     Padrão
                                 </button>
-
-                                <div className="w-[2px] h-8 bg-gray-500/50" />
-
+                                <div className="w-[2px] h-8 bg-gray-500/50 m-1" />
                                 <button
                                     onClick={() => {
                                         if (editMode) {
@@ -206,9 +218,18 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                                         }
                                         setEditMode(!editMode);
                                     }}
-                                    className={botaoAdmin}
+                                    className={`${botaoAdmin}`} 
                                 >
                                     {editMode ? "Salvar" : "Editar"}
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        logout();
+                                    }}
+                                    className="text-white text-sm opacity-90 hover:opacity-200 transition-all cursor-pointer mr-2"
+                                >
+                                    sair
                                 </button>
                             </div>
                         ) : (
@@ -268,7 +289,6 @@ function Header({ usuario, setUsuario }: HeaderProps) {
                             </>
                         )}
 
-                        {/* MOBILE CONTAINER */}
                         <div className="flex items-center gap-3 min-[1330px]:hidden">
                             {!isAdmin && usuario?.nome && (
                                 <button

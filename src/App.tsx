@@ -1,4 +1,5 @@
-import { Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { Routes, Route, useLocation, Navigate, Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -18,14 +19,20 @@ import type { Usuario } from "./types/Usuario";
 import { RotaProtegida } from "./components/RotaProtegida";
 
 function AdminRoute({ children }: { children: React.ReactElement }) {
-    const { isAdmin } = useAuth();
-
+    const { isAdmin, loadingAuth } = useAuth();
+    console.log("AdminRoute =>", {
+        isAdmin,
+        loadingAuth
+    });
+    if (loadingAuth) {
+        return null;
+    }
     return isAdmin ? children : <Navigate to="/login" replace />;
 }
 
-function App() {
+function AppContent() {
+    const { loadingAuth, logoutLoading } = useAuth();
     const location = useLocation();
-
     const esconderHeader = new Set([
         "/cadastro",
         "/login",
@@ -43,11 +50,6 @@ function App() {
     });
 
     async function carregarUsuario() {
-
-        if (location.pathname.includes("admin") || location.pathname.includes("administrador") || location.pathname === "/") {
-            return;
-        }
-
         try {
             const resposta = await fetch(
                 "https://portal-aapm-904312815750.southamerica-east1.run.app/usuario/home-logada",
@@ -75,24 +77,38 @@ function App() {
 
     useEffect(() => {
         if (esconderHeader) return;
+        if (location.pathname.startsWith("/admin")) return;
 
         carregarUsuario();
     }, [location.pathname]);
 
+    if (loadingAuth || logoutLoading) {
+        return (
+            <div className="min-h-screen bg-[#101625]" />
+        );
+    }
+
     return (
-        <AuthProvider>
-            <EditModeProvider>
-                <GlobalClickHandler />
+        <EditModeProvider>
+            <GlobalClickHandler />
 
-                {!esconderHeader && (
-                    <Header usuario={usuario} setUsuario={setUsuario} />
-                )}
+            <Routes>
+                <Route path="*" element={<p>Página não encontrada</p>} />
 
-                <Routes>
-                    <Route path="/" element={<LandingPage />} />
-                    <Route path="/login" element={<Login setUsuario={setUsuario} />} />
-                    <Route path="/cadastro" element={<Cadastro setUsuario={setUsuario} />} />
-                    <Route path="/escolhaplano" element={<EscolhaPlano />} />
+                <Route path="/login" element={<Login setUsuario={setUsuario} />} />
+                <Route path="/cadastro" element={<Cadastro setUsuario={setUsuario} />} />
+                <Route path="/escolhaplano" element={<EscolhaPlano />} />
+
+                <Route
+                    element={
+                        <>
+                            <Header usuario={usuario} setUsuario={setUsuario} />
+                            <main><Outlet/></main>
+                            <Footer />
+                        </>
+                    }
+                >
+                    <Route path="/" element={<LandingPage/>}/>
 
                     <Route element={<RotaProtegida />}>
                         <Route path="/home" element={<Home usuario={usuario} />} />
@@ -115,12 +131,22 @@ function App() {
                         <Route path="pagamento" element={<Pagamento isAdmin />} />
                     </Route>
 
-                    <Route path="*" element={<p>Página não encontrada</p>} />
-                </Routes>
 
-                <Footer />
-            </EditModeProvider>
-        </AuthProvider>
+                </Route>
+
+                
+            </Routes>
+        </EditModeProvider>
+    );
+}
+
+function App() {
+    return (
+        <GoogleOAuthProvider clientId="832032152359-3njip8902sedk03lvg7jicqebq7hcerq.apps.googleusercontent.com">
+            <AuthProvider>
+                <AppContent />
+            </AuthProvider>
+        </GoogleOAuthProvider>
     );
 }
 

@@ -22,11 +22,10 @@ function Footer() {
           </span>
           <p className="text-xs sm:text-sm font-medium text-slate-300 max-w-2xl leading-relaxed">
             Flavia Ribeiro <span className="text-[#93C2E5] mx-1.5">•</span> 
-            Leticia Gomes <span className="text-[#FFF0A5] mx-1.5">•</span> 
-            Maria Sales <span className="text-[#C83D3D] mx-1.5">•</span> 
+            Leticia Aymee Gomes <span className="text-[#FFF0A5] mx-1.5">•</span> 
+            Maria Eduarda de Sales <span className="text-[#C83D3D] mx-1.5">•</span> 
             Maysa Soares <span className="text-[#93C2E5] mx-1.5">•</span> 
-            Nicolly Almeida <span className="text-[#FFF0A5] mx-1.5">•</span>
-            Pedro Lourenço
+            Nicolly de Almeida
           </p>
         </div>
 

@@ -48,7 +48,7 @@ function Formulario({ tipo, setUsuario }: any) {
     }
   }, [dadosGoogle, tipo]);
 
-  const { login: loginAdmin } = useAuth();
+  const { ativarAdmin } = useAuth();
 
   const guardar = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -86,7 +86,7 @@ function Formulario({ tipo, setUsuario }: any) {
 
         if (resposta.ok) {
           if (resultado.mensagem === "Usuário sem cadastro") {
-            alert("Conta Google validada! Continue o preenchimento do seu cadastro.");
+            dispararAlerta("sucesso", "Sucesso!", "Conta Google validada! Continue o preenchimento do seu cadastro.");
             
             const tipoIdentificado = resultado.redirect.includes("docente") ? "docente" : "aluno";
 
@@ -103,8 +103,10 @@ function Formulario({ tipo, setUsuario }: any) {
           if (resultado.redirect === "/tela_pagamento" || resultado.status === "INATIVO") {
             localStorage.setItem("usuario_id", resultado.usuario?.usuario_id);
             localStorage.setItem("status_usuario", "INATIVO");
-            alert(resultado.erro_validacao || "Realize o pagamento para ativar sua account.");
+            dispararAlerta("erro", "Erro", resultado.erro_validacao || "Realize o pagamento para ativar sua conta.");
+            setTimeout(() => {
             navigate("/escolhaplano");
+          }, 2500);
             return;
           }
 
@@ -118,22 +120,26 @@ function Formulario({ tipo, setUsuario }: any) {
             premium: true, 
           });
 
-          alert(resultado.mensagem || "Login realizado com sucesso!");
-          navigate(resultado.redirect); 
-
+          dispararAlerta("sucesso","Sucesso!", resultado.mensagem || "Login realizado com sucesso!");
+          setTimeout(() => {
+          navigate(resultado.redirect);
+          
           setTimeout(() => {
             window.location.reload();
           }, 100);
+
+        }, 2500);
+
         } else {
-          alert(resultado.mensagem || resultado.erro_usuario || "Erro ao autenticar com o Google.");
+          dispararAlerta("erro", "Erro", resultado.mensagem || resultado.erro_usuario || "Erro ao autenticar com o Google.");
         }
       } catch (erro) {
         console.error("Erro na requisição do Google:", erro);
-        alert("Não foi possível conectar ao servidor.");
+        dispararAlerta("erro", "Erro", "Não foi possível conectar ao servidor.");
       }
     },
     onError: () => {
-      alert("Falha na autenticação com o Google. Tente novamente.");
+      dispararAlerta("erro", "Erro", "Falha na autenticação com o Google. Tente novamente.");
     }
   });
 
@@ -266,22 +272,33 @@ function Formulario({ tipo, setUsuario }: any) {
         );
 
         const resultado = await resposta.json();
+        console.log("RESULTADO LOGIN:");
+        console.log(resultado);
+        console.log("status:", resposta.status);
 
         if (resposta.ok) {
           const tipoUsuario =
             resultado.tipo_usuario ||
             resultado.usuario?.tipo_usuario;
 
+          console.log("tipoUsuario:", tipoUsuario);
+
           if (tipoUsuario === "administrador") {
-            console.log("Login de ADMINISTRADOR confirmado pelo backend");
-            await loginAdmin(dados.email, dados.senha);
-            dispararAlerta("sucesso", "Sucesso!", resultado.mensagem || "Login de Administrador realizado com sucesso!");
-            
+            ativarAdmin();
+
+            dispararAlerta(
+              "sucesso",
+              "Sucesso!",
+              "Login de Administrador realizado com sucesso!"
+            );
+
             setTimeout(() => {
-              navigate("/admin");
-            }, 2500);
+              navigate("/admin", { replace: true });
+            }, 1500);
+
             return;
           }
+
 
           if (resultado.status_usuario === "INATIVO") {
             localStorage.setItem("usuario_id", resultado.usuario_id);
@@ -485,7 +502,7 @@ function Formulario({ tipo, setUsuario }: any) {
               value={dados.email}
               onChange={guardar}
               disabled={!!dadosGoogle?.email}
-              className={`${estiloInput} ml-5.5 md:ml-8.5 cursor-pointer ${dadosGoogle?.email ? estiloInputBloqueado : ""}`}
+              className={`${estiloInput} ml-5.5 md:ml-8.5 ${dadosGoogle?.email ? estiloInputBloqueado : ""}`}
               required
             />
           </div>
