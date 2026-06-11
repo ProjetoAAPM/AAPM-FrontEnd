@@ -1,6 +1,7 @@
 import fundo from "../../assets/images/FundoNotas.png";
 import { useEffect, useState } from "react";
 import { buscarConteudo, salvarConteudo } from "../../Services/conteudoService";
+import Alert from "../../alerts/Alert";
 
 interface PostIt {
   cor: string;
@@ -19,6 +20,25 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
   const [textoItalico, setTextoItalico] = useState(false);
   const [textoSublinhado, setTextoSublinhado] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [alerta, setAlerta] = useState({
+    aberto: false,
+    tipo: "sucesso" as "sucesso" | "erro",
+    titulo: "",
+    descricao: "",
+  });
+
+  const dispararAlerta = (
+    tipo: "sucesso" | "erro",
+    titulo: string,
+    descricao: string
+  ) => {
+    setAlerta({
+      aberto: true,
+      tipo,
+      titulo,
+      descricao,
+    });
+  };
 
   const postsPadrao: PostIt[] = [
     { cor: "bg-[#C0BD61]", texto: "" },
@@ -97,15 +117,28 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
       const sucesso = await salvarConteudo(20, jsonString);
 
       if (sucesso) {
-        alert("Salvo com sucesso!");
+        dispararAlerta(
+          "sucesso",
+          "Quadro salvo!",
+          "As novidades foram publicadas para os usuários."
+        );
+
         setEditMode(false);
         setPostSelecionado(null);
       } else {
-        alert("Erro ao salvar no banco de dados!");
+        dispararAlerta(
+          "erro",
+          "Falha ao salvar",
+          "Não foi possível salvar as alterações."
+        );
       }
     } catch (err) {
       console.error("Erro ao salvar notas do quadro:", err);
-      alert("Erro ao salvar!");
+      dispararAlerta(
+        "erro",
+        "Erro inesperado",
+        "Ocorreu um erro durante o salvamento."
+      );
     } finally {
       setIsSaving(false);
     }
@@ -128,6 +161,19 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
     : posts;
 
   return (
+    <>
+      <Alert
+        aberto={alerta.aberto}
+        tipo={alerta.tipo}
+        titulo={alerta.titulo}
+        descricao={alerta.descricao}
+        fechar={() =>
+          setAlerta((prev) => ({
+            ...prev,
+            aberto: false,
+          }))
+        }
+      />
     <div className="w-full flex flex-col items-center overflow-hidden">
       <div className="w-full flex flex-row items-center justify-between gap-2 sm:gap-4 mb-4">
         <div className="self-start bg-[#14358F] text-white font-black rounded-r-[10px] shadow-md py-2 text-[1rem] sm:text-[2rem] md:text-[2.2rem] lg:text-[2.3rem] xl:text-[3.1rem] 2xl:text-[3.3rem] px-10 sm:px-20 md:px-24 lg:px-40 xl:px-52 2xl:px-64 whitespace-nowrap">
@@ -275,6 +321,7 @@ function QuadroNotas({ isAdmin = false }: QuadroNotasProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
