@@ -17,6 +17,8 @@ type ExtratoItem = {
 
 type PontuacaoProps = {
   pontos?: number;
+  pontosAnterior?: number;
+  pontosAtual?: number;
   progresso?: number;
   loading: boolean;
   usuario?: Usuario;
@@ -26,6 +28,8 @@ type PontuacaoProps = {
 
 export default function Pontuacao({
   pontos = 0,
+  pontosAnterior = 0,
+  pontosAtual = 0,
   progresso = 0,
   loading,
   usuario,
@@ -48,11 +52,15 @@ export default function Pontuacao({
                 progresso={pontos}
                 premium={usuario?.premium}
                 onPremiosCalculados={onPremiosCalculados}
+                animar={animar}
+                pontosAnterior={pontosAnterior}
+                pontosAtual={pontosAtual}
               />
 
               <PorcoPorcentagem
                 progresso={progresso}
                 animar={animar}
+                isPremium={usuario?.premium}
               />
             </div>
 
