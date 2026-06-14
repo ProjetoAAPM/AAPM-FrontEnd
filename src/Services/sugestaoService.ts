@@ -7,7 +7,7 @@ export interface ISugestao {
     tipo_usuario: string;
 }
 
-const API_BASE = "https://aapm-api.onrender.com"; 
+const API_BASE = "https://portal-aapm-904312815750.southamerica-east1.run.app"; 
 
 export const sugestaoService = {
 

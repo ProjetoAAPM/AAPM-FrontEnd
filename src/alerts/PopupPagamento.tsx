@@ -53,7 +53,7 @@ function PopupPagamento({ isOpen, onClose, planoSelecionado }: PopupProps) {
       setLoading(true);
 
       const respostaEtapa1 = await fetch(
-        "https://aapm-api.onrender.com/usuario/pagamento/gerar",
+        "https://portal-aapm-904312815750.southamerica-east1.run.app/usuario/pagamento/gerar",
         {
           method: "POST",
           headers: {
@@ -88,7 +88,7 @@ function PopupPagamento({ isOpen, onClose, planoSelecionado }: PopupProps) {
       formData.append("comprovante", comprovante);
 
       const respostaEtapa2 = await fetch(
-        "https://aapm-api.onrender.com/pagamento/enviar-comprovante",
+        "https://portal-aapm-904312815750.southamerica-east1.run.app/pagamento/enviar-comprovante",
         {
           method: "POST",
           credentials: "include",

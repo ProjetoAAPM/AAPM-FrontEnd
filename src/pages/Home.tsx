@@ -54,10 +54,10 @@ function Home({ modoAdmin = false, usuario }: HomeProps) {
       setLoading(true);
 
       const [resProgresso, resExtrato] = await Promise.all([
-        fetch("https://aapm-api.onrender.com/usuario/meu-progresso", {
+        fetch("https://portal-aapm-904312815750.southamerica-east1.run.app/usuario/meu-progresso", {
           credentials: "include",
         }),
-        fetch("https://aapm-api.onrender.com/usuario/extrato-pontos", {
+        fetch("https://portal-aapm-904312815750.southamerica-east1.run.app/usuario/extrato-pontos", {
           credentials: "include",
         }),
       ]);

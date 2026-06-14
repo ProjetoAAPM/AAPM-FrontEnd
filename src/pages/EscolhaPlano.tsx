@@ -55,7 +55,7 @@ function EscolhaPlano() {
 
         try {
             setLoading(true);
-            const respostaEtapa1 = await fetch("https://aapm-api.onrender.com/pagamento/gerar", {
+            const respostaEtapa1 = await fetch("https://portal-aapm-904312815750.southamerica-east1.run.app/pagamento/gerar", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -77,7 +77,7 @@ function EscolhaPlano() {
             formData.append("comprovante", comprovante);
 
             const respostaEtapa2 = await fetch(
-                "https://aapm-api.onrender.com/pagamento/enviar-comprovante",
+                "https://portal-aapm-904312815750.southamerica-east1.run.app/pagamento/enviar-comprovante",
                 {
                     method: "POST",
                     credentials: "include",

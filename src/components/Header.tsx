@@ -31,7 +31,7 @@ function Header({ usuario, setUsuario }: HeaderProps) {
             localStorage.removeItem("isAdmin");
         } else {
             try {
-                await fetch("https://aapm-api.onrender.com/usuario/logout", {
+                await fetch("https://portal-aapm-904312815750.southamerica-east1.run.app", {
                     method: "GET",
                     credentials: "include"
                 });

@@ -58,7 +58,7 @@ export default function ModalPerfil({
 
   async function salvarEdicao() {
     try {
-      const resposta = await fetch("https://aapm-api.onrender.com/usuario/editar-perfil", {
+      const resposta = await fetch("https://portal-aapm-904312815750.southamerica-east1.run.app/usuario/editar-perfil", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

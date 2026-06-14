@@ -52,7 +52,7 @@ function AppContent() {
     async function carregarUsuario() {
         try {
             const resposta = await fetch(
-                "https://aapm-api.onrender.com/usuario/home-logada",
+                "https://portal-aapm-904312815750.southamerica-east1.run.app/usuario/home-logada",
                 { credentials: "include" }
             );
 
